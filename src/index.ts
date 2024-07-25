@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { findUp } from 'find-up'
-import type { Agent } from './utils'
-import { AGENTS, LOCKS } from './utils'
+import type { Agent } from './agents'
+import { AGENTS, LOCKS } from './agents'
 
 export interface DetectOptions {
   cwd?: string
