@@ -43,9 +43,7 @@ export async function detect({ cwd }: DetectOptions = {}) {
         }
       }
     }
-    catch (e) {
-      console.error('WTF', e)
-    }
+    catch {}
   }
 
   // detect based on lock
