@@ -6,13 +6,13 @@
   "description": "Package manager detector",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/userquin/detect-package-manager#readme",
+  "homepage": "https://github.com/userquin/package-manager-detector#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/userquin/detect-package-manager.git"
+    "url": "git+https://github.com/userquin/package-manager-detector.git"
   },
   "bugs": {
-    "url": "https://github.com/userquin/detect-package-manager/issues"
+    "url": "https://github.com/userquin/package-manager-detector/issues"
   },
   "exports": {
     ".": {
