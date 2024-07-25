@@ -11,7 +11,8 @@ export interface DetectOptions {
 export * from './agents'
 
 export async function detect({ cwd }: DetectOptions = {}) {
-  let agent: Agent | null = null
+  let agent: Agent | undefined
+  let version: string | undefined
 
   const lockPath = await findUp(Object.keys(LOCKS), { cwd })
   let packageJsonPath: string | undefined
@@ -27,8 +28,11 @@ export async function detect({ cwd }: DetectOptions = {}) {
       const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
       if (typeof pkg.packageManager === 'string') {
         const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
+        version = ver
         if (name === 'yarn' && Number.parseInt(ver) > 1) {
           agent = 'yarn@berry'
+          // the version in packageManager isn't the actual yarn package version
+          version = 'berry'
         }
         else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
           agent = 'pnpm@6'
@@ -45,5 +49,5 @@ export async function detect({ cwd }: DetectOptions = {}) {
   if (!agent && lockPath)
     agent = LOCKS[path.basename(lockPath)]
 
-  return agent
+  return { agent, version }
 }
