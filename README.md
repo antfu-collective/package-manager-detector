@@ -1,4 +1,4 @@
-# detect-package-manager
+# package-manager-detector
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -9,23 +9,23 @@ Install:
 
 ```sh
 # pnpm
-pnpm add detect-package-manager
+pnpm add package-manager-detector
 
 # npm
-npm i detect-package-manager
+npm i package-manager-detector
 
 # yarn
-yarn add detect-package-manager
+yarn add package-manager-detector
 ```
 
 Import:
 
 ```js
 // ESM
-import { detect } from 'detect-package-manager'
+import { detect } from 'package-manager-detector'
 
 // CommonJS
-const { detect } = require('detect-package-manager')
+const { detect } = require('package-manager-detector')
 ```
 
 ## License
@@ -34,8 +34,8 @@ const { detect } = require('detect-package-manager')
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/detect-package-manager?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-version-href]: https://npmjs.com/package/detect-package-manager
-[npm-downloads-src]: https://img.shields.io/npm/dm/detect-package-manager?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-downloads-href]: https://npmjs.com/package/detect-package-manager
-[license-href]: https://github.com/userquin/detect-package-manager/blob/main/LICENSE
+[npm-version-src]: https://img.shields.io/npm/v/package-manager-detector?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-version-href]: https://npmjs.com/package/package-manager-detector
+[npm-downloads-src]: https://img.shields.io/npm/dm/package-manager-detector?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-downloads-href]: https://npmjs.com/package/package-manager-detector
+[license-href]: https://github.com/userquin/package-manager-detector/blob/main/LICENSE

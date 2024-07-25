@@ -1,5 +1,5 @@
 {
-  "name": "detect-package-manager",
+  "name": "package-manager-detector",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@9.6.0",
