@@ -1,0 +1,54 @@
+{
+  "name": "detect-package-manager",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@9.6.0",
+  "description": "Package manager detector",
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/userquin/detect-package-manager#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/userquin/detect-package-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/userquin/detect-package-manager/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "release": "bumpp && npm publish",
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.22.0",
+    "@jsdevtools/ez-spawn": "^3.0.4",
+    "@posva/prompts": "^2.4.4",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.14.10",
+    "@types/which": "^3.0.4",
+    "bumpp": "^9.4.1",
+    "eslint": "^9.7.0",
+    "find-up": "^6.3.0",
+    "fs-extra": "^11.2.0",
+    "terminal-link": "^3.0.0",
+    "typescript": "^5.5.3",
+    "unbuild": "^2.0.0",
+    "vitest": "^2.0.2",
+    "which": "^4.0.0"
+  }
+}
