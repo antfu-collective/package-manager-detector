@@ -13,7 +13,7 @@ function detectTest(fixture: string, agent: string) {
     const dir = path.join(__dirname, 'fixtures', fixture, agent)
     await fs.copy(dir, cwd)
 
-    expect(await detect({ programmatic: true, cwd })).toMatchSnapshot()
+    expect(await detect({ cwd })).toMatchSnapshot()
   }
 }
 
