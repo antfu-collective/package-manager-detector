@@ -1,14 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { findUp } from 'find-up'
-import type { Agent } from './agents'
-import { AGENTS, LOCKS } from './agents'
+import type { Agent } from './utils'
+import { AGENTS, LOCKS } from './utils'
 
 export interface DetectOptions {
   cwd?: string
 }
 
-export * from './agents'
+export type { Agent }
+export { AGENTS, LOCKS }
 
 export async function detect({ cwd }: DetectOptions = {}) {
   let agent: Agent | undefined
@@ -37,12 +38,14 @@ export async function detect({ cwd }: DetectOptions = {}) {
         else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
           agent = 'pnpm@6'
         }
-        else if (name in AGENTS) {
+        else if (AGENTS.includes(name)) {
           agent = name
         }
       }
     }
-    catch {}
+    catch (e) {
+      console.error('WTF', e)
+    }
   }
 
   // detect based on lock
