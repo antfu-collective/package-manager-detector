@@ -30,7 +30,7 @@
     "prepublishOnly": "npm run build",
     "build": "unbuild",
     "stub": "unbuild --stub",
-    "release": "bumpp && npm publish",
+    "release": "bumpp && npm publish --access=public",
     "lint": "eslint .",
     "test": "vitest"
   },
