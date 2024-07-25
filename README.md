@@ -23,7 +23,9 @@ Import:
 ```js
 // ESM
 import { detect } from 'package-manager-detector'
+```
 
+```js
 // CommonJS
 const { detect } = require('package-manager-detector')
 ```
