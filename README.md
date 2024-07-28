@@ -3,9 +3,11 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-## Usage
+Package manager detector is based on lock files and the `packageManager` field in the current project's `package.json` file.
 
-Install:
+It will detect your `yarn.lock` / `pnpm-lock.yaml` / `package-lock.json` / `bun.lockb` to know the current package manager and use the `packageManager` field in your `package.json` if present.
+
+## Install
 
 ```sh
 # pnpm
@@ -18,7 +20,7 @@ npm i package-manager-detector
 yarn add package-manager-detector
 ```
 
-Import:
+## Usage
 
 ```js
 // ESM
@@ -29,6 +31,24 @@ import { detect } from 'package-manager-detector'
 // CommonJS
 const { detect } = require('package-manager-detector')
 ```
+
+## Agents and Commands
+
+This package includes package manager agents and their corresponding commands for:
+- install dependencies
+- install dependencies using frozen lockfile
+- add dependencies
+- remove dependencies
+- install global packages
+- remove global packages
+- upgrade dependencies
+- upgrade dependencies interactively
+- execute binary scripts
+- run `package.json` scripts
+
+### Using Agents and Commands
+
+WIP
 
 ## License
 
