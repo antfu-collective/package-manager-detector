@@ -42,11 +42,20 @@ This package includes package manager agents and their corresponding commands fo
 - install global packages
 - remove global packages
 - upgrade dependencies
-- upgrade dependencies interactively [^1]
+- upgrade dependencies interactively <sup><a href="#not-supported" aria-describedby="footnote-label">1</a></sup>
 - download & execute binary scripts
 - run `package.json` scripts
 
-[^1]: not available for `npm` and `bun`
+<br>
+
+<section class="footnotes">
+<h2 id="footnote-label" class="sr-only" dir="auto">Footnotes</h2>
+<ol dir="auto">
+<li id="not-supported">
+<p dir="auto">not available for <code>npm</code> and <code>bun</code></p>
+</li>
+</ol>
+</section>
 
 ### Using Agents and Commands
 
