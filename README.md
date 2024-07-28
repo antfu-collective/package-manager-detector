@@ -42,9 +42,11 @@ This package includes package manager agents and their corresponding commands fo
 - install global packages
 - remove global packages
 - upgrade dependencies
-- upgrade dependencies interactively
-- execute binary scripts
+- upgrade dependencies interactively [^1]
+- download & execute binary scripts
 - run `package.json` scripts
+
+[^1]: not available for `npm` and `bun`
 
 ### Using Agents and Commands
 
