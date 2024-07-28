@@ -14,15 +14,27 @@
   "bugs": {
     "url": "https://github.com/antfu-collective/package-manager-detector/issues"
   },
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./agents": {
+      "import": "./dist/agents.mjs",
+      "require": "./dist/agents.cjs"
     }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "agents": [
+        "./dist/agents.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],

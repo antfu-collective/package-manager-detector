@@ -1,3 +1,15 @@
+export const AGENTS = ['npm', 'yarn', 'yarn@berry', 'pnpm', 'pnpm@6', 'bun'] as const
+export type Agent = typeof AGENTS[number]
+
+// the order here matters, more specific one comes first
+export const LOCKS: Record<string, Agent> = {
+  'bun.lockb': 'bun',
+  'pnpm-lock.yaml': 'pnpm',
+  'yarn.lock': 'yarn',
+  'package-lock.json': 'npm',
+  'npm-shrinkwrap.json': 'npm',
+}
+
 function npmRun(agent: string) {
   return (args: string[]) => {
     if (args.length > 1)
@@ -46,7 +58,7 @@ const bun = {
   'global_uninstall': 'bun remove -g {0}',
 }
 
-export const AGENTS = {
+export const COMMANDS = {
   'npm': {
     'agent': 'npm {0}',
     'run': npmRun('npm'),
@@ -80,19 +92,7 @@ export const AGENTS = {
   'bun': bun,
 }
 
-export type Agent = keyof typeof AGENTS
-export type Command = keyof typeof AGENTS.npm
-
-export const agents = Object.keys(AGENTS) as Agent[]
-
-// the order here matters, more specific one comes first
-export const LOCKS: Record<string, Agent> = {
-  'bun.lockb': 'bun',
-  'pnpm-lock.yaml': 'pnpm',
-  'yarn.lock': 'yarn',
-  'package-lock.json': 'npm',
-  'npm-shrinkwrap.json': 'npm',
-}
+export type Command = keyof typeof COMMANDS.npm
 
 export const INSTALL_PAGE: Record<Agent, string> = {
   'bun': 'https://bun.sh',

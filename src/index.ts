@@ -8,7 +8,8 @@ export interface DetectOptions {
   cwd?: string
 }
 
-export * from './agents'
+export type { Agent }
+export { AGENTS, LOCKS }
 
 export async function detect({ cwd }: DetectOptions = {}) {
   let agent: Agent | undefined
@@ -37,7 +38,7 @@ export async function detect({ cwd }: DetectOptions = {}) {
         else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
           agent = 'pnpm@6'
         }
-        else if (name in AGENTS) {
+        else if (AGENTS.includes(name)) {
           agent = name
         }
       }
