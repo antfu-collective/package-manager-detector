@@ -2,7 +2,7 @@
   "name": "package-manager-detector",
   "type": "module",
   "version": "0.0.0",
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.7.0",
   "description": "Package manager detector",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
