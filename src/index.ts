@@ -1,6 +1,7 @@
 import fs from 'node:fs'
+import fsPromises from 'node:fs/promises'
 import path from 'node:path'
-import { findUp } from 'find-up'
+import process from 'node:process'
 import type { Agent } from './agents'
 import { AGENTS, LOCKS } from './agents'
 
@@ -51,4 +52,28 @@ export async function detect({ cwd }: DetectOptions = {}) {
     agent = LOCKS[path.basename(lockPath)]
 
   return { agent, version }
+}
+
+async function findUp(name: string | string[], { cwd }: {
+  cwd: string | undefined
+}) {
+  let directory = path.resolve(cwd ?? process.cwd())
+  const { root } = path.parse(directory)
+  const names = [name].flat()
+
+  while (directory && directory !== root) {
+    for (const name of names) {
+      const filePath = path.join(directory, name)
+
+      try {
+        const stats = await fsPromises.stat(filePath)
+        if (stats.isFile()) {
+          return filePath
+        }
+      }
+      catch {}
+    }
+
+    directory = path.dirname(directory)
+  }
 }
