@@ -7,7 +7,7 @@ import { AGENTS, LOCKS } from './agents'
 
 export interface DetectOptions {
   cwd?: string
-  /* callback when pm unknown from package.json */
+  // callback when unknown pm from package.json
   unknownPackageManager?: (packageManager: string) => void
 }
 
