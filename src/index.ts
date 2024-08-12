@@ -7,12 +7,18 @@ import { AGENTS, LOCKS } from './agents'
 
 export interface DetectOptions {
   cwd?: string
+  /**
+   * Callback when unknown package manager from package.json.
+   *
+   * @param packageManager - The `packageManager` value from package.json file.
+   */
+  onUnknown?: (packageManager: string) => void
 }
 
 export type { Agent }
 export { AGENTS, LOCKS }
 
-export async function detect({ cwd }: DetectOptions = {}) {
+export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
   let agent: Agent | undefined
   let version: string | undefined
 
@@ -41,6 +47,9 @@ export async function detect({ cwd }: DetectOptions = {}) {
         }
         else if (AGENTS.includes(name)) {
           agent = name
+        }
+        else {
+          onUnknown?.(pkg.packageManager)
         }
       }
     }
