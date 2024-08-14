@@ -35,20 +35,31 @@ const { detect } = require('package-manager-detector')
 ## Agents and Commands
 
 This package includes package manager agents and their corresponding commands for:
-- install dependencies
-- install dependencies using frozen lockfile
-- add dependencies
-- remove dependencies
-- install global packages
-- remove global packages
-- upgrade dependencies
-- upgrade dependencies interactively: not available for `npm` and `bun`
-- download & execute binary scripts
-- run `package.json` scripts
+- `'agent'` - run the package manager with no arguments
+- `'install'` - install dependencies
+- `'frozen'` - install dependencies using frozen lockfile
+- `'add'` - add dependencies
+- `'uninstall'` - remove dependencies
+- `'global'` - install global packages
+- `'global_uninstall'` - remove global packages
+- `'upgrade'` - upgrade dependencies
+- `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm` and `bun`
+- `'execute'` - download & execute binary scripts
+- `'run'` - run `package.json` scripts
 
 ### Using Agents and Commands
 
-WIP
+A `COMMANDS` map is exported which lets you get a command from the above list for the detected agent. For example:
+```
+import { detect } from 'package-manager-detector'
+import { COMMANDS } from 'package-manager-detector/agents'
+
+const pm = await detect()
+if (!pm) throw new Error('Could not detect package manager')
+
+const command = COMMANDS[pm.agent]['frozen']
+console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`);
+```
 
 ## License
 
