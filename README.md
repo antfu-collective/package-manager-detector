@@ -50,7 +50,7 @@ This package includes package manager agents and their corresponding commands fo
 ### Using Agents and Commands
 
 A `COMMANDS` map is exported which lets you get a command from the above list for the detected agent. For example:
-```
+```js
 import { detect } from 'package-manager-detector'
 import { COMMANDS } from 'package-manager-detector/agents'
 
