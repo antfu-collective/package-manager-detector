@@ -55,10 +55,11 @@ import { detect } from 'package-manager-detector'
 import { COMMANDS } from 'package-manager-detector/agents'
 
 const pm = await detect()
-if (!pm) throw new Error('Could not detect package manager')
+if (!pm)
+  throw new Error('Could not detect package manager')
 
 const command = COMMANDS[pm.agent]['frozen']
-console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`);
+console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`)
 ```
 
 ## License
