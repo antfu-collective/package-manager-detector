@@ -138,7 +138,10 @@ function quoteArgument(arg: string) {
 function buildCommand(agentCommand: string) {
   const [command, ...commandArgs] = agentCommand.split(' ')
   const last = commandArgs.at(-1) === '{0}'
-  last && commandArgs.pop()
+  if (last) {
+    commandArgs.pop()
+  }
+
   return (args: string[] = []) => {
     return {
       command,
