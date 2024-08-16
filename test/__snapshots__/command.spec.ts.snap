@@ -1,65 +1,147 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`bun run command > object format should handle args 1`] = `"bun run {0}"`;
+exports[`test bun add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "bun",
+  "toString": [Function],
+}
+`;
 
-exports[`bun run command > string format converted correctly 1`] = `"bun run {0}"`;
+exports[`test bun run command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "run",
+    "arg0",
+    ""arg1-0 arg1-1"",
+  ],
+  "command": "bun",
+  "toString": [Function],
+}
+`;
 
-exports[`npm run command > object format handles args correctly 1`] = `
-[
-  "npm",
-  [
+exports[`test npm add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "i",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "npm",
+  "toString": [Function],
+}
+`;
+
+exports[`test npm run command > command handles args correctly 1`] = `
+{
+  "arguments": [
     "run",
     "arg0",
     "--",
     "arg1-0 arg1-1",
   ],
-]
+  "command": "npm",
+  "toString": [Function],
+}
 `;
 
-exports[`npm run command > object format should handle args 1`] = `
-[
-  "npm",
-  [
+exports[`test pnpm add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "pnpm",
+  "toString": [Function],
+}
+`;
+
+exports[`test pnpm run command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "run",
+    "arg0",
+    ""arg1-0 arg1-1"",
+  ],
+  "command": "pnpm",
+  "toString": [Function],
+}
+`;
+
+exports[`test pnpm@6 add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "pnpm",
+  "toString": [Function],
+}
+`;
+
+exports[`test pnpm@6 run command > command handles args correctly 1`] = `
+{
+  "arguments": [
     "run",
     "arg0",
     "--",
     "arg1-0 arg1-1",
   ],
-]
+  "command": "pnpm",
+  "toString": [Function],
+}
 `;
 
-exports[`pnpm run command > object format should handle args 1`] = `"pnpm run {0}"`;
+exports[`test yarn add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "yarn",
+  "toString": [Function],
+}
+`;
 
-exports[`pnpm run command > string format converted correctly 1`] = `"pnpm run {0}"`;
-
-exports[`pnpm@6 run command > object format handles args correctly 1`] = `
-[
-  "pnpm",
-  [
+exports[`test yarn run command > command handles args correctly 1`] = `
+{
+  "arguments": [
     "run",
     "arg0",
-    "--",
-    "arg1-0 arg1-1",
+    ""arg1-0 arg1-1"",
   ],
-]
+  "command": "yarn",
+  "toString": [Function],
+}
 `;
 
-exports[`pnpm@6 run command > object format should handle args 1`] = `
-[
-  "pnpm",
-  [
+exports[`test yarn@berry add command > command handles args correctly 1`] = `
+{
+  "arguments": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "yarn",
+  "toString": [Function],
+}
+`;
+
+exports[`test yarn@berry run command > command handles args correctly 1`] = `
+{
+  "arguments": [
     "run",
     "arg0",
-    "--",
-    "arg1-0 arg1-1",
+    ""arg1-0 arg1-1"",
   ],
-]
+  "command": "yarn",
+  "toString": [Function],
+}
 `;
-
-exports[`yarn run command > object format should handle args 1`] = `"yarn run {0}"`;
-
-exports[`yarn run command > string format converted correctly 1`] = `"yarn run {0}"`;
-
-exports[`yarn@berry run command > object format should handle args 1`] = `"yarn run {0}"`;
-
-exports[`yarn@berry run command > string format converted correctly 1`] = `"yarn run {0}"`;

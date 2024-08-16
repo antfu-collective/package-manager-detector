@@ -94,32 +94,60 @@ export const COMMANDS = {
 
 export type Command = keyof typeof COMMANDS.npm
 
-export type CommandType = [command: string, args: string[]]
+export interface CommandType {
+  command: string
+  arguments: string[]
+  toString: () => string
+}
+
+export type CommandReturnType = (args?: string[]) => CommandType
 export interface AgentCommand {
   'agent': string
-  'run': CommandType | ((args: string[]) => CommandType)
-  'install': CommandType
-  'frozen': CommandType
-  'global': CommandType
-  'add': CommandType
-  'upgrade': CommandType
-  'upgrade-interactive': CommandType | null
-  'execute': CommandType
-  'uninstall': CommandType
-  'global_uninstall': CommandType
+  'run': CommandReturnType
+  'install': CommandReturnType
+  'frozen': CommandReturnType
+  'global': CommandReturnType
+  'add': CommandReturnType
+  'upgrade': CommandReturnType
+  'upgrade-interactive'?: CommandReturnType
+  'execute': CommandReturnType
+  'uninstall': CommandReturnType
+  'global_uninstall': CommandReturnType
 }
 
 function npmRunCommand(agent: string) {
-  return (args: string[]): CommandType => {
-    return args.length > 1
-      ? [agent, ['run', args[0], '--', ...args.slice(1)]]
-      : [agent, ['run', args[0]]]
+  return (args: string[] = []) => {
+    return {
+      command: agent,
+      arguments: args.length > 1
+        ? ['run', args[0], '--', ...args.slice(1)]
+        : ['run', args[0]],
+      toString() {
+        return [agent, ...this.arguments].join(' ')
+      },
+    } satisfies CommandType
   }
 }
 
-function buildCommand(command: string) {
-  const [cmd, ...args] = command.split(' ')
-  return [cmd, args] as CommandType
+function quoteArgument(arg: string) {
+  return (!arg.startsWith('--') && arg.includes(' '))
+    ? JSON.stringify(arg)
+    : arg
+}
+
+function buildCommand(agentCommand: string) {
+  const [command, ...commandArgs] = agentCommand.split(' ')
+  const last = commandArgs.at(-1) === '{0}'
+  last && commandArgs.pop()
+  return (args: string[] = []) => {
+    return {
+      command,
+      arguments: last ? [...commandArgs, ...args.map(quoteArgument)] : [...commandArgs],
+      toString() {
+        return [command, ...this.arguments].join(' ')
+      },
+    } satisfies CommandType
+  }
 }
 
 function buildCommands(agent: Agent, commands: typeof COMMANDS.npm) {
@@ -134,7 +162,7 @@ function buildCommands(agent: Agent, commands: typeof COMMANDS.npm) {
     'global': buildCommand(commands.global),
     'add': buildCommand(commands.add),
     'upgrade': buildCommand(commands.upgrade),
-    'upgrade-interactive': interactive ? buildCommand(interactive) : null,
+    'upgrade-interactive': interactive ? buildCommand(interactive) : undefined,
     'execute': buildCommand(commands.execute),
     'uninstall': buildCommand(commands.uninstall),
     'global_uninstall': buildCommand(commands.global_uninstall),
