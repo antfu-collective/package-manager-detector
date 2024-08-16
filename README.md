@@ -58,7 +58,7 @@ const pm = await detect()
 if (!pm)
   throw new Error('Could not detect package manager')
 
-const command = COMMANDS[pm]['frozen']
+const command = COMMANDS[pm].frozen
 console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`)
 ```
 
@@ -71,7 +71,7 @@ const pm = await detect()
 if (!pm)
   throw new Error('Could not detect package manager')
 
-const command = AGENT_COMMANDS[pm]['add']
+const command = AGENT_COMMANDS[pm].add
 console.log(`Detected the ${pm.agent} package manager. You can install "my-awesome-lib" with ${command(['my-awesome-lib']).toString()}`)
 ```
 
