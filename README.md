@@ -73,7 +73,7 @@ if (!pm)
 
 const command = AGENT_COMMANDS[pm]['add']
 console.log(`Detected the ${pm.agent} package manager. You can install "my-awesome-lib" with ${command(['my-awesome-lib']).toString()}`)
-``` 
+```
 
 ## License
 
