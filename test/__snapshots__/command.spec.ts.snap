@@ -1,0 +1,65 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`bun run command > object format should handle args 1`] = `"bun run {0}"`;
+
+exports[`bun run command > string format converted correctly 1`] = `"bun run {0}"`;
+
+exports[`npm run command > object format handles args correctly 1`] = `
+[
+  "npm",
+  [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+]
+`;
+
+exports[`npm run command > object format should handle args 1`] = `
+[
+  "npm",
+  [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+]
+`;
+
+exports[`pnpm run command > object format should handle args 1`] = `"pnpm run {0}"`;
+
+exports[`pnpm run command > string format converted correctly 1`] = `"pnpm run {0}"`;
+
+exports[`pnpm@6 run command > object format handles args correctly 1`] = `
+[
+  "pnpm",
+  [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+]
+`;
+
+exports[`pnpm@6 run command > object format should handle args 1`] = `
+[
+  "pnpm",
+  [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+]
+`;
+
+exports[`yarn run command > object format should handle args 1`] = `"yarn run {0}"`;
+
+exports[`yarn run command > string format converted correctly 1`] = `"yarn run {0}"`;
+
+exports[`yarn@berry run command > object format should handle args 1`] = `"yarn run {0}"`;
+
+exports[`yarn@berry run command > string format converted correctly 1`] = `"yarn run {0}"`;

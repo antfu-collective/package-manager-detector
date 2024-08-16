@@ -23,6 +23,10 @@
     "./agents": {
       "import": "./dist/agents.mjs",
       "require": "./dist/agents.cjs"
+    },
+    "./commands": {
+      "import": "./dist/commands.mjs",
+      "require": "./dist/commands.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -32,6 +36,9 @@
     "*": {
       "agents": [
         "./dist/agents.d.ts"
+      ],
+      "commands": [
+        "./dist/commands.d.ts"
       ]
     }
   },
