@@ -145,6 +145,7 @@ function buildCommand(agentCommand: string) {
   return (args: string[] = []) => {
     return {
       command,
+      // ignore arguments if the command doesn't support a placeholder
       arguments: last ? [...commandArgs, ...args.map(quoteArgument)] : [...commandArgs],
       toString() {
         return [command, ...this.arguments].join(' ')
