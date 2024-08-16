@@ -12,9 +12,12 @@ export const LOCKS: Record<string, Agent> = {
 
 function npmRun(agent: string) {
   return (args: string[]) => {
-    if (args.length > 1)
+    if (args.length > 1) {
       return `${agent} run ${args[0]} -- ${args.slice(1).join(' ')}`
-    else return `${agent} run ${args[0]}`
+    }
+    else {
+      return `${agent} run ${args[0]}`
+    }
   }
 }
 
@@ -146,7 +149,7 @@ function buildCommand(agentCommand: string) {
     return {
       command,
       // ignore arguments if the command doesn't support a placeholder
-      arguments: last ? [...commandArgs, ...args.map(quoteArgument)] : [...commandArgs],
+      arguments: last && args.length ? [...commandArgs, ...args.map(quoteArgument)] : [...commandArgs],
       toString() {
         return [command, ...this.arguments].join(' ')
       },
