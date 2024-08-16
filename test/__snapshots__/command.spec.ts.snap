@@ -1,6 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`test bun add command > command handles args correctly 1`] = `
+exports[`test bun add command > command handles args correctly 1`] = `"bun add @antfu/ni -D"`;
+
+exports[`test bun add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "add",
@@ -12,7 +14,9 @@ exports[`test bun add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test bun run command > command handles args correctly 1`] = `
+exports[`test bun run command > command handles args correctly 1`] = `"bun run arg0 "arg1-0 arg1-1""`;
+
+exports[`test bun run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
@@ -24,7 +28,9 @@ exports[`test bun run command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test npm add command > command handles args correctly 1`] = `
+exports[`test npm add command > command handles args correctly 1`] = `"npm i @antfu/ni -D"`;
+
+exports[`test npm add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "i",
@@ -36,7 +42,9 @@ exports[`test npm add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test npm run command > command handles args correctly 1`] = `
+exports[`test npm run command > command handles args correctly 1`] = `"npm run arg0 -- arg1-0 arg1-1"`;
+
+exports[`test npm run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
@@ -49,7 +57,9 @@ exports[`test npm run command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test pnpm add command > command handles args correctly 1`] = `
+exports[`test pnpm add command > command handles args correctly 1`] = `"pnpm add @antfu/ni -D"`;
+
+exports[`test pnpm add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "add",
@@ -61,7 +71,9 @@ exports[`test pnpm add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test pnpm run command > command handles args correctly 1`] = `
+exports[`test pnpm run command > command handles args correctly 1`] = `"pnpm run arg0 "arg1-0 arg1-1""`;
+
+exports[`test pnpm run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
@@ -73,7 +85,9 @@ exports[`test pnpm run command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test pnpm@6 add command > command handles args correctly 1`] = `
+exports[`test pnpm@6 add command > command handles args correctly 1`] = `"pnpm add @antfu/ni -D"`;
+
+exports[`test pnpm@6 add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "add",
@@ -85,7 +99,9 @@ exports[`test pnpm@6 add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test pnpm@6 run command > command handles args correctly 1`] = `
+exports[`test pnpm@6 run command > command handles args correctly 1`] = `"pnpm run arg0 -- arg1-0 arg1-1"`;
+
+exports[`test pnpm@6 run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
@@ -98,7 +114,9 @@ exports[`test pnpm@6 run command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test yarn add command > command handles args correctly 1`] = `
+exports[`test yarn add command > command handles args correctly 1`] = `"yarn add @antfu/ni -D"`;
+
+exports[`test yarn add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "add",
@@ -110,7 +128,9 @@ exports[`test yarn add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test yarn run command > command handles args correctly 1`] = `
+exports[`test yarn run command > command handles args correctly 1`] = `"yarn run arg0 "arg1-0 arg1-1""`;
+
+exports[`test yarn run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
@@ -122,7 +142,9 @@ exports[`test yarn run command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test yarn@berry add command > command handles args correctly 1`] = `
+exports[`test yarn@berry add command > command handles args correctly 1`] = `"yarn add @antfu/ni -D"`;
+
+exports[`test yarn@berry add command > command handles args correctly 2`] = `
 {
   "arguments": [
     "add",
@@ -134,7 +156,9 @@ exports[`test yarn@berry add command > command handles args correctly 1`] = `
 }
 `;
 
-exports[`test yarn@berry run command > command handles args correctly 1`] = `
+exports[`test yarn@berry run command > command handles args correctly 1`] = `"yarn run arg0 "arg1-0 arg1-1""`;
+
+exports[`test yarn@berry run command > command handles args correctly 2`] = `
 {
   "arguments": [
     "run",
