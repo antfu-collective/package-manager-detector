@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Agent } from '../src'
-import { COMMANDS } from '../src/agents'
-import { AGENT_COMMANDS } from '../src/commands'
+import { AGENT_COMMANDS, COMMANDS } from '../src/agents'
 
 Object.entries(AGENT_COMMANDS)
   .map(([pm, c]) => [pm, c.run] as const)

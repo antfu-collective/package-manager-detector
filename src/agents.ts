@@ -94,6 +94,60 @@ export const COMMANDS = {
 
 export type Command = keyof typeof COMMANDS.npm
 
+export type CommandType = [command: string, args: string[]]
+export interface AgentCommand {
+  'agent': string
+  'run': CommandType | ((args: string[]) => CommandType)
+  'install': CommandType
+  'frozen': CommandType
+  'global': CommandType
+  'add': CommandType
+  'upgrade': CommandType
+  'upgrade-interactive': CommandType | null
+  'execute': CommandType
+  'uninstall': CommandType
+  'global_uninstall': CommandType
+}
+
+function npmRunCommand(agent: string) {
+  return (args: string[]): CommandType => {
+    return args.length > 1
+      ? [agent, ['run', args[0], '--', ...args.slice(1)]]
+      : [agent, ['run', args[0]]]
+  }
+}
+
+function buildCommand(command: string) {
+  const [cmd, ...args] = command.split(' ')
+  return [cmd, args] as CommandType
+}
+
+function buildCommands(agent: Agent, commands: typeof COMMANDS.npm) {
+  const interactive = commands['upgrade-interactive'] as string | null
+  return {
+    'agent': commands.agent,
+    'run': typeof commands.run === 'function'
+      ? npmRunCommand(agent.includes('@') ? agent.split('@')[0] : agent)
+      : buildCommand(commands.run as string),
+    'install': buildCommand(commands.install),
+    'frozen': buildCommand(commands.frozen),
+    'global': buildCommand(commands.global),
+    'add': buildCommand(commands.add),
+    'upgrade': buildCommand(commands.upgrade),
+    'upgrade-interactive': interactive ? buildCommand(interactive) : null,
+    'execute': buildCommand(commands.execute),
+    'uninstall': buildCommand(commands.uninstall),
+    'global_uninstall': buildCommand(commands.global_uninstall),
+  } satisfies AgentCommand
+}
+
+export const AGENT_COMMANDS = Object.entries(COMMANDS)
+  .map(([pm, commands]) => [pm, buildCommands(pm as Agent, commands as any)] as const)
+  .reduce((acc, [pm, commands]) => {
+    acc[pm as Agent] = commands
+    return acc
+  }, {} as Record<Agent, ReturnType<typeof buildCommands>>)
+
 export const INSTALL_PAGE: Record<Agent, string> = {
   'bun': 'https://bun.sh',
   'pnpm': 'https://pnpm.io/installation',
