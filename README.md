@@ -52,27 +52,14 @@ This package includes package manager agents and their corresponding commands fo
 A `COMMANDS` map is exported which lets you get a command from the above list for the detected agent. For example:
 ```js
 import { detect } from 'package-manager-detector'
-import { COMMANDS } from 'package-manager-detector/agents'
+import { COMMANDS, constructCommand } from 'package-manager-detector/agents'
 
 const pm = await detect()
 if (!pm)
   throw new Error('Could not detect package manager')
 
-const command = COMMANDS[pm].frozen
-console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`)
-```
-
-Almost every command from `COMMANDS` will accept arguments, if you want to get the command with custom arguments, you can use `AGENT_COMMANDS` instead. For example, if you want to show how to install `my-awesome-lib` dependency:
-```js
-import { detect } from 'package-manager-detector'
-import { AGENT_COMMANDS } from 'package-manager-detector/agents'
-
-const pm = await detect()
-if (!pm)
-  throw new Error('Could not detect package manager')
-
-const command = AGENT_COMMANDS[pm].add
-console.log(`Detected the ${pm.agent} package manager. You can install "my-awesome-lib" with ${command(['my-awesome-lib']).toString()}`)
+const commandArgs = constructCommand(COMMANDS[pm].add, ['@antfu/ni']) // ['pnpm', 'add', '@antfu/ni']
+console.log(`Detected the ${pm.agent} package manager. You can run a install with ${commandArgs}`)
 ```
 
 ## License
