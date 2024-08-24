@@ -1,4 +1,5 @@
 export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'bun'
+export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun'
 
 export type AgentCommandValue = (string | number)[] | ((args?: string[]) => string[]) | null
 
@@ -18,16 +19,14 @@ export interface AgentCommands {
 
 export type Command = keyof AgentCommands
 
-export interface CommandType {
-  command: string
-  arguments: string[]
-  toString: () => string
-}
-
-export type CommandReturnType = (args?: string[]) => CommandType
-
 export interface ResolvedCommand {
+  /**
+   * CLI command.
+   */
   command: string
+  /**
+   * Arguments for the CLI command, merged with user arguments.
+   */
   args: string[]
 }
 
@@ -42,6 +41,20 @@ export interface DetectOptions {
 }
 
 export interface DetectResult {
+  /**
+   * Agent name without the specifier.
+   * Can be `npm`, `yarn`, `pnpm`, or `bun`.
+   */
+  name: AgentName
+  /**
+   * Agent specifier to resolve the command.
+   *
+   * Might contains '@' for differencate the version (e.g. 'yarn@berry').
+   * Use `name` for the agent name without the specifier.
+   */
   agent: Agent
+  /**
+   * Specific version of the agent, read from `packageManager` field in package.json.
+   */
   version?: string
 }
