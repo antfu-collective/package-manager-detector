@@ -12,15 +12,19 @@ export interface DetectOptions {
    *
    * @param packageManager - The `packageManager` value from package.json file.
    */
-  onUnknown?: (packageManager: string) => void
+  onUnknown?: (packageManager: string) => DetectResult | null | undefined
 }
 
 export type { Agent }
 export { AGENTS, LOCKS }
 
-export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
+export interface DetectResult {
+  agent: Agent
+  version?: string
+}
+
+export async function detect({ cwd, onUnknown }: DetectOptions = {}): Promise<DetectResult | null> {
   let agent: Agent | undefined
-  let version: string | undefined
 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
@@ -31,7 +35,7 @@ export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
         if (result)
           return result
         else
-          return { agent, version }
+          return { agent }
       }
     }
     // Look up for package.json
@@ -40,7 +44,7 @@ export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
       return result
   }
 
-  return { agent, version }
+  return null
 }
 
 function * lookup(cwd: string = process.cwd()): Generator<string> {
@@ -57,10 +61,10 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
 async function parsePackageJson(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
-) {
+): Promise<DetectResult | null> {
   // read `packageManager` field in package.json
-  if (!filepath && !fs.existsSync(filepath))
-    return
+  if (!filepath || !await fileExists(filepath))
+    return null
 
   try {
     const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
@@ -79,15 +83,16 @@ async function parsePackageJson(
         return { agent, version }
       }
       else if (AGENTS.includes(name)) {
-        agent = name
+        agent = name as Agent
         return { agent, version }
       }
       else {
-        return onUnknown?.(pkg.packageManager)
+        return onUnknown?.(pkg.packageManager) ?? null
       }
     }
   }
   catch {}
+  return null
 }
 
 async function fileExists(filePath: string) {
