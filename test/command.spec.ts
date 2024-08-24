@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { COMMANDS, resolveCommand } from '../src/agents'
+import { COMMANDS, resolveCommand } from '../src/commands'
 import type { Agent } from '../src'
 
 Object.entries(COMMANDS)

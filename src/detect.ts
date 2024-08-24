@@ -2,23 +2,8 @@ import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import type { Agent } from './types'
+import type { Agent, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
-
-export interface DetectOptions {
-  cwd?: string
-  /**
-   * Callback when unknown package manager from package.json.
-   *
-   * @param packageManager - The `packageManager` value from package.json file.
-   */
-  onUnknown?: (packageManager: string) => DetectResult | null | undefined
-}
-
-export interface DetectResult {
-  agent: Agent
-  version?: string
-}
 
 export async function detect({ cwd, onUnknown }: DetectOptions = {}): Promise<DetectResult | null> {
   let agent: Agent | undefined
