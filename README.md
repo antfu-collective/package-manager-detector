@@ -49,17 +49,18 @@ This package includes package manager agents and their corresponding commands fo
 
 ### Using Agents and Commands
 
-A `COMMANDS` map is exported which lets you get a command from the above list for the detected agent. For example:
-```js
+A `resolveCommand` function is provided to resolve the command for a specific agent.
+
+```ts
 import { detect } from 'package-manager-detector'
-import { COMMANDS } from 'package-manager-detector/agents'
+import { resolveCommand } from 'package-manager-detector/agents'
 
 const pm = await detect()
 if (!pm)
   throw new Error('Could not detect package manager')
 
-const command = COMMANDS[pm.agent]['frozen']
-console.log(`Detected the ${pm.agent} package manager. You can run a frozen install with ${command}`)
+const { command, args } = resolveCommand(pm.agent, 'add', ['@antfu/ni']) // { cli: 'pnpm', args: ['add', '@antfu/ni'] }
+console.log(`Detected the ${pm.agent} package manager. You can run a install with ${command} ${args.join(' ')}`)
 ```
 
 ## License

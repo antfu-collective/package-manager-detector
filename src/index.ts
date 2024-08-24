@@ -2,8 +2,10 @@ import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import type { Agent } from './agents'
+import type { Agent } from './types'
 import { AGENTS, LOCKS } from './agents'
+
+export * from './types'
 
 export interface DetectOptions {
   cwd?: string

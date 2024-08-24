@@ -1,0 +1,135 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`test bun add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "bun",
+}
+`;
+
+exports[`test bun run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "bun",
+}
+`;
+
+exports[`test npm add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "i",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "npm",
+}
+`;
+
+exports[`test npm run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+  "command": "npm",
+}
+`;
+
+exports[`test pnpm add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm@6 add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm@6 run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "--",
+    "arg1-0 arg1-1",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test yarn add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn@berry add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn@berry run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
