@@ -1,4 +1,4 @@
-import type { Agent, AgentCommandValue, AgentCommands } from './types'
+import type { Agent, AgentCommandValue, AgentCommands, Command, ResolvedCommand } from './types'
 
 export const AGENTS: Agent[] = ['npm', 'yarn', 'yarn@berry', 'pnpm', 'pnpm@6', 'bun']
 
@@ -105,16 +105,25 @@ export const INSTALL_PAGE: Record<Agent, string> = {
   'npm': 'https://docs.npmjs.com/cli/v8/configuring-npm/install',
 }
 
-export function constructCommand(command: AgentCommandValue, args: string[]): string[] | null {
-  if (command === null)
+export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
+  const value = COMMANDS[agent][command] as AgentCommandValue
+  return constructCommand(value, args)
+}
+
+export function constructCommand(value: AgentCommandValue, args: string[]): ResolvedCommand | null {
+  if (value == null)
     return null
 
-  if (typeof command === 'function')
-    return command(args)
+  const list = typeof value === 'function'
+    ? value(args)
+    : value.flatMap((v) => {
+      if (typeof v === 'number')
+        return args
+      return [v]
+    })
 
-  return command.flatMap((v) => {
-    if (typeof v === 'number')
-      return args
-    return [v]
-  })
+  return {
+    command: list[0],
+    args: list.slice(1),
+  }
 }

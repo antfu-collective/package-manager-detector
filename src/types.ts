@@ -25,3 +25,8 @@ export interface CommandType {
 }
 
 export type CommandReturnType = (args?: string[]) => CommandType
+
+export interface ResolvedCommand {
+  command: string
+  args: string[]
+}
