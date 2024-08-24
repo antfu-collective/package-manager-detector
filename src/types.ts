@@ -49,7 +49,7 @@ export interface DetectResult {
   /**
    * Agent specifier to resolve the command.
    *
-   * Might contains '@' for differencate the version (e.g. 'yarn@berry').
+   * May contain '@' to differentiate the version (e.g. 'yarn@berry').
    * Use `name` for the agent name without the specifier.
    */
   agent: Agent
