@@ -55,10 +55,10 @@ import { detect } from 'package-manager-detector'
 import { COMMANDS, constructCommand } from 'package-manager-detector/agents'
 
 const pm = await detect()
-if (!pm)
+if (!pm.agent)
   throw new Error('Could not detect package manager')
 
-const commandArgs = constructCommand(COMMANDS[pm].add, ['@antfu/ni']) // ['pnpm', 'add', '@antfu/ni']
+const commandArgs = constructCommand(COMMANDS[pm.agent].add, ['@antfu/ni']) // ['pnpm', 'add', '@antfu/ni']
 console.log(`Detected the ${pm.agent} package manager. You can run a install with ${commandArgs}`)
 ```
 
