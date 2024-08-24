@@ -22,67 +22,85 @@ export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
   let agent: Agent | undefined
   let version: string | undefined
 
-  const lockPath = await findUp(Object.keys(LOCKS), { cwd })
-  let packageJsonPath: string | undefined
-
-  if (lockPath)
-    packageJsonPath = path.resolve(lockPath, '../package.json')
-  else
-    packageJsonPath = await findUp('package.json', { cwd })
-
-  // read `packageManager` field in package.json
-  if (packageJsonPath && fs.existsSync(packageJsonPath)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-      if (typeof pkg.packageManager === 'string') {
-        const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-        version = ver
-        if (name === 'yarn' && Number.parseInt(ver) > 1) {
-          agent = 'yarn@berry'
-          // the version in packageManager isn't the actual yarn package version
-          version = 'berry'
+  for (const directory of lookup(cwd)) {
+    // Look up for lock files
+    for (const lock of Object.keys(LOCKS)) {
+      if (await fileExists(path.join(directory, lock))) {
+        agent = LOCKS[lock]
+        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+        if (result) {
+          agent = result.agent
+          version = result.version
         }
-        else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
-          agent = 'pnpm@6'
-        }
-        else if (AGENTS.includes(name)) {
-          agent = name
-        }
-        else {
-          onUnknown?.(pkg.packageManager)
-        }
+        break
       }
     }
-    catch {}
+    // Look up for package.json
+    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+    if (result) {
+      agent = result.agent
+      version = result.version
+      break
+    }
   }
-
-  // detect based on lock
-  if (!agent && lockPath)
-    agent = LOCKS[path.basename(lockPath)]
 
   return { agent, version }
 }
 
-async function findUp(name: string | string[], { cwd }: {
-  cwd: string | undefined
-}) {
-  let directory = path.resolve(cwd ?? process.cwd())
+function * lookup(cwd: string = process.cwd()): Generator<string> {
+  let directory = path.resolve(cwd)
   const { root } = path.parse(directory)
-  const names = [name].flat()
 
   while (directory && directory !== root) {
-    for (const name of names) {
-      const filePath = path.join(directory, name)
-
-      try {
-        const stats = await fsPromises.stat(filePath)
-        if (stats.isFile()) {
-          return filePath
-        }
-      }
-      catch {}
-    }
+    yield directory
 
     directory = path.dirname(directory)
   }
+}
+
+async function parsePackageJson(
+  filepath: string,
+  onUnknown: DetectOptions['onUnknown'],
+) {
+  // read `packageManager` field in package.json
+  if (!filepath && !fs.existsSync(filepath))
+    return
+
+  try {
+    const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+    let agent: Agent | undefined
+    if (typeof pkg.packageManager === 'string') {
+      const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
+      let version = ver
+      if (name === 'yarn' && Number.parseInt(ver) > 1) {
+        agent = 'yarn@berry'
+        // the version in packageManager isn't the actual yarn package version
+        version = 'berry'
+        return { agent, version }
+      }
+      else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
+        agent = 'pnpm@6'
+        return { agent, version }
+      }
+      else if (AGENTS.includes(name)) {
+        agent = name
+        return { agent, version }
+      }
+      else {
+        return onUnknown?.(pkg.packageManager)
+      }
+    }
+  }
+  catch {}
+}
+
+async function fileExists(filePath: string) {
+  try {
+    const stats = await fsPromises.stat(filePath)
+    if (stats.isFile()) {
+      return true
+    }
+  }
+  catch {}
+  return false
 }
