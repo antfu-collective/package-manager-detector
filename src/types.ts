@@ -10,7 +10,7 @@ export interface AgentCommands {
   'global': AgentCommandValue
   'add': AgentCommandValue
   'upgrade': AgentCommandValue
-  'upgrade-interactive'?: AgentCommandValue
+  'upgrade-interactive': AgentCommandValue
   'execute': AgentCommandValue
   'uninstall': AgentCommandValue
   'global_uninstall': AgentCommandValue
