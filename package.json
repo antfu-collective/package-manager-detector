@@ -20,9 +20,17 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./agents": {
-      "import": "./dist/agents.mjs",
-      "require": "./dist/agents.cjs"
+    "./commands": {
+      "import": "./dist/commands.mjs",
+      "require": "./dist/commands.cjs"
+    },
+    "./detect": {
+      "import": "./dist/detect.mjs",
+      "require": "./dist/detect.cjs"
+    },
+    "./constants": {
+      "import": "./dist/constants.mjs",
+      "require": "./dist/constants.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -30,8 +38,14 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "agents": [
-        "./dist/agents.d.ts"
+      "commands": [
+        "./dist/commands.d.ts"
+      ],
+      "detect": [
+        "./dist/detect.d.ts"
+      ],
+      "constants": [
+        "./dist/constants.d.ts"
       ]
     }
   },
