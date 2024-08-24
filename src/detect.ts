@@ -6,18 +6,16 @@ import type { Agent, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
 
 export async function detect({ cwd, onUnknown }: DetectOptions = {}): Promise<DetectResult | null> {
-  let agent: Agent | undefined
-
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
       if (await fileExists(path.join(directory, lock))) {
-        agent = LOCKS[lock]
+        const name = LOCKS[lock]
         const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
         if (result)
           return result
         else
-          return { agent }
+          return { name, agent: name }
       }
     }
     // Look up for package.json
@@ -58,15 +56,15 @@ async function parsePackageJson(
         agent = 'yarn@berry'
         // the version in packageManager isn't the actual yarn package version
         version = 'berry'
-        return { agent, version }
+        return { name, agent, version }
       }
       else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
         agent = 'pnpm@6'
-        return { agent, version }
+        return { name, agent, version }
       }
       else if (AGENTS.includes(name)) {
         agent = name as Agent
-        return { agent, version }
+        return { name, agent, version }
       }
       else {
         return onUnknown?.(pkg.packageManager) ?? null

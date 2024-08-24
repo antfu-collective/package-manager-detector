@@ -1,9 +1,16 @@
-import type { Agent } from './types'
+import type { Agent, AgentName } from './types'
 
-export const AGENTS: Agent[] = ['npm', 'yarn', 'yarn@berry', 'pnpm', 'pnpm@6', 'bun']
+export const AGENTS: Agent[] = [
+  'npm',
+  'yarn',
+  'yarn@berry',
+  'pnpm',
+  'pnpm@6',
+  'bun',
+]
 
 // the order here matters, more specific one comes first
-export const LOCKS: Record<string, Agent> = {
+export const LOCKS: Record<string, AgentName> = {
   'bun.lockb': 'bun',
   'pnpm-lock.yaml': 'pnpm',
   'yarn.lock': 'yarn',
