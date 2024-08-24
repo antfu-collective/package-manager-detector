@@ -28,20 +28,16 @@ export async function detect({ cwd, onUnknown }: DetectOptions = {}) {
       if (await fileExists(path.join(directory, lock))) {
         agent = LOCKS[lock]
         const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-        if (result) {
-          agent = result.agent
-          version = result.version
-        }
-        break
+        if (result)
+          return result
+        else
+          return { agent, version }
       }
     }
     // Look up for package.json
     const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result) {
-      agent = result.agent
-      version = result.version
-      break
-    }
+    if (result)
+      return result
   }
 
   return { agent, version }
