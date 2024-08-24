@@ -30,3 +30,18 @@ export interface ResolvedCommand {
   command: string
   args: string[]
 }
+
+export interface DetectOptions {
+  cwd?: string
+  /**
+   * Callback when unknown package manager from package.json.
+   *
+   * @param packageManager - The `packageManager` value from package.json file.
+   */
+  onUnknown?: (packageManager: string) => DetectResult | null | undefined
+}
+
+export interface DetectResult {
+  agent: Agent
+  version?: string
+}

@@ -1,16 +1,5 @@
 import type { Agent, AgentCommandValue, AgentCommands, Command, ResolvedCommand } from './types'
 
-export const AGENTS: Agent[] = ['npm', 'yarn', 'yarn@berry', 'pnpm', 'pnpm@6', 'bun']
-
-// the order here matters, more specific one comes first
-export const LOCKS: Record<string, Agent> = {
-  'bun.lockb': 'bun',
-  'pnpm-lock.yaml': 'pnpm',
-  'yarn.lock': 'yarn',
-  'package-lock.json': 'npm',
-  'npm-shrinkwrap.json': 'npm',
-}
-
 function npmRun(agent: string) {
   return (args: string[]) => {
     if (args.length > 1) {
@@ -95,15 +84,6 @@ export const COMMANDS = {
   },
   'bun': bun,
 } satisfies Record<Agent, AgentCommands>
-
-export const INSTALL_PAGE: Record<Agent, string> = {
-  'bun': 'https://bun.sh',
-  'pnpm': 'https://pnpm.io/installation',
-  'pnpm@6': 'https://pnpm.io/6.x/installation',
-  'yarn': 'https://classic.yarnpkg.com/en/docs/install',
-  'yarn@berry': 'https://yarnpkg.com/getting-started/install',
-  'npm': 'https://docs.npmjs.com/cli/v8/configuring-npm/install',
-}
 
 export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
   const value = COMMANDS[agent][command] as AgentCommandValue

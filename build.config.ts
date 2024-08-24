@@ -3,7 +3,9 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
   entries: [
     'src/index.ts',
-    'src/agents.ts',
+    'src/commands.ts',
+    'src/detect.ts',
+    'src/constants.ts',
   ],
   clean: true,
   declaration: true,

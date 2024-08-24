@@ -24,17 +24,18 @@ yarn add package-manager-detector
 
 ```js
 // ESM
-import { detect } from 'package-manager-detector'
+import { detect } from 'package-manager-detector/detect'
 ```
 
 ```js
 // CommonJS
-const { detect } = require('package-manager-detector')
+const { detect } = require('package-manager-detector/detect')
 ```
 
 ## Agents and Commands
 
 This package includes package manager agents and their corresponding commands for:
+
 - `'agent'` - run the package manager with no arguments
 - `'install'` - install dependencies
 - `'frozen'` - install dependencies using frozen lockfile
@@ -52,8 +53,8 @@ This package includes package manager agents and their corresponding commands fo
 A `resolveCommand` function is provided to resolve the command for a specific agent.
 
 ```ts
-import { detect } from 'package-manager-detector'
-import { resolveCommand } from 'package-manager-detector/agents'
+import { detect } from 'package-manager-detector/detect'
+import { resolveCommand } from 'package-manager-detector/commands'
 
 const pm = await detect()
 if (!pm)
