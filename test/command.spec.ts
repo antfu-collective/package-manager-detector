@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import type { Agent } from '../src'
 import { COMMANDS, constructCommand } from '../src/agents'
 
 Object.entries(COMMANDS)
