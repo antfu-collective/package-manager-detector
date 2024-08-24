@@ -3,49 +3,38 @@
 exports[`lockfile > bun 1`] = `
 {
   "agent": "bun",
-  "version": undefined,
 }
 `;
 
 exports[`lockfile > npm 1`] = `
 {
   "agent": "npm",
-  "version": undefined,
 }
 `;
 
 exports[`lockfile > pnpm 1`] = `
 {
   "agent": "pnpm",
-  "version": undefined,
 }
 `;
 
 exports[`lockfile > pnpm@6 1`] = `
 {
   "agent": "pnpm",
-  "version": undefined,
 }
 `;
 
-exports[`lockfile > unknown 1`] = `
-{
-  "agent": undefined,
-  "version": undefined,
-}
-`;
+exports[`lockfile > unknown 1`] = `null`;
 
 exports[`lockfile > yarn 1`] = `
 {
   "agent": "yarn",
-  "version": undefined,
 }
 `;
 
 exports[`lockfile > yarn@berry 1`] = `
 {
   "agent": "yarn",
-  "version": undefined,
 }
 `;
 
@@ -77,12 +66,7 @@ exports[`packager > pnpm@6 1`] = `
 }
 `;
 
-exports[`packager > unknown 1`] = `
-{
-  "agent": undefined,
-  "version": undefined,
-}
-`;
+exports[`packager > unknown 1`] = `null`;
 
 exports[`packager > yarn 1`] = `
 {
