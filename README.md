@@ -2,6 +2,8 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![JSDocs][jsdocs-src]][jsdocs-href]
+[![License][license-src]][license-href]
 
 Package manager detector is based on lock files and the `packageManager` field in the current project's `package.json` file.
 
@@ -74,4 +76,7 @@ console.log(`Detected the ${pm.agent} package manager. You can run a install wit
 [npm-version-href]: https://npmjs.com/package/package-manager-detector
 [npm-downloads-src]: https://img.shields.io/npm/dm/package-manager-detector?style=flat&colorA=18181B&colorB=F0DB4F
 [npm-downloads-href]: https://npmjs.com/package/package-manager-detector
-[license-href]: https://github.com/userquin/package-manager-detector/blob/main/LICENSE
+[jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=18181B&colorB=F0DB4F
+[jsdocs-href]: https://www.jsdocs.io/package/package-manager-detector
+[license-src]: https://img.shields.io/github/license/antfu-collective/package-manager-detector.svg?style=flat&colorA=18181B&colorB=F0DB4F
+[license-href]: https://github.com/antfu-collective/package-manager-detector/blob/main/LICENSE
