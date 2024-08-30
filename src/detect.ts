@@ -5,7 +5,15 @@ import process from 'node:process'
 import type { Agent, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
 
-export async function detect({ cwd, onUnknown }: DetectOptions = {}): Promise<DetectResult | null> {
+/**
+ * Detects the package manager used in the project.
+ *
+ * @param options {DetectOptions} The options to use when detecting the package manager.
+ *
+ * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
+ */
+export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
+  const { cwd, onUnknown } = options
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
