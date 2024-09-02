@@ -85,11 +85,36 @@ export const COMMANDS = {
   'bun': bun,
 } satisfies Record<Agent, AgentCommands>
 
+/**
+ * Resolve the command for the agent merging the command arguments with the provided arguments.
+ *
+ * For example, to show how to install `@antfu/ni` globally using `pnpm`:
+ * ```js
+ * import { resolveCommand } from 'package-manager-detector/commands'
+ *
+ * const { command, args } = resolveCommand('pnpm', 'global', ['@antfu/ni'])
+ * console.log(`${command} ${args.join(' ')}`) // 'pnpm add -g @antfu/ni'
+ * ```
+ *
+ * @param agent The agent to use.
+ * @param command the command to resolve.
+ * @param args The arguments to pass to the command.
+ *
+ * @returns {ResolvedCommand} The resolved command or `null` if the agent command is not found.
+ */
 export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
   const value = COMMANDS[agent][command] as AgentCommandValue
   return constructCommand(value, args)
 }
 
+/**
+ * Construct the command from the agent command merging the command arguments with the provided arguments.
+ *
+ * @param value {AgentCommandValue} The agent command to use.
+ * @param args The arguments to pass to the command.
+ *
+ * @returns {ResolvedCommand} The resolved command or `null` if the command is `null`.
+ */
 export function constructCommand(value: AgentCommandValue, args: string[]): ResolvedCommand | null {
   if (value == null)
     return null

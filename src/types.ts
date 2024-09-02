@@ -31,6 +31,11 @@ export interface ResolvedCommand {
 }
 
 export interface DetectOptions {
+  /**
+   * Current working directory to start looking up for package manager.
+   *
+   * @default `process.cwd()`
+   */
   cwd?: string
   /**
    * Callback when unknown package manager from package.json.
