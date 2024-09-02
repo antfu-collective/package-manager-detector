@@ -66,6 +66,8 @@ const { command, args } = resolveCommand(pm.agent, 'add', ['@antfu/ni']) // { cl
 console.log(`Detected the ${pm.agent} package manager. You can run a install with ${command} ${args.join(' ')}`)
 ```
 
+You can check the source code or the [JSDocs](https://www.jsdocs.io/package/package-manager-detector) for more information.
+
 ## License
 
 [MIT](./LICENSE) License © 2020-PRESENT [Anthony Fu](https://github.com/antfu)
