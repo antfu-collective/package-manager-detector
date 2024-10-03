@@ -21,7 +21,7 @@ const yarn: AgentCommands = {
   'upgrade': ['yarn', 'upgrade', 0],
   'upgrade-interactive': ['yarn', 'upgrade-interactive', 0],
   'execute': ['npx', 0],
-  'execute-local': ['yarn', 0],
+  'execute-local': ['yarn', 'exec', 0],
   'uninstall': ['yarn', 'remove', 0],
   'global_uninstall': ['yarn', 'global', 'remove', 0],
 }
