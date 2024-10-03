@@ -49,7 +49,7 @@ const bun: AgentCommands = {
   'upgrade': ['bun', 'update', 0],
   'upgrade-interactive': ['bun', 'update', 0],
   'execute': ['bun', 'x', 0],
-  'execute-local': ['bun', 'x', 0],
+  'execute-local': ['bun', 0],
   'uninstall': ['bun', 'remove', 0],
   'global_uninstall': ['bun', 'remove', '-g', 0],
 }
@@ -65,7 +65,7 @@ export const COMMANDS = {
     'upgrade': ['npm', 'update', 0],
     'upgrade-interactive': null,
     'execute': ['npx', 0],
-    'execute-local': ['npm', 'exec', 0],
+    'execute-local': ['npx', 0],
     'uninstall': ['npm', 'uninstall', 0],
     'global_uninstall': ['npm', 'uninstall', '-g', 0],
   },
