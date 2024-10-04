@@ -21,7 +21,7 @@ const yarn: AgentCommands = {
   'upgrade': ['yarn', 'upgrade', 0],
   'upgrade-interactive': ['yarn', 'upgrade-interactive', 0],
   'execute': ['npx', 0],
-  'execute-local': ['yarn', 0],
+  'execute-local': ['yarn', 'exec', 0],
   'uninstall': ['yarn', 'remove', 0],
   'global_uninstall': ['yarn', 'global', 'remove', 0],
 }
@@ -35,7 +35,7 @@ const pnpm: AgentCommands = {
   'upgrade': ['pnpm', 'update', 0],
   'upgrade-interactive': ['pnpm', 'update', '-i', 0],
   'execute': ['pnpm', 'dlx', 0],
-  'execute-local': ['pnpm', 0],
+  'execute-local': ['pnpm', 'exec', 0],
   'uninstall': ['pnpm', 'remove', 0],
   'global_uninstall': ['pnpm', 'remove', '--global', 0],
 }
@@ -49,7 +49,7 @@ const bun: AgentCommands = {
   'upgrade': ['bun', 'update', 0],
   'upgrade-interactive': ['bun', 'update', 0],
   'execute': ['bun', 'x', 0],
-  'execute-local': ['bun', 0],
+  'execute-local': ['bun', 'x', 0],
   'uninstall': ['bun', 'remove', 0],
   'global_uninstall': ['bun', 'remove', '-g', 0],
 }
@@ -76,7 +76,7 @@ export const COMMANDS = {
     'upgrade': ['yarn', 'up', 0],
     'upgrade-interactive': ['yarn', 'up', '-i', 0],
     'execute': ['yarn', 'dlx', 0],
-    'execute-local': ['yarn', 0],
+    'execute-local': ['yarn', 'exec', 0],
     // Yarn 2+ removed 'global', see https://github.com/yarnpkg/berry/issues/821
     'global': ['npm', 'i', '-g', 0],
     'global_uninstall': ['npm', 'uninstall', '-g', 0],
