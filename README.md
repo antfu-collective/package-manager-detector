@@ -48,7 +48,7 @@ This package includes package manager agents and their corresponding commands fo
 - `'upgrade'` - upgrade dependencies
 - `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm` and `bun`
 - `'execute'` - download & execute binary scripts
-- `'execute-local'` - execute binary scripts
+- `'execute-local'` - execute binary scripts (from package locally installed)
 - `'run'` - run `package.json` scripts
 
 ### Using Agents and Commands
