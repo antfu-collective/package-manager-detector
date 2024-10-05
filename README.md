@@ -27,11 +27,15 @@ yarn add package-manager-detector
 ```js
 // ESM
 import { detect } from 'package-manager-detector/detect'
+// or sync version
+import { detectSync } from 'package-manager-detector/detect'
 ```
 
 ```js
 // CommonJS
 const { detect } = require('package-manager-detector/detect')
+// or sync version
+const { detectSync } = require('package-manager-detector/detect')
 ```
 
 ## Agents and Commands
