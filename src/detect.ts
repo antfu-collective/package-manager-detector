@@ -7,9 +7,7 @@ import { AGENTS, LOCKS } from './constants'
 
 /**
  * Detects the package manager used in the project.
- *
  * @param options {DetectOptions} The options to use when detecting the package manager.
- *
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
@@ -37,9 +35,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
 
 /**
  * Detects the package manager used in the project.
- *
  * @param options {DetectOptions} The options to use when detecting the package manager.
- *
  * @returns {DetectResult | null>} The detected package manager or `null` if not found.
  */
 export function detectSync(options: DetectOptions = {}): DetectResult | null {
