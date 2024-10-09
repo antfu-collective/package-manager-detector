@@ -1,0 +1,95 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`lockfile > bun 1`] = `
+{
+  "agent": "bun",
+  "name": "bun",
+}
+`;
+
+exports[`lockfile > npm 1`] = `
+{
+  "agent": "npm",
+  "name": "npm",
+}
+`;
+
+exports[`lockfile > pnpm 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+}
+`;
+
+exports[`lockfile > pnpm@6 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+}
+`;
+
+exports[`lockfile > unknown 1`] = `null`;
+
+exports[`lockfile > yarn 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+}
+`;
+
+exports[`lockfile > yarn@berry 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+}
+`;
+
+exports[`packager > bun 1`] = `
+{
+  "agent": "bun",
+  "name": "bun",
+  "version": "0",
+}
+`;
+
+exports[`packager > npm 1`] = `
+{
+  "agent": "npm",
+  "name": "npm",
+  "version": "7",
+}
+`;
+
+exports[`packager > pnpm 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+  "version": "8",
+}
+`;
+
+exports[`packager > pnpm@6 1`] = `
+{
+  "agent": "pnpm@6",
+  "name": "pnpm",
+  "version": "6",
+}
+`;
+
+exports[`packager > unknown 1`] = `null`;
+
+exports[`packager > yarn 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+  "version": "1",
+}
+`;
+
+exports[`packager > yarn@berry 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+  "version": "berry",
+}
+`;

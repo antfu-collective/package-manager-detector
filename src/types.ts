@@ -34,13 +34,11 @@ export interface ResolvedCommand {
 export interface DetectOptions {
   /**
    * Current working directory to start looking up for package manager.
-   *
    * @default `process.cwd()`
    */
   cwd?: string
   /**
    * Callback when unknown package manager from package.json.
-   *
    * @param packageManager - The `packageManager` value from package.json file.
    */
   onUnknown?: (packageManager: string) => DetectResult | null | undefined
@@ -49,6 +47,7 @@ export interface DetectOptions {
 export interface DetectResult {
   /**
    * Agent name without the specifier.
+   *
    * Can be `npm`, `yarn`, `pnpm`, or `bun`.
    */
   name: AgentName
