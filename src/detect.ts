@@ -68,15 +68,15 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
  *
  * This method will check for `process.env.npm_config_user_agent`.
  */
-export function getUserAgent(): AgentName | undefined {
+export function getUserAgent(): AgentName | null {
   const userAgent = process.env.npm_config_user_agent
   if (!userAgent)
-    return undefined
+    return null
 
   const pmSpec = userAgent.split(' ')[0]
   const separatorPos = pmSpec.lastIndexOf('/')
   const name = pmSpec.substring(0, separatorPos) as AgentName
-  return AGENTS.includes(name) ? name : undefined
+  return AGENTS.includes(name) ? name : null
 }
 
 function * lookup(cwd: string = process.cwd()): Generator<string> {
