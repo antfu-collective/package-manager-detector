@@ -43,12 +43,9 @@ export interface DetectOptions {
    */
   onUnknown?: (packageManager: string) => DetectResult | null | undefined
   /**
-   * Whether to include `npm_config_user_agent` check when running in another process.
-   *
-   * When set to `true`, `detect/detectSync` will check only for `npm_config_user_agent`.
-   * When set to `'continue'`, `detect/detectSync` will check for `npm_config_user_agent`, if missing, will proceed with lock and package.json checks.
+   * Whether to check `process.env.npm_config_user_agent` when running in another process.
    */
-  npm_config_user_agent?: true | 'continue'
+  npm_config_user_agent?: true
 }
 
 export interface DetectResult {

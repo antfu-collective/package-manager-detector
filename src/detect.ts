@@ -16,17 +16,12 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     onUnknown,
     npm_config_user_agent,
   } = options
+
   if (npm_config_user_agent) {
     const userAgent = process.env?.npm_config_user_agent
-    if (npm_config_user_agent === true) {
-      return userAgent ? processUserAgent(userAgent, onUnknown) : null
-    }
-    if (userAgent) {
-      const result = processUserAgent(userAgent, undefined)
-      if (result)
-        return result
-    }
+    return userAgent ? processUserAgent(userAgent, onUnknown) : null
   }
+
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
@@ -59,17 +54,12 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
     onUnknown,
     npm_config_user_agent,
   } = options
+
   if (npm_config_user_agent) {
     const userAgent = process.env?.npm_config_user_agent
-    if (npm_config_user_agent === true) {
-      return userAgent ? processUserAgent(userAgent, onUnknown) : null
-    }
-    if (userAgent) {
-      const result = processUserAgent(userAgent, undefined)
-      if (result)
-        return result
-    }
+    return userAgent ? processUserAgent(userAgent, onUnknown) : null
   }
+
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
