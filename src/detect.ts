@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import type { Agent, DetectOptions, DetectResult } from './types'
+import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
 
 /**
@@ -11,16 +11,7 @@ import { AGENTS, LOCKS } from './constants'
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const {
-    cwd,
-    onUnknown,
-    npm_config_user_agent,
-  } = options
-
-  if (npm_config_user_agent) {
-    const userAgent = process.env?.npm_config_user_agent
-    return userAgent ? processUserAgent(userAgent, onUnknown) : null
-  }
+  const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
@@ -49,16 +40,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  * @returns {DetectResult | null>} The detected package manager or `null` if not found.
  */
 export function detectSync(options: DetectOptions = {}): DetectResult | null {
-  const {
-    cwd,
-    onUnknown,
-    npm_config_user_agent,
-  } = options
-
-  if (npm_config_user_agent) {
-    const userAgent = process.env?.npm_config_user_agent
-    return userAgent ? processUserAgent(userAgent, onUnknown) : null
-  }
+  const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
@@ -81,30 +63,20 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   return null
 }
 
-function processUserAgent(pm: any, onUnknown: DetectOptions['onUnknown']): DetectResult | null {
-  if (!pm) {
-    return null
-  }
-  let agent: Agent | undefined
-  const [name, ver] = pm.replace(/^\^/, '').split('@')
-  let version = ver
-  if (name === 'yarn' && Number.parseInt(ver) > 1) {
-    agent = 'yarn@berry'
-    // the version in packageManager isn't the actual yarn package version
-    version = 'berry'
-    return { name, agent, version }
-  }
-  else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
-    agent = 'pnpm@6'
-    return { name, agent, version }
-  }
-  else if (AGENTS.includes(name)) {
-    agent = name as Agent
-    return { name, agent, version }
-  }
-  else {
-    return onUnknown?.(pm) ?? null
-  }
+/**
+ * Detects the package manager used in the running process.
+ *
+ * This method will check for `process.env.npm_config_user_agent`.
+ */
+export function getUserAgent(): AgentName | undefined {
+  const userAgent = process.env.npm_config_user_agent
+  if (!userAgent)
+    return undefined
+
+  const pmSpec = userAgent.split(' ')[0]
+  const separatorPos = pmSpec.lastIndexOf('/')
+  const name = pmSpec.substring(0, separatorPos) as AgentName
+  return AGENTS.includes(name) ? name : undefined
 }
 
 function * lookup(cwd: string = process.cwd()): Generator<string> {
@@ -139,8 +111,27 @@ function handlePackageManager(
   // read `packageManager` field in package.json
   try {
     const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+    let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
-      return processUserAgent(pkg.packageManager, onUnknown)
+      const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
+      let version = ver
+      if (name === 'yarn' && Number.parseInt(ver) > 1) {
+        agent = 'yarn@berry'
+        // the version in packageManager isn't the actual yarn package version
+        version = 'berry'
+        return { name, agent, version }
+      }
+      else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
+        agent = 'pnpm@6'
+        return { name, agent, version }
+      }
+      else if (AGENTS.includes(name)) {
+        agent = name as Agent
+        return { name, agent, version }
+      }
+      else {
+        return onUnknown?.(pkg.packageManager) ?? null
+      }
     }
   }
   catch {}

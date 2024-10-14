@@ -42,10 +42,6 @@ export interface DetectOptions {
    * @param packageManager - The `packageManager` value from package.json file.
    */
   onUnknown?: (packageManager: string) => DetectResult | null | undefined
-  /**
-   * Whether to check `process.env.npm_config_user_agent` when running in another process.
-   */
-  npm_config_user_agent?: true
 }
 
 export interface DetectResult {
