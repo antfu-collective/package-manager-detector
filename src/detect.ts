@@ -11,7 +11,22 @@ import { AGENTS, LOCKS } from './constants'
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, onUnknown } = options
+  const {
+    cwd,
+    onUnknown,
+    npm_config_user_agent,
+  } = options
+  if (npm_config_user_agent) {
+    const userAgent = process.env?.npm_config_user_agent
+    if (npm_config_user_agent === true) {
+      return userAgent ? processUserAgent(userAgent, onUnknown) : null
+    }
+    if (userAgent) {
+      const result = processUserAgent(userAgent, undefined)
+      if (result)
+        return result
+    }
+  }
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
@@ -39,7 +54,22 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  * @returns {DetectResult | null>} The detected package manager or `null` if not found.
  */
 export function detectSync(options: DetectOptions = {}): DetectResult | null {
-  const { cwd, onUnknown } = options
+  const {
+    cwd,
+    onUnknown,
+    npm_config_user_agent,
+  } = options
+  if (npm_config_user_agent) {
+    const userAgent = process.env?.npm_config_user_agent
+    if (npm_config_user_agent === true) {
+      return userAgent ? processUserAgent(userAgent, onUnknown) : null
+    }
+    if (userAgent) {
+      const result = processUserAgent(userAgent, undefined)
+      if (result)
+        return result
+    }
+  }
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
@@ -59,6 +89,32 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   }
 
   return null
+}
+
+function processUserAgent(pm: any, onUnknown: DetectOptions['onUnknown']): DetectResult | null {
+  if (!pm) {
+    return null
+  }
+  let agent: Agent | undefined
+  const [name, ver] = pm.replace(/^\^/, '').split('@')
+  let version = ver
+  if (name === 'yarn' && Number.parseInt(ver) > 1) {
+    agent = 'yarn@berry'
+    // the version in packageManager isn't the actual yarn package version
+    version = 'berry'
+    return { name, agent, version }
+  }
+  else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
+    agent = 'pnpm@6'
+    return { name, agent, version }
+  }
+  else if (AGENTS.includes(name)) {
+    agent = name as Agent
+    return { name, agent, version }
+  }
+  else {
+    return onUnknown?.(pm) ?? null
+  }
 }
 
 function * lookup(cwd: string = process.cwd()): Generator<string> {
@@ -93,27 +149,8 @@ function handlePackageManager(
   // read `packageManager` field in package.json
   try {
     const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
-    let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
-      const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-      let version = ver
-      if (name === 'yarn' && Number.parseInt(ver) > 1) {
-        agent = 'yarn@berry'
-        // the version in packageManager isn't the actual yarn package version
-        version = 'berry'
-        return { name, agent, version }
-      }
-      else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
-        agent = 'pnpm@6'
-        return { name, agent, version }
-      }
-      else if (AGENTS.includes(name)) {
-        agent = name as Agent
-        return { name, agent, version }
-      }
-      else {
-        return onUnknown?.(pkg.packageManager) ?? null
-      }
+      return processUserAgent(pkg.packageManager, onUnknown)
     }
   }
   catch {}
