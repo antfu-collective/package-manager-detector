@@ -73,9 +73,7 @@ export function getUserAgent(): AgentName | null {
   if (!userAgent)
     return null
 
-  const pmSpec = userAgent.split(' ')[0]
-  const separatorPos = pmSpec.lastIndexOf('/')
-  const name = pmSpec.substring(0, separatorPos) as AgentName
+  const name = userAgent.split(' ')[0].split('/')[0] as AgentName
   return AGENTS.includes(name) ? name : null
 }
 
