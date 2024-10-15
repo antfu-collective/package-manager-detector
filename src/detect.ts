@@ -3,7 +3,7 @@ import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
-import { AGENTS, LOCKS } from './constants'
+import { AGENTS, LOCKS, WORKSPACE_DEFS } from './constants'
 
 /**
  * Detects the package manager used in the project.
@@ -14,21 +14,29 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
-      if (await fileExists(path.join(directory, lock))) {
-        const name = LOCKS[lock]
-        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
+    const pkg = await parsePackageJson(path.join(directory, 'package.json'))
+    // Look for workspace definitions
+    for (const file of Object.keys(WORKSPACE_DEFS)) {
+      if (await fileExists(path.join(directory, file))) {
+        const name = WORKSPACE_DEFS[file]
+        const result = getFromPackageManagerField(pkg, onUnknown)
+        return result ?? { name, agent: name }
       }
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
+    if (!options.monorepoOnly || pkg.workspaces) {
+      // Look for lock files
+      for (const lock of Object.keys(LOCKS)) {
+        if (await fileExists(path.join(directory, lock))) {
+          const name = LOCKS[lock]
+          const result = getFromPackageManagerField(pkg, onUnknown)
+          return result ?? { name, agent: name }
+        }
+      }
+      // Look in package.json
+      const result = getFromPackageManagerField(pkg, onUnknown)
+      if (result)
+        return result
+    }
   }
 
   return null
@@ -43,21 +51,29 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
+    const pkg = parsePackageJsonSync(path.join(directory, 'package.json'))
+    // Look for workspace definitions
+    for (const lock of Object.keys(WORKSPACE_DEFS)) {
       if (fileExistsSync(path.join(directory, lock))) {
-        const name = LOCKS[lock]
-        const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
+        const name = WORKSPACE_DEFS[lock]
+        const result = getFromPackageManagerField(pkg, onUnknown)
+        return result ?? { name, agent: name }
       }
     }
-    // Look up for package.json
-    const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
+    if (!options.monorepoOnly || pkg.workspaces) {
+      // Look for lock files
+      for (const lock of Object.keys(LOCKS)) {
+        if (fileExistsSync(path.join(directory, lock))) {
+          const name = LOCKS[lock]
+          const result = getFromPackageManagerField(pkg, onUnknown)
+          return result ?? { name, agent: name }
+        }
+      }
+      // Look in package.json
+      const result = getFromPackageManagerField(pkg, onUnknown)
+      if (result)
+        return result
+    }
   }
 
   return null
@@ -89,27 +105,26 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-async function parsePackageJson(
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> {
-  return !filepath || !await fileExists(filepath) ? null : handlePackageManager(filepath, onUnknown)
+async function parsePackageJson(filepath: string): Promise<any> {
+  if (!filepath || !await fileExists(filepath)) {
+    return null
+  }
+  return JSON.parse(await fsPromises.readFile(filepath, 'utf8'))
 }
 
-function parsePackageJsonSync(
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): DetectResult | null {
-  return !filepath || !fileExistsSync(filepath) ? null : handlePackageManager(filepath, onUnknown)
+function parsePackageJsonSync(filepath: string): any | null {
+  if (!filepath || !fileExistsSync(filepath)) {
+    return null
+  }
+  return JSON.parse(fs.readFileSync(filepath, 'utf8'))
 }
 
-function handlePackageManager(
-  filepath: string,
+function getFromPackageManagerField(
+  pkg: any,
   onUnknown: DetectOptions['onUnknown'],
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
     let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
       const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')

@@ -38,6 +38,10 @@ export interface DetectOptions {
    */
   cwd?: string
   /**
+   * Only detect the package manager if within a monorepo
+   */
+  monorepoOnly?: boolean
+  /**
    * Callback when unknown package manager from package.json.
    * @param packageManager - The `packageManager` value from package.json file.
    */
