@@ -14,19 +14,20 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
+    const pkg = await parsePackageJson(path.join(directory, 'package.json'))
+    // Look for lock files
     for (const lock of Object.keys(LOCKS)) {
       if (await fileExists(path.join(directory, lock))) {
         const name = LOCKS[lock]
-        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+        const result = getFromPackageManagerField(pkg, onUnknown)
         if (result)
           return result
         else
           return { name, agent: name }
       }
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+    // Look in package.json
+    const result = getFromPackageManagerField(pkg, onUnknown)
     if (result)
       return result
   }
@@ -43,19 +44,20 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
+    const pkg = parsePackageJsonSync(path.join(directory, 'package.json'))
+    // Look for lock files
     for (const lock of Object.keys(LOCKS)) {
       if (fileExistsSync(path.join(directory, lock))) {
         const name = LOCKS[lock]
-        const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
+        const result = getFromPackageManagerField(pkg, onUnknown)
         if (result)
           return result
         else
           return { name, agent: name }
       }
     }
-    // Look up for package.json
-    const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
+    // Look in package.json
+    const result = getFromPackageManagerField(pkg, onUnknown)
     if (result)
       return result
   }
@@ -89,27 +91,26 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-async function parsePackageJson(
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> {
-  return !filepath || !await fileExists(filepath) ? null : handlePackageManager(filepath, onUnknown)
+async function parsePackageJson(filepath: string): Promise<any> {
+  if (!filepath || !await fileExists(filepath)) {
+    return null
+  }
+  return JSON.parse(await fsPromises.readFile(filepath, 'utf8'))
 }
 
-function parsePackageJsonSync(
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): DetectResult | null {
-  return !filepath || !fileExistsSync(filepath) ? null : handlePackageManager(filepath, onUnknown)
+function parsePackageJsonSync(filepath: string): any | null {
+  if (!filepath || !fileExists(filepath)) {
+    return null
+  }
+  return JSON.parse(fs.readFileSync(filepath, 'utf8'))
 }
 
-function handlePackageManager(
-  filepath: string,
+function getFromPackageManagerField(
+  pkg: any,
   onUnknown: DetectOptions['onUnknown'],
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
     let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
       const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
