@@ -9,6 +9,7 @@ describe('get user agent', () => {
     ['npm', 'npm/10.9.0 node/v20.17.0 linux x64 workspaces/false'],
     ['yarn', 'yarn/1.22.11 npm/? node/v14.17.6 darwin x64'],
     ['pnpm', 'pnpm/9.12.1 npm/? node/v20.17.0 linux x64'],
+    ['bun', 'bun/1.1.8 npm/? node/v21.6.0 linux x64'],
   ].forEach(([agent, detection]) => {
     it(`${agent} detected with ${detection}`, () => {
       vi.stubEnv(
