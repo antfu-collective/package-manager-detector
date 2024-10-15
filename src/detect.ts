@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import type { Agent, DetectOptions, DetectResult } from './types'
+import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
 
 /**
@@ -12,6 +12,7 @@ import { AGENTS, LOCKS } from './constants'
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
   const { cwd, onUnknown } = options
+
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
@@ -40,6 +41,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  */
 export function detectSync(options: DetectOptions = {}): DetectResult | null {
   const { cwd, onUnknown } = options
+
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
@@ -59,6 +61,21 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   }
 
   return null
+}
+
+/**
+ * Detects the package manager used in the running process.
+ *
+ * This method will check for `process.env.npm_config_user_agent`.
+ */
+export function getUserAgent(): AgentName | null {
+  const userAgent = process.env.npm_config_user_agent
+  if (!userAgent) {
+    return null
+  }
+
+  const name = userAgent.split('/')[0] as AgentName
+  return AGENTS.includes(name) ? name : null
 }
 
 function * lookup(cwd: string = process.cwd()): Generator<string> {
