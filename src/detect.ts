@@ -70,8 +70,9 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
  */
 export function getUserAgent(): AgentName | null {
   const userAgent = process.env.npm_config_user_agent
-  if (!userAgent)
+  if (!userAgent) {
     return null
+  }
 
   const name = userAgent.split(' ')[0].split('/')[0] as AgentName
   return AGENTS.includes(name) ? name : null
