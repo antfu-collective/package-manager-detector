@@ -49,6 +49,9 @@
       ]
     }
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "files": [
     "dist"
   ],
@@ -59,9 +62,6 @@
     "release": "bumpp && npm publish",
     "lint": "eslint .",
     "test": "vitest"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.27.1",
