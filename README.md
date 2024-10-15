@@ -61,7 +61,7 @@ const { detectSync } = require('package-manager-detector/detect')
 or to get the currently running package manager:
 
 ```js
-import { getUserAgent } = require('package-manager-detector/detect')
+const { getUserAgent } = require('package-manager-detector/detect')
 ```
 
 ## Agents and Commands
