@@ -54,6 +54,21 @@ const bun: AgentCommands = {
   'global_uninstall': ['bun', 'remove', '-g', 0],
 }
 
+const deno: AgentCommands = {
+  'agent': ['deno', 0],
+  'run': ['deno', 'run', 0],
+  'install': ['deno', 'install', 0],
+  'frozen': ['deno', 'install', '--frozen'],
+  'global': ['deno', 'install', '-g', 0],
+  'add': ['deno', 'add', 0],
+  'upgrade': ['deno', 'update', 0],
+  'upgrade-interactive': ['deno', 'update', 0],
+  'execute': ['deno', 'run', 0],
+  'execute-local': ['deno', 'run', 0],
+  'uninstall': ['deno', 'remove', 0],
+  'global_uninstall': ['deno', 'uninstall', '-g', 0],
+}
+
 export const COMMANDS = {
   'npm': <AgentCommands>{
     'agent': ['npm', 0],
@@ -88,6 +103,7 @@ export const COMMANDS = {
     run: npmRun('pnpm'),
   },
   'bun': bun,
+  'deno': deno,
 } satisfies Record<Agent, AgentCommands>
 
 /**
