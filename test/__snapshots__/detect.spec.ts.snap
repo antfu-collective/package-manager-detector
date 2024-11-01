@@ -61,9 +61,9 @@ exports[`packager > bun 1`] = `
 
 exports[`packager > deno 1`] = `
 {
-  "agent": "bun",
-  "name": "bun",
-  "version": "0",
+  "agent": "deno",
+  "name": "deno",
+  "version": "2",
 }
 `;
 
