@@ -11,6 +11,11 @@ export const AGENTS: Agent[] = [
 ]
 
 // the order here matters, more specific one comes first
+export const WORKSPACE_DEFS: Record<string, AgentName> = {
+  'pnpm-lock.yaml': 'pnpm',
+}
+
+// the order here matters, more specific one comes first
 export const LOCKS: Record<string, AgentName> = {
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
