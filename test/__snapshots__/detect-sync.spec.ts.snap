@@ -7,6 +7,13 @@ exports[`lockfile > bun 1`] = `
 }
 `;
 
+exports[`lockfile > deno 1`] = `
+{
+  "agent": "deno",
+  "name": "deno",
+}
+`;
+
 exports[`lockfile > npm 1`] = `
 {
   "agent": "npm",
@@ -49,6 +56,14 @@ exports[`packager > bun 1`] = `
   "agent": "bun",
   "name": "bun",
   "version": "0",
+}
+`;
+
+exports[`packager > deno 1`] = `
+{
+  "agent": "deno",
+  "name": "deno",
+  "version": "2",
 }
 `;
 

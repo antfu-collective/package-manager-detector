@@ -22,6 +22,28 @@ exports[`test bun run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test deno add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "deno",
+}
+`;
+
+exports[`test deno run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "deno",
+}
+`;
+
 exports[`test npm add command > command handles args correctly 1`] = `
 {
   "args": [
