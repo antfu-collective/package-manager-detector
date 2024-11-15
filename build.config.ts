@@ -1,6 +1,6 @@
 import { defineBuildConfig } from 'unbuild'
 
-export default defineBuildConfig([{
+export default defineBuildConfig({
   entries: [
     'src/index.ts',
     'src/commands.ts',
@@ -14,4 +14,4 @@ export default defineBuildConfig([{
     emitCJS: true,
     inlineDependencies: true,
   },
-}])
+})
