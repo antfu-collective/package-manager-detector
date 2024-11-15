@@ -20,6 +20,14 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./types": {
+      "import": {
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "types": "./dist/index.d.cts"
+      }
+    },
     "./commands": {
       "import": "./dist/commands.mjs",
       "require": "./dist/commands.cjs"
@@ -38,6 +46,9 @@
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
+      "types": [
+        "./dist/types.d.ts"
+      ],
       "commands": [
         "./dist/commands.d.ts"
       ],
