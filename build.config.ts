@@ -13,7 +13,7 @@ export default defineBuildConfig({
     'src/constants.ts',
     'src/types.ts',
   ],
-  clean: false,
+  clean: true,
   declaration: true,
   rollup: {
     emitCJS: true,
