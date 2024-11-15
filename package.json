@@ -53,18 +53,19 @@
     "dist"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build",
     "build": "unbuild",
+    "changeset:publish": "changeset publish",
+    "prepublishOnly": "npm run build",
     "stub": "unbuild --stub",
-    "release": "bumpp && npm publish",
     "lint": "eslint .",
     "test": "vitest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.27.1",
+    "@changesets/cli": "^2.27.9",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.5.0",
-    "bumpp": "^9.5.2",
     "eslint": "^9.9.1",
     "fs-extra": "^11.2.0",
     "typescript": "^5.5.4",
