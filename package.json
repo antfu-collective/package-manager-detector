@@ -56,7 +56,7 @@
     "prepublishOnly": "npm run build",
     "build": "unbuild",
     "stub": "unbuild --stub",
-    "release": "bumpp && npm publish",
+    "release": "bumpp",
     "lint": "eslint .",
     "test": "vitest"
   },
