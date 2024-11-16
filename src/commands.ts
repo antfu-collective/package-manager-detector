@@ -1,4 +1,4 @@
-import type { Agent, AgentCommandValue, AgentCommands, Command, ResolvedCommand } from './types'
+import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
 
 function npmRun(agent: string) {
   return (args: string[]) => {

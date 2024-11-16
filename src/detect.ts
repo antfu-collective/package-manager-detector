@@ -1,8 +1,8 @@
+import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import { AGENTS, LOCKS } from './constants'
 
 /**

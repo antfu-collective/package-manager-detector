@@ -86,8 +86,8 @@ This package includes package manager agents and their corresponding commands fo
 A `resolveCommand` function is provided to resolve the command for a specific agent.
 
 ```ts
-import { detect } from 'package-manager-detector/detect'
 import { resolveCommand } from 'package-manager-detector/commands'
+import { detect } from 'package-manager-detector/detect'
 
 const pm = await detect()
 if (!pm)
