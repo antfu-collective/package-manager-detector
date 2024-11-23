@@ -93,7 +93,7 @@ const pm = await detect()
 if (!pm)
   throw new Error('Could not detect package manager')
 
-const { command, args } = resolveCommand(pm.agent, 'add', ['@antfu/ni']) // { cli: 'pnpm', args: ['add', '@antfu/ni'] }
+const { command, args } = resolveCommand(pm.agent, 'add', ['@antfu/ni']) // { command: 'pnpm', args: ['add', '@antfu/ni'] }
 console.log(`Detected the ${pm.agent} package manager. You can run a install with ${command} ${args.join(' ')}`)
 ```
 
