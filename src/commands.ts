@@ -61,10 +61,10 @@ const deno: AgentCommands = {
   'frozen': ['deno', 'install', '--frozen'],
   'global': ['deno', 'install', '-g', 0],
   'add': ['deno', 'add', 0],
-  'upgrade': ['deno', 'update', 0],
-  'upgrade-interactive': ['deno', 'update', 0],
+  'upgrade': ['deno', 'outdated', '--update', 0],
+  'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'execute': ['deno', 'run', 0],
-  'execute-local': ['deno', 'run', 0],
+  'execute-local': ['deno', 'task', '--eval', 0],
   'uninstall': ['deno', 'remove', 0],
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
 }
