@@ -11,6 +11,22 @@ function npmRun(agent: string) {
   }
 }
 
+const npm: AgentCommands = {
+  'agent': ['npm', 0],
+  'run': npmRun('npm'),
+  'install': ['npm', 'i', 0],
+  'frozen': ['npm', 'ci'],
+  'global': ['npm', 'i', '-g', 0],
+  'add': ['npm', 'i', 0],
+  'upgrade': ['npm', 'update', 0],
+  'upgrade-interactive': null,
+  'execute': ['npx', 0],
+  'execute-local': ['npx', 0],
+  'uninstall': ['npm', 'uninstall', 0],
+  'global_uninstall': ['npm', 'uninstall', '-g', 0],
+}
+
+/** yarn 1 */
 const yarn: AgentCommands = {
   'agent': ['yarn', 0],
   'run': ['yarn', 'run', 0],
@@ -25,6 +41,20 @@ const yarn: AgentCommands = {
   'uninstall': ['yarn', 'remove', 0],
   'global_uninstall': ['yarn', 'global', 'remove', 0],
 }
+
+/** yarn 2+ */
+const yarnBerry: AgentCommands = {
+  ...yarn,
+  'frozen': ['yarn', 'install', '--immutable'],
+  'upgrade': ['yarn', 'up', 0],
+  'upgrade-interactive': ['yarn', 'up', '-i', 0],
+  'execute': ['yarn', 'dlx', 0],
+  'execute-local': ['yarn', 'exec', 0],
+  // Yarn 2+ removed 'global', see https://github.com/yarnpkg/berry/issues/821
+  'global': ['npm', 'i', '-g', 0],
+  'global_uninstall': ['npm', 'uninstall', '-g', 0],
+}
+
 const pnpm: AgentCommands = {
   'agent': ['pnpm', 0],
   'run': ['pnpm', 'run', 0],
@@ -39,6 +69,7 @@ const pnpm: AgentCommands = {
   'uninstall': ['pnpm', 'remove', 0],
   'global_uninstall': ['pnpm', 'remove', '--global', 0],
 }
+
 const bun: AgentCommands = {
   'agent': ['bun', 0],
   'run': ['bun', 'run', 0],
@@ -70,32 +101,9 @@ const deno: AgentCommands = {
 }
 
 export const COMMANDS = {
-  'npm': <AgentCommands>{
-    'agent': ['npm', 0],
-    'run': npmRun('npm'),
-    'install': ['npm', 'i', 0],
-    'frozen': ['npm', 'ci'],
-    'global': ['npm', 'i', '-g', 0],
-    'add': ['npm', 'i', 0],
-    'upgrade': ['npm', 'update', 0],
-    'upgrade-interactive': null,
-    'execute': ['npx', 0],
-    'execute-local': ['npx', 0],
-    'uninstall': ['npm', 'uninstall', 0],
-    'global_uninstall': ['npm', 'uninstall', '-g', 0],
-  },
+  'npm': npm,
   'yarn': yarn,
-  'yarn@berry': <AgentCommands>{
-    ...yarn,
-    'frozen': ['yarn', 'install', '--immutable'],
-    'upgrade': ['yarn', 'up', 0],
-    'upgrade-interactive': ['yarn', 'up', '-i', 0],
-    'execute': ['yarn', 'dlx', 0],
-    'execute-local': ['yarn', 'exec', 0],
-    // Yarn 2+ removed 'global', see https://github.com/yarnpkg/berry/issues/821
-    'global': ['npm', 'i', '-g', 0],
-    'global_uninstall': ['npm', 'uninstall', '-g', 0],
-  },
+  'yarn@berry': yarnBerry,
   'pnpm': pnpm,
   // pnpm v6.x or below
   'pnpm@6': <AgentCommands>{
