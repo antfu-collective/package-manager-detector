@@ -13,7 +13,7 @@ function npmRun(agent: string) {
 
 function denoRun() {
   return (args: string[]) => {
-    return ['deno', 'run', `npm"${args[0]}`, ...args.slice(1)]
+    return ['deno', 'run', `npm:${args[0]}`, ...args.slice(1)]
   }
 }
 
