@@ -1,7 +1,7 @@
 export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'bun' | 'deno'
 export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno'
 
-export type AgentCommandValue = (string | number)[] | ((args?: string[]) => string[]) | null
+export type AgentCommandValue = (string | number)[] | ((args: string[]) => string[]) | null
 
 export interface AgentCommands {
   'agent': AgentCommandValue
