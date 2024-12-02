@@ -11,7 +11,7 @@ function npmRun(agent: string) {
   }
 }
 
-function denoRun() {
+function denoExecute() {
   return (args: string[]) => {
     return ['deno', 'run', `npm:${args[0]}`, ...args.slice(1)]
   }
@@ -93,14 +93,14 @@ const bun: AgentCommands = {
 
 const deno: AgentCommands = {
   'agent': ['deno', 0],
-  'run': denoRun(),
+  'run': ['deno', 'task', 0],
   'install': ['deno', 'install', 0],
   'frozen': ['deno', 'install', '--frozen'],
   'global': ['deno', 'install', '-g', 0],
   'add': ['deno', 'add', 0],
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
-  'execute': ['deno', 'run', 0],
+  'execute': denoExecute(),
   'execute-local': ['deno', 'task', '--eval', 0],
   'uninstall': ['deno', 'remove', 0],
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
