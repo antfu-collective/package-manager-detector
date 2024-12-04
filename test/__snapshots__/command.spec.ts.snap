@@ -36,8 +36,8 @@ exports[`test deno add command > command handles args correctly 1`] = `
 exports[`test deno run command > command handles args correctly 1`] = `
 {
   "args": [
-    "run",
-    "npm:arg0",
+    "task",
+    "arg0",
     "arg1-0 arg1-1",
   ],
   "command": "deno",
