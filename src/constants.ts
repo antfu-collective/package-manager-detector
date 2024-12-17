@@ -12,6 +12,7 @@ export const AGENTS: Agent[] = [
 
 // the order here matters, more specific one comes first
 export const LOCKS: Record<string, AgentName> = {
+  'bun.lock': 'bun',
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
   'pnpm-lock.yaml': 'pnpm',
