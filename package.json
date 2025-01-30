@@ -2,7 +2,7 @@
   "name": "package-manager-detector",
   "type": "module",
   "version": "0.2.8",
-  "packageManager": "pnpm@9.13.2",
+  "packageManager": "pnpm@9.15.4",
   "description": "Package manager detector",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -61,14 +61,14 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.9.1",
+    "@antfu/eslint-config": "^4.1.0",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.9.0",
-    "bumpp": "^9.8.1",
-    "eslint": "^9.15.0",
-    "fs-extra": "^11.2.0",
-    "typescript": "^5.6.3",
-    "unbuild": "^2.0.0",
-    "vitest": "^2.1.5"
+    "@types/node": "^22.12.0",
+    "bumpp": "^10.0.1",
+    "eslint": "^9.19.0",
+    "fs-extra": "^11.3.0",
+    "typescript": "^5.7.3",
+    "unbuild": "^3.3.1",
+    "vitest": "^3.0.4"
   }
 }

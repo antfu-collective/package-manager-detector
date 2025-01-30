@@ -153,10 +153,10 @@ export function constructCommand(value: AgentCommandValue, args: string[]): Reso
   const list = typeof value === 'function'
     ? value(args)
     : value.flatMap((v) => {
-      if (typeof v === 'number')
-        return args
-      return [v]
-    })
+        if (typeof v === 'number')
+          return args
+        return [v]
+      })
 
   return {
     command: list[0],
