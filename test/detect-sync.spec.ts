@@ -42,3 +42,35 @@ fixtures.forEach(fixture => describe(fixture, () => agents.forEach((agent) => {
     expect(infoLog).not.toHaveBeenCalled()
   })
 })))
+
+it('stops at specified directory', async () => {
+  const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+
+  const noFilesDir = path.join(cwd, 'no-files')
+  const nestedNoFilesDir = path.join(noFilesDir, 'nested')
+  const parentDir = cwd
+
+  await fs.mkdirp(noFilesDir)
+  await fs.mkdirp(nestedNoFilesDir)
+
+  await fs.copy(
+    path.join(__dirname, 'fixtures', 'lockfile', 'npm'),
+    parentDir,
+  )
+
+  const resultWithStop = detectSync({
+    cwd: nestedNoFilesDir,
+    stop: noFilesDir,
+  })
+
+  expect(resultWithStop).toBe(null)
+
+  const resultWithoutStop = detectSync({
+    cwd: nestedNoFilesDir,
+  })
+
+  expect(resultWithoutStop).toMatchObject({
+    name: 'npm',
+    agent: 'npm',
+  })
+})
