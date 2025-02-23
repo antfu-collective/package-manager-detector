@@ -38,6 +38,18 @@ or sync version:
 import { detectSync } from 'package-manager-detector/detect'
 ```
 
+or check the file system for which package manager is used for installation:
+
+```js
+import { detectInstall } from 'package-manager-detector/detect'
+```
+
+or sync version:
+
+```js
+import { detectInstallSync } from 'package-manager-detector/detect'
+```
+
 or to get the currently running package manager:
 
 ```js
@@ -56,6 +68,18 @@ or sync version:
 
 ```js
 const { detectSync } = require('package-manager-detector/detect')
+```
+
+or check the file system for which package manager is used for installation:
+
+```js
+const { detectInstall } = require('package-manager-detector/detect')
+```
+
+or sync version:
+
+```js
+const { detectInstallSync } = require('package-manager-detector/detect')
 ```
 
 or to get the currently running package manager:

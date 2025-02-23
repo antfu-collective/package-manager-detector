@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import { AGENTS, LOCKS } from './constants'
+import { AGENTS, INSTALL_METADATAS, LOCKS } from './constants'
 
 /**
  * Detects the package manager used in the project.
@@ -16,7 +16,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
-      if (await fileExists(path.join(directory, lock))) {
+      if (await pathExists(path.join(directory, lock), 'file')) {
         const name = LOCKS[lock]
         const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
         if (result)
@@ -45,13 +45,71 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
   for (const directory of lookup(cwd)) {
     // Look up for lock files
     for (const lock of Object.keys(LOCKS)) {
-      if (fileExistsSync(path.join(directory, lock))) {
+      if (pathExistsSync(path.join(directory, lock), 'file')) {
         const name = LOCKS[lock]
         const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
         if (result)
           return result
         else
           return { name, agent: name }
+      }
+    }
+    // Look up for package.json
+    const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
+    if (result)
+      return result
+  }
+
+  return null
+}
+
+/**
+ * Detects the package manager used for installation in the project.
+ * @param options {DetectOptions} The options to use when detecting the package manager.
+ * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
+ */
+export async function detectInstall(options: DetectOptions = {}): Promise<DetectResult | null> {
+  const { cwd, onUnknown } = options
+
+  for (const directory of lookup(cwd)) {
+    // Look up for installation metadata files
+    for (const metadata of Object.keys(INSTALL_METADATAS)) {
+      const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
+      if (await pathExists(path.join(directory, metadata), fileOrDir)) {
+        const name = INSTALL_METADATAS[metadata]
+        const agent = name === 'yarn'
+          ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
+          : name
+        return { name, agent }
+      }
+    }
+    // Look up for package.json
+    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+    if (result)
+      return result
+  }
+
+  return null
+}
+
+/**
+ * Detects the package manager used for installation in the project.
+ * @param options {DetectOptions} The options to use when detecting the package manager.
+ * @returns {DetectResult | null} The detected package manager or `null` if not found.
+ */
+export function detectInstallSync(options: DetectOptions = {}): DetectResult | null {
+  const { cwd, onUnknown } = options
+
+  for (const directory of lookup(cwd)) {
+    // Look up for installation metadata files
+    for (const metadata of Object.keys(INSTALL_METADATAS)) {
+      const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
+      if (pathExistsSync(path.join(directory, metadata), fileOrDir)) {
+        const name = INSTALL_METADATAS[metadata]
+        const agent = name === 'yarn'
+          ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
+          : name
+        return { name, agent }
       }
     }
     // Look up for package.json
@@ -93,14 +151,14 @@ async function parsePackageJson(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
 ): Promise<DetectResult | null> {
-  return !filepath || !await fileExists(filepath) ? null : handlePackageManager(filepath, onUnknown)
+  return !filepath || !await pathExists(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
 }
 
 function parsePackageJsonSync(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
 ): DetectResult | null {
-  return !filepath || !fileExistsSync(filepath) ? null : handlePackageManager(filepath, onUnknown)
+  return !filepath || !pathExistsSync(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
 }
 
 function handlePackageManager(
@@ -137,10 +195,14 @@ function handlePackageManager(
   return null
 }
 
-async function fileExists(filePath: string) {
+function isMetadataYarnClassic(metadataPath: string) {
+  return metadataPath.endsWith('.yarn_integrity')
+}
+
+async function pathExists(filePath: string, type: 'file' | 'dir') {
   try {
     const stats = await fsPromises.stat(filePath)
-    if (stats.isFile()) {
+    if (type === 'file' ? stats.isFile() : stats.isDirectory()) {
       return true
     }
   }
@@ -148,10 +210,10 @@ async function fileExists(filePath: string) {
   return false
 }
 
-function fileExistsSync(filePath: string) {
+function pathExistsSync(filePath: string, type: 'file' | 'dir') {
   try {
     const stats = fs.statSync(filePath)
-    if (stats.isFile()) {
+    if (type === 'file' ? stats.isFile() : stats.isDirectory()) {
       return true
     }
   }
