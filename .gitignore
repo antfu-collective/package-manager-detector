@@ -83,3 +83,6 @@ _storage.json
 
 # System files
 .DS_Store
+
+# Allow node_modules in install fixture to test installation setups
+!test/fixtures/install/*/node_modules
