@@ -11,7 +11,7 @@ import { AGENTS, LOCKS } from './constants'
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, onUnknown } = options
+  const { cwd, onUnknown, stop } = options
 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
@@ -29,6 +29,10 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
     if (result)
       return result
+
+    // Stop the traversing if the stop directory is reached
+    if (stop && path.resolve(directory) === path.resolve(stop))
+      break
   }
 
   return null
@@ -40,7 +44,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  * @returns {DetectResult | null>} The detected package manager or `null` if not found.
  */
 export function detectSync(options: DetectOptions = {}): DetectResult | null {
-  const { cwd, onUnknown } = options
+  const { cwd, onUnknown, stop } = options
 
   for (const directory of lookup(cwd)) {
     // Look up for lock files
@@ -58,6 +62,10 @@ export function detectSync(options: DetectOptions = {}): DetectResult | null {
     const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
     if (result)
       return result
+
+    // Stop the traversing if the stop directory is reached
+    if (stop && path.resolve(directory) === path.resolve(stop))
+      break
   }
 
   return null
