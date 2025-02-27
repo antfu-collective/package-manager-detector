@@ -50,10 +50,10 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-const parsePackageJson = quansync(async function (
+const parsePackageJson = quansync(async (
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> {
+): Promise<DetectResult | null> => {
   return !filepath || !await isFile(filepath) ? null : handlePackageManager(filepath, onUnknown)
 })
 
@@ -62,7 +62,7 @@ const parsePackageJson = quansync(async function (
  * @param options {DetectOptions} The options to use when detecting the package manager.
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
-export const detect = quansync(async function (options: DetectOptions = {}): Promise<DetectResult | null> {
+export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
