@@ -1,4 +1,5 @@
 import { defineBuildConfig } from 'unbuild'
+import Quansync from 'unplugin-quansync/rollup'
 
 export default defineBuildConfig({
   entries: [
@@ -12,5 +13,10 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     inlineDependencies: true,
+  },
+  hooks: {
+    'rollup:options': function (ctx, options) {
+      options.plugins.push(Quansync())
+    },
   },
 })
