@@ -60,6 +60,9 @@
     "lint": "eslint .",
     "test": "vitest"
   },
+  "dependencies": {
+    "quansync": "^0.2.2"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^4.1.0",
     "@types/fs-extra": "^11.0.4",
@@ -69,6 +72,7 @@
     "fs-extra": "^11.3.0",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
+    "unplugin-quansync": "^0.3.2",
     "vitest": "^3.0.4"
   }
 }
