@@ -12,7 +12,9 @@ export default defineBuildConfig({
   declaration: true,
   rollup: {
     emitCJS: true,
-    inlineDependencies: true,
+    dts: {
+      respectExternal: true,
+    }
   },
   hooks: {
     'rollup:options': function (ctx, options) {

@@ -61,18 +61,18 @@
     "test": "vitest"
   },
   "dependencies": {
-    "quansync": "^0.2.2"
+    "quansync": "^0.2.7"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.8",
     "bumpp": "^10.0.3",
     "eslint": "^9.21.0",
     "fs-extra": "^11.3.0",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "unbuild": "^3.5.0",
-    "unplugin-quansync": "^0.3.2",
+    "unplugin-quansync": "^0.3.3",
     "vitest": "^3.0.7"
   },
   "pnpm": {

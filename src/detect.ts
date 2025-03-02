@@ -2,6 +2,7 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import { QuansyncFn } from 'quansync'
 import { quansync } from 'quansync/macro'
 import { AGENTS, LOCKS } from './constants'
 
