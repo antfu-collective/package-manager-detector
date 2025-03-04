@@ -16,39 +16,14 @@
   },
   "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./commands": {
-      "import": "./dist/commands.mjs",
-      "require": "./dist/commands.cjs"
-    },
-    "./detect": {
-      "import": "./dist/detect.mjs",
-      "require": "./dist/detect.cjs"
-    },
-    "./constants": {
-      "import": "./dist/constants.mjs",
-      "require": "./dist/constants.cjs"
-    }
+    ".": "./dist/index.mjs",
+    "./commands": "./dist/commands.mjs",
+    "./detect": "./dist/detect.mjs",
+    "./constants": "./dist/constants.mjs"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "commands": [
-        "./dist/commands.d.ts"
-      ],
-      "detect": [
-        "./dist/detect.d.ts"
-      ],
-      "constants": [
-        "./dist/constants.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
@@ -60,9 +35,6 @@
     "lint": "eslint .",
     "test": "vitest"
   },
-  "dependencies": {
-    "quansync": "^0.2.7"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
     "@types/fs-extra": "^11.0.4",
@@ -72,8 +44,8 @@
     "fs-extra": "^11.3.0",
     "typescript": "^5.8.2",
     "unbuild": "^3.5.0",
-    "unplugin-quansync": "^0.3.3",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.7",
+    "vitest-package-exports": "^0.1.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -2,28 +2,16 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { QuansyncFn } from 'quansync'
-import { quansync } from 'quansync/macro'
 import { AGENTS, LOCKS } from './constants'
 
-const isFile = quansync({
-  sync: (path: string) => {
-    try {
-      return fs.statSync(path).isFile()
-    }
-    catch {
-      return false
-    }
-  },
-  async: async (path: string) => {
-    try {
-      return (await fs.promises.stat(path)).isFile()
-    }
-    catch {
-      return false
-    }
-  },
-})
+async function isFile(path: string) {
+  try {
+    return (await fs.promises.stat(path)).isFile()
+  }
+  catch {
+    return false
+  }
+}
 
 /**
  * Detects the package manager used in the running process.
@@ -51,19 +39,18 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-const parsePackageJson = quansync(async (
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> => {
-  return !filepath || !await isFile(filepath) ? null : handlePackageManager(filepath, onUnknown)
-})
+async function parsePackageJson(filepath: string, onUnknown: DetectOptions['onUnknown']): Promise<DetectResult | null> {
+  return (!filepath || !await isFile(filepath))
+    ? null
+    : await handlePackageManager(filepath, onUnknown)
+}
 
 /**
  * Detects the package manager used in the project.
  * @param options {DetectOptions} The options to use when detecting the package manager.
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
-export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
+export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
   const { cwd, onUnknown } = options
 
   for (const directory of lookup(cwd)) {
@@ -85,16 +72,15 @@ export const detect = quansync(async (options: DetectOptions = {}): Promise<Dete
   }
 
   return null
-})
-export const detectSync = detect.sync
+}
 
-function handlePackageManager(
+async function handlePackageManager(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+    const pkg = JSON.parse(await fs.promises.readFile(filepath, 'utf8'))
     let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
       const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
