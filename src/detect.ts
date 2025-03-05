@@ -1,125 +1,29 @@
 import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
-import fsPromises from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
+import { QuansyncFn } from 'quansync'
+import { quansync } from 'quansync/macro'
 import { AGENTS, INSTALL_METADATAS, LOCKS } from './constants'
 
-/**
- * Detects the package manager used in the project.
- * @param options {DetectOptions} The options to use when detecting the package manager.
- * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
- */
-export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, onUnknown } = options
-
-  for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
-      if (await pathExists(path.join(directory, lock), 'file')) {
-        const name = LOCKS[lock]
-        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
-      }
+const isFile = quansync({
+  sync: (path: string) => {
+    try {
+      return fs.statSync(path).isFile()
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
-  }
-
-  return null
-}
-
-/**
- * Detects the package manager used in the project.
- * @param options {DetectOptions} The options to use when detecting the package manager.
- * @returns {DetectResult | null>} The detected package manager or `null` if not found.
- */
-export function detectSync(options: DetectOptions = {}): DetectResult | null {
-  const { cwd, onUnknown } = options
-
-  for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
-      if (pathExistsSync(path.join(directory, lock), 'file')) {
-        const name = LOCKS[lock]
-        const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
-      }
+    catch {
+      return false
     }
-    // Look up for package.json
-    const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
-  }
-
-  return null
-}
-
-/**
- * Detects the package manager used for installation in the project.
- * @param options {DetectOptions} The options to use when detecting the package manager.
- * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
- */
-export async function detectInstall(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, onUnknown } = options
-
-  for (const directory of lookup(cwd)) {
-    // Look up for installation metadata files
-    for (const metadata of Object.keys(INSTALL_METADATAS)) {
-      const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
-      if (await pathExists(path.join(directory, metadata), fileOrDir)) {
-        const name = INSTALL_METADATAS[metadata]
-        const agent = name === 'yarn'
-          ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
-          : name
-        return { name, agent }
-      }
+  },
+  async: async (path: string) => {
+    try {
+      return (await fs.promises.stat(path)).isFile()
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
-  }
-
-  return null
-}
-
-/**
- * Detects the package manager used for installation in the project.
- * @param options {DetectOptions} The options to use when detecting the package manager.
- * @returns {DetectResult | null} The detected package manager or `null` if not found.
- */
-export function detectInstallSync(options: DetectOptions = {}): DetectResult | null {
-  const { cwd, onUnknown } = options
-
-  for (const directory of lookup(cwd)) {
-    // Look up for installation metadata files
-    for (const metadata of Object.keys(INSTALL_METADATAS)) {
-      const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
-      if (pathExistsSync(path.join(directory, metadata), fileOrDir)) {
-        const name = INSTALL_METADATAS[metadata]
-        const agent = name === 'yarn'
-          ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
-          : name
-        return { name, agent }
-      }
+    catch {
+      return false
     }
-    // Look up for package.json
-    const result = parsePackageJsonSync(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
-  }
-
-  return null
-}
+  },
+})
 
 /**
  * Detects the package manager used in the running process.
@@ -147,19 +51,42 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-async function parsePackageJson(
+const parsePackageJson = quansync(async (
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> {
-  return !filepath || !await pathExists(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
-}
+): Promise<DetectResult | null> => {
+  return !filepath || !await isFile(filepath) ? null : handlePackageManager(filepath, onUnknown)
+})
 
-function parsePackageJsonSync(
-  filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
-): DetectResult | null {
-  return !filepath || !pathExistsSync(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
-}
+/**
+ * Detects the package manager used in the project.
+ * @param options {DetectOptions} The options to use when detecting the package manager.
+ * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
+ */
+export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
+  const { cwd, onUnknown } = options
+
+  for (const directory of lookup(cwd)) {
+    // Look up for lock files
+    for (const lock of Object.keys(LOCKS)) {
+      if (await isFile(path.join(directory, lock))) {
+        const name = LOCKS[lock]
+        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+        if (result)
+          return result
+        else
+          return { name, agent: name }
+      }
+    }
+    // Look up for package.json
+    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+    if (result)
+      return result
+  }
+
+  return null
+})
+export const detectSync = detect.sync
 
 function handlePackageManager(
   filepath: string,
