@@ -14,7 +14,7 @@ export default defineBuildConfig({
     emitCJS: true,
     dts: {
       respectExternal: true,
-    }
+    },
   },
   hooks: {
     'rollup:options': function (ctx, options) {
