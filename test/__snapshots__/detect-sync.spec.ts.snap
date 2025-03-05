@@ -51,6 +51,64 @@ exports[`lockfile > yarn@berry 1`] = `
 }
 `;
 
+exports[`nodemodules > bun 1`] = `
+{
+  "agent": "bun",
+  "name": "bun",
+}
+`;
+
+exports[`nodemodules > deno 1`] = `
+{
+  "agent": "deno",
+  "name": "deno",
+}
+`;
+
+exports[`nodemodules > npm 1`] = `
+{
+  "agent": "npm",
+  "name": "npm",
+}
+`;
+
+exports[`nodemodules > pnpm 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+}
+`;
+
+exports[`nodemodules > unknown 1`] = `null`;
+
+exports[`nodemodules > yarn 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+}
+`;
+
+exports[`nodemodules > yarn@berry 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
+exports[`nodemodules > yarn@berry_pnp-v2 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
+exports[`nodemodules > yarn@berry_pnp-v3 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
 exports[`packager > bun 1`] = `
 {
   "agent": "bun",
@@ -88,6 +146,14 @@ exports[`packager > pnpm@6 1`] = `
   "agent": "pnpm@6",
   "name": "pnpm",
   "version": "6",
+}
+`;
+
+exports[`packager > pnpm-version-range 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+  "version": "8.0.0",
 }
 `;
 

@@ -6,18 +6,20 @@ import { QuansyncFn } from 'quansync'
 import { quansync } from 'quansync/macro'
 import { AGENTS, INSTALL_METADATAS, LOCKS } from './constants'
 
-const isFile = quansync({
-  sync: (path: string) => {
+const pathExists = quansync({
+  sync: (path: string, type: 'file' | 'dir') => {
     try {
-      return fs.statSync(path).isFile()
+      const stat = fs.statSync(path)
+      return type === 'file' ? stat.isFile() : stat.isDirectory()
     }
     catch {
       return false
     }
   },
-  async: async (path: string) => {
+  async: async (path: string, type: 'file' | 'dir') => {
     try {
-      return (await fs.promises.stat(path)).isFile()
+      const stat = await fs.promises.stat(path)
+      return type === 'file' ? stat.isFile() : stat.isDirectory()
     }
     catch {
       return false
@@ -55,7 +57,7 @@ const parsePackageJson = quansync(async (
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
 ): Promise<DetectResult | null> => {
-  return !filepath || !await isFile(filepath) ? null : handlePackageManager(filepath, onUnknown)
+  return !filepath || !await pathExists(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
 })
 
 /**
@@ -64,24 +66,48 @@ const parsePackageJson = quansync(async (
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
-  const { cwd, onUnknown } = options
+  const { cwd, strategies = ['lockfile', 'packageManager'], onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
-      if (await isFile(path.join(directory, lock))) {
-        const name = LOCKS[lock]
-        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
+    for (const strategy of strategies) {
+      switch (strategy) {
+        case 'lockfile': {
+          // Look up for lock files
+          for (const lock of Object.keys(LOCKS)) {
+            if (await pathExists(path.join(directory, lock), 'file')) {
+              const name = LOCKS[lock]
+              const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+              if (result)
+                return result
+              else
+                return { name, agent: name }
+            }
+          }
+          break
+        }
+        case 'packageManager': {
+          // Look up for package.json
+          const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+          if (result)
+            return result
+          break
+        }
+        case 'node_modules': {
+          // Look up for installation metadata files
+          for (const metadata of Object.keys(INSTALL_METADATAS)) {
+            const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
+            if (await pathExists(path.join(directory, metadata), fileOrDir)) {
+              const name = INSTALL_METADATAS[metadata]
+              const agent = name === 'yarn'
+                ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
+                : name
+              return { name, agent }
+            }
+          }
+          break
+        }
       }
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
   }
 
   return null
@@ -124,26 +150,4 @@ function handlePackageManager(
 
 function isMetadataYarnClassic(metadataPath: string) {
   return metadataPath.endsWith('.yarn_integrity')
-}
-
-async function pathExists(filePath: string, type: 'file' | 'dir') {
-  try {
-    const stats = await fsPromises.stat(filePath)
-    if (type === 'file' ? stats.isFile() : stats.isDirectory()) {
-      return true
-    }
-  }
-  catch {}
-  return false
-}
-
-function pathExistsSync(filePath: string, type: 'file' | 'dir') {
-  try {
-    const stats = fs.statSync(filePath)
-    if (type === 'file' ? stats.isFile() : stats.isDirectory()) {
-      return true
-    }
-  }
-  catch {}
-  return false
 }
