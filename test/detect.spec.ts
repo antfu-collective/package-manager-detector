@@ -1,19 +1,20 @@
 import type { MockInstance } from 'vitest'
+import type { DetectOptions } from '../src'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { AGENTS, detect } from '../src'
+import { detect } from '../src'
 
 let basicLog: MockInstance, errorLog: MockInstance, warnLog: MockInstance, infoLog: MockInstance
 
-function detectTest(fixture: string, agent: string) {
+function detectTest(fixture: string, agent: string, options?: DetectOptions) {
   return async () => {
     const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
     const dir = path.join(__dirname, 'fixtures', fixture, agent)
     await fs.copy(dir, cwd)
 
-    expect(await detect({ cwd })).toMatchSnapshot()
+    expect(await detect({ cwd, ...options })).toMatchSnapshot()
   }
 }
 
@@ -28,12 +29,18 @@ afterAll(() => {
   vi.resetAllMocks()
 })
 
-const agents = [...AGENTS, 'unknown']
-const fixtures = ['lockfile', 'packager']
+const fixtures = ['lockfile', 'packager', 'nodemodules']
 
-// matrix testing of: fixtures x agents
-fixtures.forEach(fixture => describe(fixture, () => agents.forEach((agent) => {
-  it(agent, detectTest(fixture, agent))
+fixtures.forEach(fixture => describe(fixture, () => {
+  const fixtureDirs = getFixtureDirs(fixture)
+
+  fixtureDirs.forEach((dir) => {
+    let options: DetectOptions | undefined
+    if (fixture === 'nodemodules') {
+      options = { strategies: ['node_modules', 'lockfile', 'packageManager'] }
+    }
+    it(dir, detectTest(fixture, dir, options))
+  })
 
   it('no logs', () => {
     expect(basicLog).not.toHaveBeenCalled()
@@ -41,4 +48,10 @@ fixtures.forEach(fixture => describe(fixture, () => agents.forEach((agent) => {
     expect(errorLog).not.toHaveBeenCalled()
     expect(infoLog).not.toHaveBeenCalled()
   })
-})))
+}))
+
+function getFixtureDirs(fixture: string) {
+  const fixtureDir = path.join(__dirname, 'fixtures', fixture)
+  const items = fs.readdirSync(fixtureDir)
+  return items.filter(item => fs.statSync(path.join(fixtureDir, item)).isDirectory())
+}
