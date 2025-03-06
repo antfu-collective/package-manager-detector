@@ -22,6 +22,12 @@ npm i package-manager-detector
 yarn add package-manager-detector
 ```
 
+**using bun**
+
+```sh
+bun install
+```
+
 ## Usage
 
 ### ESM
