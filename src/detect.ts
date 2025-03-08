@@ -28,7 +28,7 @@ export function getUserAgent(): AgentName | null {
   return AGENTS.includes(name) ? name : null
 }
 
-function * lookup(cwd: string = process.cwd()): Generator<string> {
+function* lookup(cwd: string = process.cwd()): Generator<string> {
   let directory = path.resolve(cwd)
   const { root } = path.parse(directory)
 
