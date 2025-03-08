@@ -58,6 +58,7 @@
     "stub": "unbuild --stub",
     "release": "bumpp",
     "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
     "test": "vitest"
   },
   "dependencies": {
