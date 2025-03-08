@@ -27,13 +27,13 @@
   "typesVersions": {
     "*": {
       "commands": [
-        "./dist/commands.d.ts"
+        "./dist/commands.d.mts"
       ],
       "detect": [
-        "./dist/detect.d.ts"
+        "./dist/detect.d.mts"
       ],
       "constants": [
-        "./dist/constants.d.ts"
+        "./dist/constants.d.mts"
       ]
     }
   },

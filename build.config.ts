@@ -8,7 +8,7 @@ export default defineBuildConfig({
     'src/constants.ts',
   ],
   clean: true,
-  declaration: true,
+  declaration: 'node16',
   rollup: {
     dts: {
       respectExternal: true,
