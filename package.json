@@ -24,6 +24,19 @@
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
+  "typesVersions": {
+    "*": {
+      "commands": [
+        "./dist/commands.d.ts"
+      ],
+      "detect": [
+        "./dist/detect.d.ts"
+      ],
+      "constants": [
+        "./dist/constants.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
