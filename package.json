@@ -32,7 +32,8 @@
     "build": "unbuild",
     "stub": "unbuild --stub",
     "release": "bumpp",
-    "lint": "eslint .",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "test": "vitest"
   },
   "devDependencies": {
