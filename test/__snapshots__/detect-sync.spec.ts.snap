@@ -1,5 +1,63 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`install-metadata > bun 1`] = `
+{
+  "agent": "bun",
+  "name": "bun",
+}
+`;
+
+exports[`install-metadata > deno 1`] = `
+{
+  "agent": "deno",
+  "name": "deno",
+}
+`;
+
+exports[`install-metadata > npm 1`] = `
+{
+  "agent": "npm",
+  "name": "npm",
+}
+`;
+
+exports[`install-metadata > pnpm 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+}
+`;
+
+exports[`install-metadata > unknown 1`] = `null`;
+
+exports[`install-metadata > yarn 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+}
+`;
+
+exports[`install-metadata > yarn@berry 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
+exports[`install-metadata > yarn@berry_pnp-v2 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
+exports[`install-metadata > yarn@berry_pnp-v3 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+}
+`;
+
 exports[`lockfile > bun 1`] = `
 {
   "agent": "bun",
@@ -47,64 +105,6 @@ exports[`lockfile > yarn 1`] = `
 exports[`lockfile > yarn@berry 1`] = `
 {
   "agent": "yarn",
-  "name": "yarn",
-}
-`;
-
-exports[`nodemodules > bun 1`] = `
-{
-  "agent": "bun",
-  "name": "bun",
-}
-`;
-
-exports[`nodemodules > deno 1`] = `
-{
-  "agent": "deno",
-  "name": "deno",
-}
-`;
-
-exports[`nodemodules > npm 1`] = `
-{
-  "agent": "npm",
-  "name": "npm",
-}
-`;
-
-exports[`nodemodules > pnpm 1`] = `
-{
-  "agent": "pnpm",
-  "name": "pnpm",
-}
-`;
-
-exports[`nodemodules > unknown 1`] = `null`;
-
-exports[`nodemodules > yarn 1`] = `
-{
-  "agent": "yarn",
-  "name": "yarn",
-}
-`;
-
-exports[`nodemodules > yarn@berry 1`] = `
-{
-  "agent": "yarn@berry",
-  "name": "yarn",
-}
-`;
-
-exports[`nodemodules > yarn@berry_pnp-v2 1`] = `
-{
-  "agent": "yarn@berry",
-  "name": "yarn",
-}
-`;
-
-exports[`nodemodules > yarn@berry_pnp-v3 1`] = `
-{
-  "agent": "yarn@berry",
   "name": "yarn",
 }
 `;

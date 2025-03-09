@@ -29,15 +29,15 @@ afterAll(() => {
   vi.resetAllMocks()
 })
 
-const fixtures = ['lockfile', 'packager', 'nodemodules']
+const fixtures = ['lockfile', 'packager', 'install-metadata']
 
 fixtures.forEach(fixture => describe(fixture, () => {
   const fixtureDirs = getFixtureDirs(fixture)
 
   fixtureDirs.forEach((dir) => {
     let options: DetectOptions | undefined
-    if (fixture === 'nodemodules') {
-      options = { strategies: ['node_modules', 'lockfile', 'packageManager'] }
+    if (fixture === 'install-metadata') {
+      options = { strategies: ['install-metadata', 'lockfile', 'packageManager-field'] }
     }
     it(dir, detectTest(fixture, dir, options))
   })

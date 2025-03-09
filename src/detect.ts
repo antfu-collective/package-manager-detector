@@ -65,7 +65,7 @@ const parsePackageJson = quansync(async (
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
-  const { cwd, strategies = ['lockfile', 'packageManager'], onUnknown } = options
+  const { cwd, strategies = ['lockfile', 'packageManager-field'], onUnknown } = options
 
   for (const directory of lookup(cwd)) {
     for (const strategy of strategies) {
@@ -84,14 +84,14 @@ export const detect = quansync(async (options: DetectOptions = {}): Promise<Dete
           }
           break
         }
-        case 'packageManager': {
+        case 'packageManager-field': {
           // Look up for package.json
           const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
           if (result)
             return result
           break
         }
-        case 'node_modules': {
+        case 'install-metadata': {
           // Look up for installation metadata files
           for (const metadata of Object.keys(INSTALL_METADATAS)) {
             const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
