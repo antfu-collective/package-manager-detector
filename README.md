@@ -32,36 +32,10 @@ To check the file system for which package manager is used:
 import { detect } from 'package-manager-detector/detect'
 ```
 
-or sync version:
-
-```js
-import { detectSync } from 'package-manager-detector/detect'
-```
-
 or to get the currently running package manager:
 
 ```js
 import { getUserAgent } from 'package-manager-detector/detect'
-```
-
-### CommonJS
-
-To check the file system for which package manager is used:
-
-```js
-const { detect } = require('package-manager-detector/detect')
-```
-
-or sync version:
-
-```js
-const { detectSync } = require('package-manager-detector/detect')
-```
-
-or to get the currently running package manager:
-
-```js
-const { getUserAgent } = require('package-manager-detector/detect')
 ```
 
 ## Agents and Commands
