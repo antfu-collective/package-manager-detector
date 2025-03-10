@@ -2,11 +2,12 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { AGENTS, LOCKS } from './constants'
+import { AGENTS, INSTALL_METADATA, LOCKS } from './constants'
 
-async function isFile(path: string) {
+function pathExists(path: string, type: 'file' | 'dir') {
   try {
-    return (await fs.promises.stat(path)).isFile()
+    const stat = fs.statSync(path)
+    return type === 'file' ? stat.isFile() : stat.isDirectory()
   }
   catch {
     return false
@@ -39,8 +40,11 @@ function* lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-async function parsePackageJson(filepath: string, onUnknown: DetectOptions['onUnknown']): Promise<DetectResult | null> {
-  return (!filepath || !await isFile(filepath))
+async function parsePackageJson(
+  filepath: string,
+  onUnknown: DetectOptions['onUnknown'],
+): Promise<DetectResult | null> {
+  return (!filepath || !pathExists(filepath, 'file'))
     ? null
     : await handlePackageManager(filepath, onUnknown)
 }
@@ -51,24 +55,48 @@ async function parsePackageJson(filepath: string, onUnknown: DetectOptions['onUn
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, onUnknown } = options
+  const { cwd, strategies = ['lockfile', 'packageManager-field'], onUnknown } = options
 
   for (const directory of lookup(cwd)) {
-    // Look up for lock files
-    for (const lock of Object.keys(LOCKS)) {
-      if (await isFile(path.join(directory, lock))) {
-        const name = LOCKS[lock]
-        const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-        if (result)
-          return result
-        else
-          return { name, agent: name }
+    for (const strategy of strategies) {
+      switch (strategy) {
+        case 'lockfile': {
+          // Look up for lock files
+          for (const lock of Object.keys(LOCKS)) {
+            if (await pathExists(path.join(directory, lock), 'file')) {
+              const name = LOCKS[lock]
+              const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+              if (result)
+                return result
+              else
+                return { name, agent: name }
+            }
+          }
+          break
+        }
+        case 'packageManager-field': {
+          // Look up for package.json
+          const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+          if (result)
+            return result
+          break
+        }
+        case 'install-metadata': {
+          // Look up for installation metadata files
+          for (const metadata of Object.keys(INSTALL_METADATA)) {
+            const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
+            if (await pathExists(path.join(directory, metadata), fileOrDir)) {
+              const name = INSTALL_METADATA[metadata]
+              const agent = name === 'yarn'
+                ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
+                : name
+              return { name, agent }
+            }
+          }
+          break
+        }
       }
     }
-    // Look up for package.json
-    const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
-    if (result)
-      return result
   }
 
   return null
@@ -106,4 +134,8 @@ async function handlePackageManager(
   }
   catch {}
   return null
+}
+
+function isMetadataYarnClassic(metadataPath: string) {
+  return metadataPath.endsWith('.yarn_integrity')
 }

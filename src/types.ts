@@ -31,12 +31,26 @@ export interface ResolvedCommand {
   args: string[]
 }
 
+export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'install-metadata'
+
 export interface DetectOptions {
   /**
    * Current working directory to start looking up for package manager.
    * @default `process.cwd()`
    */
   cwd?: string
+  /**
+   * The strategies to use for detecting the package manager. The strategies
+   * are executed in the order it's specified for every directory that it iterates
+   * upwards from the `cwd`.
+   *
+   * - `lockfile`: Look up for lock files.
+   * - `packageManager-field`: Look up for the `packageManager` field in package.json.
+   * - `install-metadata`: Look up for installation metadata added by package managers.
+   *
+   * @default ['lockfile', 'packageManager-field']
+   */
+  strategies?: DetectStrategy[]
   /**
    * Callback when unknown package manager from package.json.
    * @param packageManager - The `packageManager` value from package.json file.

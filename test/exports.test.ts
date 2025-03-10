@@ -12,6 +12,7 @@ it('exports-snapshot', async () => {
       ".": {
         "AGENTS": "object",
         "COMMANDS": "object",
+        "INSTALL_METADATA": "object",
         "INSTALL_PAGE": "object",
         "LOCKS": "object",
         "constructCommand": "function",
@@ -26,6 +27,7 @@ it('exports-snapshot', async () => {
       },
       "./constants": {
         "AGENTS": "object",
+        "INSTALL_METADATA": "object",
         "INSTALL_PAGE": "object",
         "LOCKS": "object",
       },

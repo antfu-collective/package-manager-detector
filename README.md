@@ -5,9 +5,9 @@
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![License][license-src]][license-href]
 
-Package manager detector is based on lock files and the `packageManager` field in the current project's `package.json` file.
+Package manager detector is based on lock files, the `package.json` `packageManager` field, and installation metadata to detect the package manager used in a project.
 
-It will detect your `yarn.lock` / `pnpm-lock.yaml` / `package-lock.json` / `bun.lock` / `bun.lockb` / `deno.lock` to know the current package manager and use the `packageManager` field in your `package.json` if present.
+It supports `npm`, `yarn`, `pnpm`, `deno`, and `bun`.
 
 ## Install
 
