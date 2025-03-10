@@ -2,7 +2,7 @@
   "name": "package-manager-detector",
   "type": "module",
   "version": "0.2.11",
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.6.1",
   "description": "Package manager detector",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -16,36 +16,24 @@
   },
   "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./commands": {
-      "import": "./dist/commands.mjs",
-      "require": "./dist/commands.cjs"
-    },
-    "./detect": {
-      "import": "./dist/detect.mjs",
-      "require": "./dist/detect.cjs"
-    },
-    "./constants": {
-      "import": "./dist/constants.mjs",
-      "require": "./dist/constants.cjs"
-    }
+    ".": "./dist/index.mjs",
+    "./commands": "./dist/commands.mjs",
+    "./detect": "./dist/detect.mjs",
+    "./constants": "./dist/constants.mjs"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "typesVersions": {
     "*": {
       "commands": [
-        "./dist/commands.d.ts"
+        "./dist/commands.d.mts"
       ],
       "detect": [
-        "./dist/detect.d.ts"
+        "./dist/detect.d.mts"
       ],
       "constants": [
-        "./dist/constants.d.ts"
+        "./dist/constants.d.mts"
       ]
     }
   },
@@ -57,23 +45,21 @@
     "build": "unbuild",
     "stub": "unbuild --stub",
     "release": "bumpp",
-    "lint": "eslint .",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "test": "vitest"
   },
-  "dependencies": {
-    "quansync": "^0.2.7"
-  },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.3.0",
+    "@antfu/eslint-config": "^4.8.1",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.13.8",
+    "@types/node": "^22.13.10",
     "bumpp": "^10.0.3",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "fs-extra": "^11.3.0",
     "typescript": "^5.8.2",
     "unbuild": "^3.5.0",
-    "unplugin-quansync": "^0.3.3",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.8",
+    "vitest-package-exports": "^0.1.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

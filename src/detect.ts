@@ -2,29 +2,17 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { quansync } from 'quansync/macro'
-import { AGENTS, INSTALL_METADATAS, LOCKS } from './constants'
+import { AGENTS, INSTALL_METADATA, LOCKS } from './constants'
 
-const pathExists = quansync({
-  sync: (path: string, type: 'file' | 'dir') => {
-    try {
-      const stat = fs.statSync(path)
-      return type === 'file' ? stat.isFile() : stat.isDirectory()
-    }
-    catch {
-      return false
-    }
-  },
-  async: async (path: string, type: 'file' | 'dir') => {
-    try {
-      const stat = await fs.promises.stat(path)
-      return type === 'file' ? stat.isFile() : stat.isDirectory()
-    }
-    catch {
-      return false
-    }
-  },
-})
+function pathExists(path: string, type: 'file' | 'dir') {
+  try {
+    const stat = fs.statSync(path)
+    return type === 'file' ? stat.isFile() : stat.isDirectory()
+  }
+  catch {
+    return false
+  }
+}
 
 /**
  * Detects the package manager used in the running process.
@@ -41,7 +29,7 @@ export function getUserAgent(): AgentName | null {
   return AGENTS.includes(name) ? name : null
 }
 
-function * lookup(cwd: string = process.cwd()): Generator<string> {
+function* lookup(cwd: string = process.cwd()): Generator<string> {
   let directory = path.resolve(cwd)
   const { root } = path.parse(directory)
 
@@ -52,19 +40,21 @@ function * lookup(cwd: string = process.cwd()): Generator<string> {
   }
 }
 
-const parsePackageJson = quansync(async (
+async function parsePackageJson(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
-): Promise<DetectResult | null> => {
-  return !filepath || !await pathExists(filepath, 'file') ? null : handlePackageManager(filepath, onUnknown)
-})
+): Promise<DetectResult | null> {
+  return (!filepath || !pathExists(filepath, 'file'))
+    ? null
+    : await handlePackageManager(filepath, onUnknown)
+}
 
 /**
  * Detects the package manager used in the project.
  * @param options {DetectOptions} The options to use when detecting the package manager.
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
-export const detect = quansync(async (options: DetectOptions = {}): Promise<DetectResult | null> => {
+export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
   const { cwd, strategies = ['lockfile', 'packageManager-field'], onUnknown } = options
 
   for (const directory of lookup(cwd)) {
@@ -93,10 +83,10 @@ export const detect = quansync(async (options: DetectOptions = {}): Promise<Dete
         }
         case 'install-metadata': {
           // Look up for installation metadata files
-          for (const metadata of Object.keys(INSTALL_METADATAS)) {
+          for (const metadata of Object.keys(INSTALL_METADATA)) {
             const fileOrDir = metadata.endsWith('/') ? 'dir' : 'file'
             if (await pathExists(path.join(directory, metadata), fileOrDir)) {
-              const name = INSTALL_METADATAS[metadata]
+              const name = INSTALL_METADATA[metadata]
               const agent = name === 'yarn'
                 ? isMetadataYarnClassic(metadata) ? 'yarn' : 'yarn@berry'
                 : name
@@ -110,16 +100,15 @@ export const detect = quansync(async (options: DetectOptions = {}): Promise<Dete
   }
 
   return null
-})
-export const detectSync = detect.sync
+}
 
-function handlePackageManager(
+async function handlePackageManager(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+    const pkg = JSON.parse(await fs.promises.readFile(filepath, 'utf8'))
     let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
       const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')

@@ -22,7 +22,7 @@ export const LOCKS: Record<string, AgentName> = {
 }
 
 // the order here matters, more specific one comes first
-export const INSTALL_METADATAS: Record<string, AgentName> = {
+export const INSTALL_METADATA: Record<string, AgentName> = {
   'node_modules/.deno/': 'deno',
   'node_modules/.pnpm/': 'pnpm',
   'node_modules/.yarn-state.yml': 'yarn', // yarn v2+ (node-modules)
