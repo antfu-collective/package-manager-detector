@@ -1,12 +1,12 @@
 import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import { AGENTS, INSTALL_METADATA, LOCKS } from './constants'
 
-function pathExists(path: string, type: 'file' | 'dir') {
+async function pathExists(path: string, type: 'file' | 'dir') {
   try {
-    const stat = fs.statSync(path)
+    const stat = await fs.stat(path)
     return type === 'file' ? stat.isFile() : stat.isDirectory()
   }
   catch {
@@ -108,7 +108,7 @@ async function handlePackageManager(
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(await fs.promises.readFile(filepath, 'utf8'))
+    const pkg = JSON.parse(await fs.readFile(filepath, 'utf8'))
     let agent: Agent | undefined
     if (typeof pkg.packageManager === 'string') {
       const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
