@@ -44,9 +44,9 @@ export interface DetectOptions {
    * are executed in the order it's specified for every directory that it iterates
    * upwards from the `cwd`.
    *
-   * - `lockfile`: Look up for lock files.
-   * - `packageManager-field`: Look up for the `packageManager` field in package.json.
-   * - `install-metadata`: Look up for installation metadata added by package managers.
+   * - `'lockfile'`: Look up for lock files.
+   * - `'packageManager-field'`: Look up for the `packageManager` field in package.json.
+   * - `'install-metadata'`: Look up for installation metadata added by package managers.
    *
    * @default ['lockfile', 'packageManager-field']
    */
