@@ -38,7 +38,7 @@ import { getUserAgent } from 'package-manager-detector/detect'
 
 ## Customize Detection Strategy
 
-By default, the `detect` API searches through the current directory for lock files, and if none exists, the `package.json` `packageManager` field. If both strategy couldn't detect the package manager, it'll crawl upwards to the parent directory and repeat the detection process until it reaches the root directory.
+By default, the `detect` API searches through the current directory for lock files, and if none exists, the `package.json` `packageManager` field. If both strategies couldn't detect the package manager, it'll crawl upwards to the parent directory and repeat the detection process until it reaches the root directory.
 
 The strategies can be configured through `detect`'s `strategies` option with the following accepted strategies:
 
