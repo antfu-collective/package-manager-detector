@@ -1,5 +1,71 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`dev-engines > bun 1`] = `
+{
+  "agent": "bun",
+  "name": "bun",
+  "version": "0",
+}
+`;
+
+exports[`dev-engines > deno 1`] = `
+{
+  "agent": "deno",
+  "name": "deno",
+  "version": "2",
+}
+`;
+
+exports[`dev-engines > npm 1`] = `
+{
+  "agent": "npm",
+  "name": "npm",
+  "version": "7",
+}
+`;
+
+exports[`dev-engines > pnpm 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+  "version": "8",
+}
+`;
+
+exports[`dev-engines > pnpm@6 1`] = `
+{
+  "agent": "pnpm@6",
+  "name": "pnpm",
+  "version": "6",
+}
+`;
+
+exports[`dev-engines > pnpm-version-range 1`] = `
+{
+  "agent": "pnpm",
+  "name": "pnpm",
+  "version": "8.0.0",
+}
+`;
+
+exports[`dev-engines > unknown 1`] = `null`;
+
+exports[`dev-engines > yarn 1`] = `
+{
+  "agent": "yarn",
+  "name": "yarn",
+  "version": "1",
+}
+`;
+
+exports[`dev-engines > yarn@berry 1`] = `
+{
+  "agent": "yarn@berry",
+  "name": "yarn",
+  "version": "berry",
+}
+`;
+
 exports[`install-metadata > bun 1`] = `
 {
   "agent": "bun",

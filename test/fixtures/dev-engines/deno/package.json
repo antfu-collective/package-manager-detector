@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "deno",
+      "version": "2"
+    }
+  }
+}

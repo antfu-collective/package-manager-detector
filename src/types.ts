@@ -31,7 +31,7 @@ export interface ResolvedCommand {
   args: string[]
 }
 
-export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'install-metadata'
+export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
 
 export interface DetectOptions {
   /**
@@ -46,9 +46,10 @@ export interface DetectOptions {
    *
    * - `'lockfile'`: Look up for lock files.
    * - `'packageManager-field'`: Look up for the `packageManager` field in package.json.
+   * - `'devEngines-field'`: Look up for the `devEngines.packageManager` field in package.json.
    * - `'install-metadata'`: Look up for installation metadata added by package managers.
    *
-   * @default ['lockfile', 'packageManager-field']
+   * @default ['lockfile', 'packageManager-field', 'devEngines-field']
    */
   strategies?: DetectStrategy[]
   /**

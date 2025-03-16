@@ -29,7 +29,7 @@ afterAll(() => {
   vi.resetAllMocks()
 })
 
-const fixtures = ['lockfile', 'packager', 'install-metadata']
+const fixtures = ['lockfile', 'packager', 'dev-engines', 'install-metadata']
 
 fixtures.forEach(fixture => describe(fixture, () => {
   const fixtureDirs = getFixtureDirs(fixture)
@@ -37,7 +37,7 @@ fixtures.forEach(fixture => describe(fixture, () => {
   fixtureDirs.forEach((dir) => {
     let options: DetectOptions | undefined
     if (fixture === 'install-metadata') {
-      options = { strategies: ['install-metadata', 'lockfile', 'packageManager-field'] }
+      options = { strategies: ['install-metadata', 'lockfile', 'packageManager-field', 'devEngines-field'] }
     }
     it(dir, detectTest(fixture, dir, options))
   })

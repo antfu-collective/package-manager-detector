@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "bun",
+      "version": "0"
+    }
+  }
+}
