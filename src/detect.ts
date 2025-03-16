@@ -55,7 +55,7 @@ async function parsePackageJson(
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, strategies = ['lockfile', 'packageManager-field'], onUnknown } = options
+  const { cwd, strategies = ['lockfile', 'packageManager-field', 'devEngines-field'], onUnknown } = options
 
   for (const directory of lookup(cwd)) {
     for (const strategy of strategies) {
@@ -74,7 +74,8 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
           }
           break
         }
-        case 'packageManager-field': {
+        case 'packageManager-field':
+        case 'devEngines-field': {
           // Look up for package.json
           const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
           if (result)
@@ -102,6 +103,21 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
+function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
+  const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+  if (typeof pkg.packageManager === 'string') {
+    const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
+    return { name, ver: handelVer(ver) }
+  }
+  if (typeof pkg.devEngines?.packageManager?.name === 'string') {
+    return {
+      name: pkg.devEngines.packageManager.name,
+      ver: handelVer(pkg.devEngines.packageManager.version),
+    }
+  }
+  return undefined
+}
+
 async function handlePackageManager(
   filepath: string,
   onUnknown: DetectOptions['onUnknown'],
@@ -110,16 +126,18 @@ async function handlePackageManager(
   try {
     const pkg = JSON.parse(await fs.readFile(filepath, 'utf8'))
     let agent: Agent | undefined
-    if (typeof pkg.packageManager === 'string') {
-      const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
+    const nameAndVer = getNameAndVer(pkg)
+    if (nameAndVer) {
+      const name = nameAndVer.name as AgentName
+      const ver = nameAndVer.ver
       let version = ver
-      if (name === 'yarn' && Number.parseInt(ver) > 1) {
+      if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
         agent = 'yarn@berry'
         // the version in packageManager isn't the actual yarn package version
         version = 'berry'
         return { name, agent, version }
       }
-      else if (name === 'pnpm' && Number.parseInt(ver) < 7) {
+      else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
         agent = 'pnpm@6'
         return { name, agent, version }
       }
