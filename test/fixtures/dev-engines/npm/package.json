@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "7"
+    }
+  }
+}

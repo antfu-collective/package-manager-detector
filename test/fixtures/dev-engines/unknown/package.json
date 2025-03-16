@@ -1,0 +1,7 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "future-package-manager"
+    }
+  }
+}

@@ -29,7 +29,7 @@ afterAll(() => {
   vi.resetAllMocks()
 })
 
-const fixtures = ['lockfile', 'packager', 'install-metadata']
+const fixtures = ['lockfile', 'packager', 'dev-engines', 'install-metadata']
 
 fixtures.forEach(fixture => describe(fixture, () => {
   const fixtureDirs = getFixtureDirs(fixture)

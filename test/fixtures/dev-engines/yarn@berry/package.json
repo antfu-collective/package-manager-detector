@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "yarn",
+      "version": "3"
+    }
+  }
+}
