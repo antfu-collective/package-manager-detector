@@ -16,6 +16,7 @@ export const LOCKS: Record<string, AgentName> = {
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
   'pnpm-lock.yaml': 'pnpm',
+  'pnpm-workspace.yaml': 'pnpm',
   'yarn.lock': 'yarn',
   'package-lock.json': 'npm',
   'npm-shrinkwrap.json': 'npm',
