@@ -1,12 +1,12 @@
 import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
 
-function npmRun(agent: string) {
+function dashDashArg(agent: string, agentCommand: string) {
   return (args: string[]) => {
     if (args.length > 1) {
-      return [agent, 'run', args[0], '--', ...args.slice(1)]
+      return [agent, agentCommand, args[0], '--', ...args.slice(1)]
     }
     else {
-      return [agent, 'run', args[0]]
+      return [agent, agentCommand, args[0]]
     }
   }
 }
@@ -19,7 +19,7 @@ function denoExecute() {
 
 const npm: AgentCommands = {
   'agent': ['npm', 0],
-  'run': npmRun('npm'),
+  'run': dashDashArg('npm', 'run'),
   'install': ['npm', 'i', 0],
   'frozen': ['npm', 'ci', 0],
   'global': ['npm', 'i', '-g', 0],
@@ -43,7 +43,7 @@ const yarn: AgentCommands = {
   'upgrade': ['yarn', 'upgrade', 0],
   'upgrade-interactive': ['yarn', 'upgrade-interactive', 0],
   'execute': ['npx', 0],
-  'execute-local': ['yarn', 'exec', 0],
+  'execute-local': dashDashArg('yarn', 'exec'),
   'uninstall': ['yarn', 'remove', 0],
   'global_uninstall': ['yarn', 'global', 'remove', 0],
 }
@@ -114,7 +114,7 @@ export const COMMANDS = {
   // pnpm v6.x or below
   'pnpm@6': <AgentCommands>{
     ...pnpm,
-    run: npmRun('pnpm'),
+    run: dashDashArg('pnpm', 'run'),
   },
   'bun': bun,
   'deno': deno,
