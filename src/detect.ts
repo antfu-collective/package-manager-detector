@@ -56,6 +56,7 @@ async function parsePackageJson(
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
   const { cwd, strategies = ['lockfile', 'packageManager-field', 'devEngines-field'], onUnknown, stop } = options
+  const resolvedStop = stop ? path.resolve(stop) : undefined
 
   for (const directory of lookup(cwd)) {
     for (const strategy of strategies) {
@@ -100,7 +101,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     }
 
     // Stop the traversing if the stop directory is reached
-    if (stop && path.resolve(directory) === path.resolve(stop))
+    if (resolvedStop && directory === resolvedStop)
       break
   }
 
