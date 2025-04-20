@@ -44,3 +44,7 @@ export const INSTALL_PAGE: Record<Agent, string> = {
   'yarn@berry': 'https://yarnpkg.com/getting-started/install',
   'npm': 'https://docs.npmjs.com/cli/configuring-npm/install',
 }
+
+export const WORKSPACE_ROOTS: string[] = [
+  'pnpm-workspace.yaml',
+]

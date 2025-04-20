@@ -2,7 +2,7 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-import { AGENTS, INSTALL_METADATA, LOCKS } from './constants'
+import { AGENTS, INSTALL_METADATA, LOCKS, WORKSPACE_ROOTS } from './constants'
 
 async function pathExists(path: string, type: 'file' | 'dir') {
   try {
@@ -38,6 +38,22 @@ function* lookup(cwd: string = process.cwd()): Generator<string> {
 
     directory = path.dirname(directory)
   }
+}
+
+/**
+ * Get the root directory of a pnpm workspace
+ * @param {string} cwd The directory to start looking from
+ * @returns {Promise<string | null>} The absolute path to the workspace root or null if not found
+ */
+export async function getWorkspaceRoot(cwd: string = process.cwd()): Promise<string | null> {
+  for (const directory of lookup(cwd)) {
+    for (const workspaceRoot of WORKSPACE_ROOTS) {
+      if (await pathExists(path.join(directory, workspaceRoot), 'file')) {
+        return directory
+      }
+    }
+  }
+  return null
 }
 
 async function parsePackageJson(
@@ -155,7 +171,7 @@ async function handlePackageManager(
       }
     }
   }
-  catch {}
+  catch { }
   return null
 }
 
