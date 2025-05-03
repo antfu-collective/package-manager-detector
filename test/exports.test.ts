@@ -15,11 +15,9 @@ it('exports-snapshot', async () => {
         "INSTALL_METADATA": "object",
         "INSTALL_PAGE": "object",
         "LOCKS": "object",
-        "WORKSPACE_ROOTS": "object",
         "constructCommand": "function",
         "detect": "function",
         "getUserAgent": "function",
-        "getWorkspaceRoot": "function",
         "resolveCommand": "function",
       },
       "./commands": {
@@ -32,12 +30,10 @@ it('exports-snapshot', async () => {
         "INSTALL_METADATA": "object",
         "INSTALL_PAGE": "object",
         "LOCKS": "object",
-        "WORKSPACE_ROOTS": "object",
       },
       "./detect": {
         "detect": "function",
         "getUserAgent": "function",
-        "getWorkspaceRoot": "function",
       },
     }
   `)

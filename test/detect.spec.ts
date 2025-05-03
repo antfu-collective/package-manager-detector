@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { detect, getWorkspaceRoot } from '../src'
+import { detect } from '../src'
 
 let basicLog: MockInstance, errorLog: MockInstance, warnLog: MockInstance, infoLog: MockInstance
 
@@ -86,29 +86,4 @@ it('stops at specified directory', async () => {
     name: 'npm',
     agent: 'npm',
   })
-})
-
-it('detects pnpm workspace root', async () => {
-  const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
-
-  // setup a pnpm workspace structure
-  const workspaceDir = path.join(cwd, 'workspace')
-  const packageDir = path.join(workspaceDir, 'packages', 'foo')
-
-  await fs.copy(
-    path.join(__dirname, 'fixtures', 'workspace', 'pnpm'),
-    workspaceDir,
-  )
-
-  // should find workspace root from package directory
-  const rootFromPackage = await getWorkspaceRoot(packageDir)
-  expect(rootFromPackage).toBe(workspaceDir)
-
-  // should find workspace root from workspace directory
-  const rootFromWorkspace = await getWorkspaceRoot(workspaceDir)
-  expect(rootFromWorkspace).toBe(workspaceDir)
-
-  // should return null when no workspace root
-  const rootFromOutside = await getWorkspaceRoot(cwd)
-  expect(rootFromOutside).toBe(null)
 })
