@@ -57,6 +57,10 @@ export interface DetectOptions {
    * @param packageManager - The `packageManager` value from package.json file.
    */
   onUnknown?: (packageManager: string) => DetectResult | null | undefined
+  /**
+   * The path to stop traversing up the directory.
+   */
+  stopDir?: string | ((currentDir: string) => boolean)
 }
 
 export interface DetectResult {

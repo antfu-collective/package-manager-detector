@@ -55,7 +55,20 @@ async function parsePackageJson(
  * @returns {Promise<DetectResult | null>} The detected package manager or `null` if not found.
  */
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
-  const { cwd, strategies = ['lockfile', 'packageManager-field', 'devEngines-field'], onUnknown } = options
+  const {
+    cwd,
+    strategies = ['lockfile', 'packageManager-field', 'devEngines-field'],
+    onUnknown,
+  } = options
+
+  let stopDir: ((dir: string) => boolean) | undefined
+  if (typeof options.stopDir === 'string') {
+    const resolved = path.resolve(options.stopDir)
+    stopDir = dir => dir === resolved
+  }
+  else {
+    stopDir = options.stopDir
+  }
 
   for (const directory of lookup(cwd)) {
     for (const strategy of strategies) {
@@ -98,6 +111,10 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
         }
       }
     }
+
+    // Stop the traversing if the stop directory is reached
+    if (stopDir?.(directory))
+      break
   }
 
   return null
@@ -150,7 +167,7 @@ async function handlePackageManager(
       }
     }
   }
-  catch {}
+  catch { }
   return null
 }
 
