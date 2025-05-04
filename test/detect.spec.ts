@@ -73,7 +73,43 @@ it('stops at specified directory', async () => {
 
   const resultWithStop = await detect({
     cwd: nestedNoFilesDir,
-    stop: noFilesDir,
+    stopDir: noFilesDir,
+  })
+
+  expect(resultWithStop).toBe(null)
+
+  const resultWithoutStop = await detect({
+    cwd: nestedNoFilesDir,
+  })
+
+  expect(resultWithoutStop).toMatchObject({
+    name: 'npm',
+    agent: 'npm',
+  })
+})
+
+it('stops at with custom stop function', async () => {
+  const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+  let count = 0
+
+  const noFilesDir = path.join(cwd, 'no-files')
+  const nestedNoFilesDir = path.join(noFilesDir, 'nested/nested')
+  const parentDir = cwd
+
+  await fs.mkdirp(noFilesDir)
+  await fs.mkdirp(nestedNoFilesDir)
+
+  await fs.copy(
+    path.join(__dirname, 'fixtures', 'lockfile', 'npm'),
+    parentDir,
+  )
+
+  const resultWithStop = await detect({
+    cwd: nestedNoFilesDir,
+    stopDir: () => {
+      count++
+      return count > 2
+    },
   })
 
   expect(resultWithStop).toBe(null)

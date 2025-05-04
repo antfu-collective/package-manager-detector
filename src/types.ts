@@ -60,7 +60,7 @@ export interface DetectOptions {
   /**
    * The path to stop traversing up the directory.
    */
-  stop?: string
+  stopDir?: string | ((currentDir: string) => boolean)
 }
 
 export interface DetectResult {
