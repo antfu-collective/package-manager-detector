@@ -84,7 +84,7 @@ const bun: AgentCommands = {
   'global': ['bun', 'add', '-g', 0],
   'add': ['bun', 'add', 0],
   'upgrade': ['bun', 'update', 0],
-  'upgrade-interactive': ['bun', 'update', 0],
+  'upgrade-interactive': ['bun', 'update', '-i', 0],
   'execute': ['bun', 'x', 0],
   'execute-local': ['bun', 'x', 0],
   'uninstall': ['bun', 'remove', 0],
