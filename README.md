@@ -69,7 +69,7 @@ This package includes package manager agents and their corresponding commands fo
 - `'global'` - install global packages
 - `'global_uninstall'` - remove global packages
 - `'upgrade'` - upgrade dependencies
-- `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm` and `bun`
+- `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm`
 - `'execute'` - download & execute binary scripts
 - `'execute-local'` - execute binary scripts (from package locally installed)
 - `'run'` - run `package.json` scripts
