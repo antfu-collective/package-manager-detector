@@ -7,6 +7,7 @@ export interface AgentCommands {
   'agent': AgentCommandValue
   'run': AgentCommandValue
   'install': AgentCommandValue
+  'dedupe': AgentCommandValue
   'frozen': AgentCommandValue
   'global': AgentCommandValue
   'add': AgentCommandValue
