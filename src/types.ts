@@ -7,12 +7,12 @@ export interface AgentCommands {
   'agent': AgentCommandValue
   'run': AgentCommandValue
   'install': AgentCommandValue
-  'dedupe': AgentCommandValue
   'frozen': AgentCommandValue
   'global': AgentCommandValue
   'add': AgentCommandValue
   'upgrade': AgentCommandValue
   'upgrade-interactive': AgentCommandValue
+  'dedupe': AgentCommandValue
   'execute': AgentCommandValue
   'execute-local': AgentCommandValue
   'uninstall': AgentCommandValue
