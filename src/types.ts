@@ -12,6 +12,7 @@ export interface AgentCommands {
   'add': AgentCommandValue
   'upgrade': AgentCommandValue
   'upgrade-interactive': AgentCommandValue
+  'dedupe': AgentCommandValue
   'execute': AgentCommandValue
   'execute-local': AgentCommandValue
   'uninstall': AgentCommandValue
