@@ -1,7 +1,7 @@
 {
   "name": "package-manager-detector",
   "type": "module",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "packageManager": "pnpm@10.18.3",
   "description": "Package manager detector",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
