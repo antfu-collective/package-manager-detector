@@ -1,3 +1,4 @@
 {
-  "packageManager": "bun@0"
+  // https://bun.com/blog/bun-v1.1.5#package-json-with-comments-and-trailing-commas
+  "packageManager": "bun@0",
 }

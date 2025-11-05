@@ -147,7 +147,7 @@ async function handlePackageManager(
      * https://bun.com/blog/bun-v1.1.5#package-json-with-comments-and-trailing-commas
      * Bun allows comments and trailing commas in package.json, so we need to strip them before parsing.
      */
-    const cleanJsonString = stripJsonComments(jsonString)
+    const cleanJsonString = stripJsonComments(jsonString, { trailingCommas: true })
     const pkg = JSON.parse(cleanJsonString)
 
     let agent: Agent | undefined
