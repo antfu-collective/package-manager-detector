@@ -13,5 +13,8 @@ export default defineBuildConfig({
     dts: {
       respectExternal: true,
     },
+    inlineDependencies: [
+      'strip-json-comments',
+    ],
   },
 })

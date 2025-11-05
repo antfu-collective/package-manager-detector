@@ -2,6 +2,7 @@ import type { Agent, AgentName, DetectOptions, DetectResult } from './types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
+import stripJsonComments from 'strip-json-comments'
 import { AGENTS, INSTALL_METADATA, LOCKS } from './constants'
 
 async function pathExists(path: string, type: 'file' | 'dir') {
@@ -141,7 +142,14 @@ async function handlePackageManager(
 ) {
   // read `packageManager` field in package.json
   try {
-    const pkg = JSON.parse(await fs.readFile(filepath, 'utf8'))
+    const jsonString = await fs.readFile(filepath, 'utf8')
+    /**
+     * https://bun.com/blog/bun-v1.1.5#package-json-with-comments-and-trailing-commas
+     * Bun allows comments and trailing commas in package.json, so we need to strip them before parsing.
+     */
+    const cleanJsonString = stripJsonComments(jsonString)
+    const pkg = JSON.parse(cleanJsonString)
+
     let agent: Agent | undefined
     const nameAndVer = getNameAndVer(pkg)
     if (nameAndVer) {
