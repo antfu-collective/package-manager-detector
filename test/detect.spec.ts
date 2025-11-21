@@ -123,3 +123,45 @@ it('stops at with custom stop function', async () => {
     agent: 'npm',
   })
 })
+
+describe('packageJsonParser', () => {
+  it('uses custom package.json parser', async () => {
+    const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+    const fixturePath = path.join(__dirname, 'fixtures', 'packager', 'npm')
+    await fs.copy(fixturePath, cwd)
+
+    const parser = vi.fn((content: string) => JSON.parse(content))
+
+    const result = await detect({
+      cwd,
+      packageJsonParser: parser,
+    })
+
+    expect(result).toMatchObject({
+      name: 'npm',
+      agent: 'npm',
+    })
+
+    expect(parser).toHaveBeenCalledTimes(1)
+    expect(parser).toHaveBeenCalledWith(expect.stringContaining('"packageManager": "npm@7"'), path.join(cwd, 'package.json'))
+  })
+
+  it('uses custom package.json parser to modify result', async () => {
+    const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+    const fixturePath = path.join(__dirname, 'fixtures', 'packager', 'npm')
+    await fs.copy(fixturePath, cwd)
+
+    // Parser that lies about the package manager
+    const parser = vi.fn(() => ({ packageManager: 'pnpm@8' }))
+
+    const result = await detect({
+      cwd,
+      packageJsonParser: parser,
+    })
+
+    expect(result).toMatchObject({
+      name: 'pnpm',
+      agent: 'pnpm',
+    })
+  })
+})

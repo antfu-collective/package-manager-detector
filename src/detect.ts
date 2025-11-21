@@ -42,11 +42,12 @@ function* lookup(cwd: string = process.cwd()): Generator<string> {
 
 async function parsePackageJson(
   filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
+  options: DetectOptions,
 ): Promise<DetectResult | null> {
-  return (!filepath || !pathExists(filepath, 'file'))
-    ? null
-    : await handlePackageManager(filepath, onUnknown)
+  if (!filepath || !(await pathExists(filepath, 'file')))
+    return null
+
+  return await handlePackageManager(filepath, options)
 }
 
 /**
@@ -58,7 +59,6 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   const {
     cwd,
     strategies = ['lockfile', 'packageManager-field', 'devEngines-field'],
-    onUnknown,
   } = options
 
   let stopDir: ((dir: string) => boolean) | undefined
@@ -78,7 +78,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
           for (const lock of Object.keys(LOCKS)) {
             if (await pathExists(path.join(directory, lock), 'file')) {
               const name = LOCKS[lock]
-              const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+              const result = await parsePackageJson(path.join(directory, 'package.json'), options)
               if (result)
                 return result
               else
@@ -90,7 +90,7 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
         case 'packageManager-field':
         case 'devEngines-field': {
           // Look up for package.json
-          const result = await parsePackageJson(path.join(directory, 'package.json'), onUnknown)
+          const result = await parsePackageJson(path.join(directory, 'package.json'), options)
           if (result)
             return result
           break
@@ -137,11 +137,15 @@ function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageMan
 
 async function handlePackageManager(
   filepath: string,
-  onUnknown: DetectOptions['onUnknown'],
+  options: DetectOptions,
 ) {
-  // read `packageManager` field in package.json
+  // read `packageManager` field in package.json using an optional custom parser
   try {
-    const pkg = JSON.parse(await fs.readFile(filepath, 'utf8'))
+    const content = await fs.readFile(filepath, 'utf8')
+    const pkg = options.packageJsonParser
+      ? await options.packageJsonParser(content, filepath)
+      : JSON.parse(content)
+
     let agent: Agent | undefined
     const nameAndVer = getNameAndVer(pkg)
     if (nameAndVer) {
@@ -163,7 +167,7 @@ async function handlePackageManager(
         return { name, agent, version }
       }
       else {
-        return onUnknown?.(pkg.packageManager) ?? null
+        return options.onUnknown?.(pkg.packageManager) ?? null
       }
     }
   }
