@@ -62,6 +62,19 @@ export interface DetectOptions {
    * The path to stop traversing up the directory.
    */
   stopDir?: string | ((currentDir: string) => boolean)
+
+  /**
+   * Optional custom parser for `package.json` content.
+   *
+   * If provided, it will be used instead of `JSON.parse` when reading `package.json` files.
+   * This can be used to support JSONC, YAML, or other formats.
+   *
+   * @param content - The content of the file.
+   * @param filepath - The absolute path to the file.
+   * @returns The parsed object or a Promise resolving to it.
+   * @default JSON.parse
+   */
+  packageJsonParser?: (content: string, filepath: string) => any | Promise<any>
 }
 
 export interface DetectResult {
