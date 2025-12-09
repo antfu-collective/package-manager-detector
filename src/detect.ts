@@ -146,20 +146,18 @@ async function handlePackageManager(
       ? await options.packageJsonParser(content, filepath)
       : JSON.parse(content)
 
-    let agent: Agent | undefined
     const nameAndVer = getNameAndVer(pkg)
     if (nameAndVer) {
-      const name = nameAndVer.name as AgentName
-      const ver = nameAndVer.ver
-      let version = ver
-      return resolveAgent(name, ver)
+      return resolveAgent(nameAndVer.name as AgentName, nameAndVer.ver) ?? options.onUnknown?.(pkg.packageManager) ?? null
     }
   }
   catch { }
   return null
 }
 
-export function resolveAgent(name: AgentName, version: string) {
+export function resolveAgent(name: AgentName, ver?: string) {
+  let agent: Agent | undefined
+  let version = ver
   if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
     agent = 'yarn@berry'
     // the version in packageManager isn't the actual yarn package version
@@ -174,10 +172,6 @@ export function resolveAgent(name: AgentName, version: string) {
     agent = name as Agent
     return { name, agent, version }
   }
-  else {
-    return options.onUnknown?.(pkg.packageManager) ?? null
-  }
-  return null
 }
 
 function isMetadataYarnClassic(metadataPath: string) {
