@@ -120,16 +120,16 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
-export const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+export const handleVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-    return { name, ver: handelVer(ver) }
+    return { name, ver: handleVersion(ver) }
   }
   if (typeof pkg.devEngines?.packageManager?.name === 'string') {
     return {
       name: pkg.devEngines.packageManager.name,
-      ver: handelVer(pkg.devEngines.packageManager.version),
+      ver: handleVersion(pkg.devEngines.packageManager.version),
     }
   }
   return undefined
