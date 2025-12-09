@@ -120,8 +120,8 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
+export const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
-  const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
     return { name, ver: handelVer(ver) }
@@ -152,26 +152,31 @@ async function handlePackageManager(
       const name = nameAndVer.name as AgentName
       const ver = nameAndVer.ver
       let version = ver
-      if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
-        agent = 'yarn@berry'
-        // the version in packageManager isn't the actual yarn package version
-        version = 'berry'
-        return { name, agent, version }
-      }
-      else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
-        agent = 'pnpm@6'
-        return { name, agent, version }
-      }
-      else if (AGENTS.includes(name)) {
-        agent = name as Agent
-        return { name, agent, version }
-      }
-      else {
-        return options.onUnknown?.(pkg.packageManager) ?? null
-      }
+      return resolveAgent(name, ver)
     }
   }
   catch { }
+  return null
+}
+
+export function resolveAgent(name: AgentName, version: string) {
+  if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
+    agent = 'yarn@berry'
+    // the version in packageManager isn't the actual yarn package version
+    version = 'berry'
+    return { name, agent, version }
+  }
+  else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
+    agent = 'pnpm@6'
+    return { name, agent, version }
+  }
+  else if (AGENTS.includes(name)) {
+    agent = name as Agent
+    return { name, agent, version }
+  }
+  else {
+    return options.onUnknown?.(pkg.packageManager) ?? null
+  }
   return null
 }
 
