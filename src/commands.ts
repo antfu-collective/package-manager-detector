@@ -13,7 +13,7 @@ function dashDashArg(agent: string, agentCommand: string) {
 
 function denoExecute() {
   return (args: string[]) => {
-    return ['deno', 'run', `npm:${args[0]}`, ...args.slice(1)]
+    return ['deno', 'x', `npm:${args[0]}`, ...args.slice(1)]
   }
 }
 

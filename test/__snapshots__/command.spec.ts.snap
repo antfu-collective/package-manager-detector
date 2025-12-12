@@ -11,6 +11,17 @@ exports[`test bun add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test bun execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "x",
+    "eslint",
+    "--fix",
+  ],
+  "command": "bun",
+}
+`;
+
 exports[`test bun run command > command handles args correctly 1`] = `
 {
   "args": [
@@ -28,6 +39,17 @@ exports[`test deno add command > command handles args correctly 1`] = `
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "deno",
+}
+`;
+
+exports[`test deno execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "x",
+    "npm:eslint",
+    "--fix",
   ],
   "command": "deno",
 }
@@ -55,6 +77,16 @@ exports[`test npm add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test npm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "npx",
+}
+`;
+
 exports[`test npm run command > command handles args correctly 1`] = `
 {
   "args": [
@@ -78,6 +110,17 @@ exports[`test pnpm add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test pnpm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
+  ],
+  "command": "pnpm",
+}
+`;
+
 exports[`test pnpm run command > command handles args correctly 1`] = `
 {
   "args": [
@@ -95,6 +138,17 @@ exports[`test pnpm@6 add command > command handles args correctly 1`] = `
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm@6 execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
   ],
   "command": "pnpm",
 }
@@ -123,6 +177,16 @@ exports[`test yarn add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test yarn execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "npx",
+}
+`;
+
 exports[`test yarn run command > command handles args correctly 1`] = `
 {
   "args": [
@@ -140,6 +204,17 @@ exports[`test yarn@berry add command > command handles args correctly 1`] = `
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn@berry execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
   ],
   "command": "yarn",
 }
