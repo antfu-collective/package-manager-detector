@@ -11,12 +11,6 @@ function dashDashArg(agent: string, agentCommand: string) {
   }
 }
 
-function denoExecute() {
-  return (args: string[]) => {
-    return ['deno', 'x', `npm:${args[0]}`, ...args.slice(1)]
-  }
-}
-
 const npm: AgentCommands = {
   'agent': ['npm', 0],
   'run': dashDashArg('npm', 'run'),
@@ -106,7 +100,7 @@ const deno: AgentCommands = {
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'dedupe': null,
-  'execute': denoExecute(),
+  'execute': ['deno', 'x', 0],
   'execute-local': ['deno', 'task', '--eval', 0],
   'uninstall': ['deno', 'remove', 0],
   'global_uninstall': ['deno', 'uninstall', '-g', 0],

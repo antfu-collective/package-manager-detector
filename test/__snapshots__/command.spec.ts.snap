@@ -48,7 +48,7 @@ exports[`test deno execute command > command handles args correctly 1`] = `
 {
   "args": [
     "x",
-    "npm:eslint",
+    "eslint",
     "--fix",
   ],
   "command": "deno",
