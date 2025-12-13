@@ -19,4 +19,10 @@ Object.entries(COMMANDS)
         expect(args).toMatchSnapshot()
       })
     })
+    describe(`test ${pm} execute command`, () => {
+      it ('command handles args correctly', () => {
+        const args = resolveCommand(pm, 'execute', ['eslint', '--fix'])
+        expect(args).toMatchSnapshot()
+      })
+    })
   })
