@@ -37,6 +37,7 @@ exports[`test deno add command > command handles args correctly 1`] = `
 {
   "args": [
     "add",
+    "--npm",
     "@antfu/ni",
     "-D",
   ],
