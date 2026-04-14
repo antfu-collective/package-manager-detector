@@ -1,19 +1,34 @@
 import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
 
-function dashDashArg(agent: string, agentCommand: string) {
+function dashDashArg(agent: string, agentCommand: string, valueFlags: string[] = []) {
   return (args: string[]) => {
-    if (args.length > 1) {
-      return [agent, agentCommand, args[0], '--', ...args.slice(1)]
+    // Find the script name: the first positional arg that isn't a flag
+    // and isn't the value of a preceding value-taking flag (e.g. `-w foo`).
+    let scriptIdx = -1
+    for (let i = 0; i < args.length; i++) {
+      if (args[i].startsWith('-'))
+        continue
+      const prev = i > 0 ? args[i - 1] : undefined
+      if (prev !== undefined && valueFlags.includes(prev))
+        continue
+      scriptIdx = i
+      break
     }
-    else {
-      return [agent, agentCommand, args[0]]
-    }
+    if (scriptIdx === -1)
+      return [agent, agentCommand, ...args]
+
+    const before = args.slice(0, scriptIdx)
+    const script = args[scriptIdx]
+    const after = args.slice(scriptIdx + 1)
+    if (after.length > 0)
+      return [agent, agentCommand, ...before, script, '--', ...after]
+    return [agent, agentCommand, ...before, script]
   }
 }
 
 const npm: AgentCommands = {
   'agent': ['npm', 0],
-  'run': dashDashArg('npm', 'run'),
+  'run': dashDashArg('npm', 'run', ['-w', '--workspace']),
   'install': ['npm', 'i', 0],
   'frozen': ['npm', 'ci', 0],
   'global': ['npm', 'i', '-g', 0],
@@ -114,7 +129,7 @@ export const COMMANDS = {
   // pnpm v6.x or below
   'pnpm@6': <AgentCommands>{
     ...pnpm,
-    run: dashDashArg('pnpm', 'run'),
+    run: dashDashArg('pnpm', 'run', ['-F', '--filter']),
   },
   'bun': bun,
   'deno': deno,
