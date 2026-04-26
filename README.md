@@ -7,7 +7,7 @@
 
 Package manager detector is based on lock files, the `package.json` `packageManager` field, and installation metadata to detect the package manager used in a project.
 
-It supports `npm`, `yarn`, `pnpm`, `deno`, and `bun`.
+It supports `npm`, `yarn`, `pnpm`, `deno`, `bun`, and `aube`.
 
 ## Install
 

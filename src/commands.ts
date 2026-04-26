@@ -90,6 +90,22 @@ const bun: AgentCommands = {
   'global_uninstall': ['bun', 'remove', '-g', 0],
 }
 
+const aube: AgentCommands = {
+  'agent': ['aube', 0],
+  'run': ['aube', 'run', 0],
+  'install': ['aube', 'install', 0],
+  'frozen': ['aube', 'install', '--frozen-lockfile', 0],
+  'global': ['aube', 'add', '-g', 0],
+  'add': ['aube', 'add', 0],
+  'upgrade': ['aube', 'update', 0],
+  'upgrade-interactive': ['aube', 'update', '-i', 0],
+  'dedupe': ['aube', 'dedupe', 0],
+  'execute': ['aube', 'dlx', 0],
+  'execute-local': ['aube', 'exec', 0],
+  'uninstall': ['aube', 'remove', 0],
+  'global_uninstall': ['aube', 'remove', '-g', 0],
+}
+
 const deno: AgentCommands = {
   'agent': ['deno', 0],
   'run': ['deno', 'task', 0],
@@ -117,6 +133,7 @@ export const COMMANDS = {
     run: dashDashArg('pnpm', 'run'),
   },
   'bun': bun,
+  'aube': aube,
   'deno': deno,
 } satisfies Record<Agent, AgentCommands>
 
