@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "aube",
+      "version": "1"
+    }
+  }
+}

@@ -1,5 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`dev-engines > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+  "version": "1",
+}
+`;
+
 exports[`dev-engines > bun 1`] = `
 {
   "agent": "bun",
@@ -66,6 +74,13 @@ exports[`dev-engines > yarn@berry 1`] = `
 }
 `;
 
+exports[`install-metadata > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+}
+`;
+
 exports[`install-metadata > bun 1`] = `
 {
   "agent": "bun",
@@ -124,6 +139,13 @@ exports[`install-metadata > yarn@berry_pnp-v3 1`] = `
 }
 `;
 
+exports[`lockfile > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+}
+`;
+
 exports[`lockfile > bun 1`] = `
 {
   "agent": "bun",
@@ -172,6 +194,14 @@ exports[`lockfile > yarn@berry 1`] = `
 {
   "agent": "yarn",
   "name": "yarn",
+}
+`;
+
+exports[`packager > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+  "version": "1",
 }
 `;
 
