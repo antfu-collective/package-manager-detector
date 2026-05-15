@@ -166,6 +166,39 @@ exports[`test pnpm@6 run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test rush add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "-p",
+    "@antfu/ni",
+    "-p",
+    "-D",
+  ],
+  "command": "rush",
+}
+`;
+
+exports[`test rush execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "npx",
+}
+`;
+
+exports[`test rush run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "rushx",
+}
+`;
+
 exports[`test yarn add command > command handles args correctly 1`] = `
 {
   "args": [

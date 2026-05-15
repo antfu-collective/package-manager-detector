@@ -159,6 +159,13 @@ exports[`lockfile > pnpm@6 1`] = `
 }
 `;
 
+exports[`lockfile > rush 1`] = `
+{
+  "agent": "rush",
+  "name": "rush",
+}
+`;
+
 exports[`lockfile > unknown 1`] = `null`;
 
 exports[`lockfile > yarn 1`] = `
