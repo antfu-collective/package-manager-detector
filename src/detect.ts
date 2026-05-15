@@ -75,9 +75,16 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
       switch (strategy) {
         case 'lockfile': {
           // Look up for lock files
+          // Note: iteration order of LOCKS matters — more specific entries
+          // (e.g. rush.json) must come before generic ones (e.g. pnpm-lock.yaml)
+          // to avoid misdetection when both files exist in the same project.
           for (const lock of Object.keys(LOCKS)) {
             if (await pathExists(path.join(directory, lock), 'file')) {
               const name = LOCKS[lock]
+              // Rush manages its own package manager via rush.json,
+              // skip packageManager field to avoid detecting as pnpm
+              if (name === 'rush')
+                return { name, agent: name }
               const result = await parsePackageJson(path.join(directory, 'package.json'), options)
               if (result)
                 return result

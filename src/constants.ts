@@ -8,6 +8,7 @@ export const AGENTS: Agent[] = [
   'pnpm@6',
   'bun',
   'deno',
+  'rush',
 ]
 
 // the order here matters, more specific one comes first
@@ -15,6 +16,9 @@ export const LOCKS: Record<string, AgentName> = {
   'bun.lock': 'bun',
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
+  // rush.json must come before pnpm entries, as rush projects
+  // also contain pnpm-lock.yaml and would be misdetected as pnpm
+  'rush.json': 'rush',
   'pnpm-lock.yaml': 'pnpm',
   'pnpm-workspace.yaml': 'pnpm',
   'yarn.lock': 'yarn',
@@ -40,6 +44,7 @@ export const INSTALL_PAGE: Record<Agent, string> = {
   'deno': 'https://deno.com',
   'pnpm': 'https://pnpm.io/installation',
   'pnpm@6': 'https://pnpm.io/6.x/installation',
+  'rush': 'https://rushjs.io',
   'yarn': 'https://classic.yarnpkg.com/en/docs/install',
   'yarn@berry': 'https://yarnpkg.com/getting-started/install',
   'npm': 'https://docs.npmjs.com/cli/configuring-npm/install',

@@ -106,6 +106,22 @@ const deno: AgentCommands = {
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
 }
 
+const rush: AgentCommands = {
+  'agent': ['rush-pnpm', 0],
+  'run': ['rushx', 0],
+  'install': ['rush', 'install', 0],
+  'frozen': ['rush', 'install', '--purge', 0],
+  'global': null,
+  'add': (args: string[]) => ['rush', 'add', ...args.flatMap(a => ['-p', a])],
+  'upgrade': ['rush', 'update', 0],
+  'upgrade-interactive': null,
+  'dedupe': null,
+  'execute': ['npx', 0],
+  'execute-local': ['rushx', 0],
+  'uninstall': (args: string[]) => ['rush', 'remove', ...args.flatMap(a => ['-p', a])],
+  'global_uninstall': null,
+}
+
 export const COMMANDS = {
   'npm': npm,
   'yarn': yarn,
@@ -118,6 +134,7 @@ export const COMMANDS = {
   },
   'bun': bun,
   'deno': deno,
+  'rush': rush,
 } satisfies Record<Agent, AgentCommands>
 
 /**
