@@ -106,8 +106,10 @@ const deno: AgentCommands = {
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
 }
 
-// nub's package-manager CLI is pnpm-compatible; `execute` (dlx) is the
-// dedicated `nubx` binary, not a `nub` subcommand.
+// nub mirrors pnpm's CLI grammar, with two deliberate divergences encoded
+// here: `upgrade` maps to `nub update` (nub reserves `nub upgrade` for its
+// own self-update, which rejects a package argument), and `execute` (dlx) is
+// the dedicated `nubx` binary, not a `nub` subcommand.
 const nub: AgentCommands = {
   'agent': ['nub', 0],
   'run': ['nub', 'run', 0],
