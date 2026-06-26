@@ -106,6 +106,24 @@ const deno: AgentCommands = {
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
 }
 
+// nub's package-manager CLI is pnpm-compatible; `execute` (dlx) is the
+// dedicated `nubx` binary, not a `nub` subcommand.
+const nub: AgentCommands = {
+  'agent': ['nub', 0],
+  'run': ['nub', 'run', 0],
+  'install': ['nub', 'install', 0],
+  'frozen': ['nub', 'install', '--frozen-lockfile', 0],
+  'global': ['nub', 'add', '-g', 0],
+  'add': ['nub', 'add', 0],
+  'upgrade': ['nub', 'update', 0],
+  'upgrade-interactive': ['nub', 'update', '-i', 0],
+  'dedupe': ['nub', 'dedupe', 0],
+  'execute': ['nubx', 0],
+  'execute-local': ['nub', 'exec', 0],
+  'uninstall': ['nub', 'remove', 0],
+  'global_uninstall': ['nub', 'remove', '-g', 0],
+}
+
 export const COMMANDS = {
   'npm': npm,
   'yarn': yarn,
@@ -118,6 +136,7 @@ export const COMMANDS = {
   },
   'bun': bun,
   'deno': deno,
+  'nub': nub,
 } satisfies Record<Agent, AgentCommands>
 
 /**

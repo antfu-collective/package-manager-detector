@@ -8,6 +8,7 @@ export const AGENTS: Agent[] = [
   'pnpm@6',
   'bun',
   'deno',
+  'nub',
 ]
 
 // the order here matters, more specific one comes first
@@ -43,4 +44,5 @@ export const INSTALL_PAGE: Record<Agent, string> = {
   'yarn': 'https://classic.yarnpkg.com/en/docs/install',
   'yarn@berry': 'https://yarnpkg.com/getting-started/install',
   'npm': 'https://docs.npmjs.com/cli/configuring-npm/install',
+  'nub': 'https://nubjs.com/docs/install',
 }

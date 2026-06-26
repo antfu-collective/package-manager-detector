@@ -99,6 +99,38 @@ exports[`test npm run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test nub add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "nub",
+}
+`;
+
+exports[`test nub execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "nubx",
+}
+`;
+
+exports[`test nub run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "nub",
+}
+`;
+
 exports[`test pnpm add command > command handles args correctly 1`] = `
 {
   "args": [

@@ -24,6 +24,14 @@ exports[`dev-engines > npm 1`] = `
 }
 `;
 
+exports[`dev-engines > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+  "version": "0.2.4",
+}
+`;
+
 exports[`dev-engines > pnpm 1`] = `
 {
   "agent": "pnpm",
@@ -196,6 +204,14 @@ exports[`packager > npm 1`] = `
   "agent": "npm",
   "name": "npm",
   "version": "7",
+}
+`;
+
+exports[`packager > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+  "version": "0.2.4",
 }
 `;
 
