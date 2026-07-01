@@ -1,41 +1,9 @@
 import { fileURLToPath } from 'node:url'
-import { expect, it } from 'vitest'
-import { getPackageExportsManifest } from 'vitest-package-exports'
+import { snapshotApiPerEntry } from 'tsnapi/vitest'
+import { describe } from 'vitest'
 
-it('exports-snapshot', async () => {
-  const manifest = await getPackageExportsManifest({
-    importMode: 'src',
-    cwd: fileURLToPath(import.meta.url),
-  })
-  expect(manifest.exports).toMatchInlineSnapshot(`
-    {
-      ".": {
-        "AGENTS": "object",
-        "COMMANDS": "object",
-        "INSTALL_METADATA": "object",
-        "INSTALL_PAGE": "object",
-        "LOCKS": "object",
-        "constructCommand": "function",
-        "detect": "function",
-        "getUserAgent": "function",
-        "resolveCommand": "function",
-      },
-      "./commands": {
-        "COMMANDS": "object",
-        "constructCommand": "function",
-        "resolveCommand": "function",
-        "splitRunArgs": "function",
-      },
-      "./constants": {
-        "AGENTS": "object",
-        "INSTALL_METADATA": "object",
-        "INSTALL_PAGE": "object",
-        "LOCKS": "object",
-      },
-      "./detect": {
-        "detect": "function",
-        "getUserAgent": "function",
-      },
-    }
-  `)
+const root = fileURLToPath(new URL('..', import.meta.url))
+
+describe('exports', () => {
+  snapshotApiPerEntry(root)
 })

@@ -1,2 +1,6 @@
-onlyBuiltDependencies:
-  - esbuild
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+allowBuilds:
+  esbuild: true

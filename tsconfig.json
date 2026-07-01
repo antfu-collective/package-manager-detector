@@ -3,10 +3,15 @@
     "target": "es2017",
     "lib": ["esnext"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "dist",
+    "test/__snapshots__"
+  ]
 }
