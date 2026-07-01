@@ -120,16 +120,16 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
+export const handleVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
-  const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-    return { name, ver: handelVer(ver) }
+    return { name, ver: handleVersion(ver) }
   }
   if (typeof pkg.devEngines?.packageManager?.name === 'string') {
     return {
       name: pkg.devEngines.packageManager.name,
-      ver: handelVer(pkg.devEngines.packageManager.version),
+      ver: handleVersion(pkg.devEngines.packageManager.version),
     }
   }
   return undefined
@@ -146,33 +146,32 @@ async function handlePackageManager(
       ? await options.packageJsonParser(content, filepath)
       : JSON.parse(content)
 
-    let agent: Agent | undefined
     const nameAndVer = getNameAndVer(pkg)
     if (nameAndVer) {
-      const name = nameAndVer.name as AgentName
-      const ver = nameAndVer.ver
-      let version = ver
-      if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
-        agent = 'yarn@berry'
-        // the version in packageManager isn't the actual yarn package version
-        version = 'berry'
-        return { name, agent, version }
-      }
-      else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
-        agent = 'pnpm@6'
-        return { name, agent, version }
-      }
-      else if (AGENTS.includes(name)) {
-        agent = name as Agent
-        return { name, agent, version }
-      }
-      else {
-        return options.onUnknown?.(pkg.packageManager) ?? null
-      }
+      return resolveAgent(nameAndVer.name as AgentName, nameAndVer.ver) ?? options.onUnknown?.(pkg.packageManager) ?? null
     }
   }
   catch { }
   return null
+}
+
+export function resolveAgent(name: AgentName, ver?: string) {
+  let agent: Agent | undefined
+  let version = ver
+  if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
+    agent = 'yarn@berry'
+    // the version in packageManager isn't the actual yarn package version
+    version = 'berry'
+    return { name, agent, version }
+  }
+  else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
+    agent = 'pnpm@6'
+    return { name, agent, version }
+  }
+  else if (AGENTS.includes(name)) {
+    agent = name as Agent
+    return { name, agent, version }
+  }
 }
 
 function isMetadataYarnClassic(metadataPath: string) {

@@ -34,6 +34,8 @@ it('exports-snapshot', async () => {
       "./detect": {
         "detect": "function",
         "getUserAgent": "function",
+        "handleVersion": "function",
+        "resolveAgent": "function",
       },
     }
   `)
