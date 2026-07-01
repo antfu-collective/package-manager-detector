@@ -1,19 +1,48 @@
 import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
 
-function dashDashArg(agent: string, agentCommand: string) {
+/**
+ * Split `run` arguments around the script name for package managers that
+ * require `--` to forward extra arguments to the script (npm, pnpm@6).
+ *
+ * The script name is the first positional argument that is neither a flag
+ * nor the value of a preceding value-taking flag (e.g. `-w <workspace>`).
+ * Everything before it (workspace/filter flags) stays in front; everything
+ * after it is the script's own arguments.
+ *
+ * @param args The arguments passed after the `run` command.
+ * @param valueFlags Flags that consume the following argument as their value.
+ * @returns The args split into `before` the script, the `script` itself
+ * (or `undefined` when there is no script name), and the `after` args.
+ */
+export function splitRunArgs(args: string[], valueFlags: string[] = []): {
+  before: string[]
+  script: string | undefined
+  after: string[]
+} {
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('-'))
+      continue
+    if (i > 0 && valueFlags.includes(args[i - 1]))
+      continue
+    return { before: args.slice(0, i), script: args[i], after: args.slice(i + 1) }
+  }
+  return { before: args, script: undefined, after: [] }
+}
+
+function dashDashArg(agent: string, agentCommand: string, valueFlags: string[] = []) {
   return (args: string[]) => {
-    if (args.length > 1) {
-      return [agent, agentCommand, args[0], '--', ...args.slice(1)]
-    }
-    else {
-      return [agent, agentCommand, args[0]]
-    }
+    const { before, script, after } = splitRunArgs(args, valueFlags)
+    if (script === undefined)
+      return [agent, agentCommand, ...before]
+    if (after.length > 0)
+      return [agent, agentCommand, ...before, script, '--', ...after]
+    return [agent, agentCommand, ...before, script]
   }
 }
 
 const npm: AgentCommands = {
   'agent': ['npm', 0],
-  'run': dashDashArg('npm', 'run'),
+  'run': dashDashArg('npm', 'run', ['-w', '--workspace']),
   'install': ['npm', 'i', 0],
   'frozen': ['npm', 'ci', 0],
   'global': ['npm', 'i', '-g', 0],
@@ -122,6 +151,26 @@ const deno: AgentCommands = {
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
 }
 
+// nub mirrors pnpm's CLI grammar, with two deliberate divergences encoded
+// here: `upgrade` maps to `nub update` (nub reserves `nub upgrade` for its
+// own self-update, which rejects a package argument), and `execute` (dlx) is
+// the dedicated `nubx` binary, not a `nub` subcommand.
+const nub: AgentCommands = {
+  'agent': ['nub', 0],
+  'run': ['nub', 'run', 0],
+  'install': ['nub', 'install', 0],
+  'frozen': ['nub', 'install', '--frozen-lockfile', 0],
+  'global': ['nub', 'add', '-g', 0],
+  'add': ['nub', 'add', 0],
+  'upgrade': ['nub', 'update', 0],
+  'upgrade-interactive': ['nub', 'update', '-i', 0],
+  'dedupe': ['nub', 'dedupe', 0],
+  'execute': ['nubx', 0],
+  'execute-local': ['nub', 'exec', 0],
+  'uninstall': ['nub', 'remove', 0],
+  'global_uninstall': ['nub', 'remove', '-g', 0],
+}
+
 export const COMMANDS = {
   'npm': npm,
   'yarn': yarn,
@@ -130,11 +179,12 @@ export const COMMANDS = {
   // pnpm v6.x or below
   'pnpm@6': <AgentCommands>{
     ...pnpm,
-    run: dashDashArg('pnpm', 'run'),
+    run: dashDashArg('pnpm', 'run', ['-F', '--filter']),
   },
   'bun': bun,
   'aube': aube,
   'deno': deno,
+  'nub': nub,
 } satisfies Record<Agent, AgentCommands>
 
 /**

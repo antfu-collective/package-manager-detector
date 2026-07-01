@@ -24,6 +24,7 @@ it('exports-snapshot', async () => {
         "COMMANDS": "object",
         "constructCommand": "function",
         "resolveCommand": "function",
+        "splitRunArgs": "function",
       },
       "./constants": {
         "AGENTS": "object",
