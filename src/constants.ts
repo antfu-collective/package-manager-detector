@@ -9,10 +9,13 @@ export const AGENTS: Agent[] = [
   'bun',
   'deno',
   'nub',
+  'aube',
 ]
 
 // the order here matters, more specific one comes first
 export const LOCKS: Record<string, AgentName> = {
+  'aube-lock.yaml': 'aube',
+  'aube-workspace.yaml': 'aube',
   'bun.lock': 'bun',
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
@@ -25,6 +28,7 @@ export const LOCKS: Record<string, AgentName> = {
 
 // the order here matters, more specific one comes first
 export const INSTALL_METADATA: Record<string, AgentName> = {
+  'node_modules/.aube/': 'aube',
   'node_modules/.deno/': 'deno',
   'node_modules/.pnpm/': 'pnpm',
   'node_modules/.yarn-state.yml': 'yarn', // yarn v2+ (node-modules)
@@ -37,6 +41,7 @@ export const INSTALL_METADATA: Record<string, AgentName> = {
 }
 
 export const INSTALL_PAGE: Record<Agent, string> = {
+  'aube': 'https://aube.en.dev/installation',
   'bun': 'https://bun.sh',
   'deno': 'https://deno.com',
   'pnpm': 'https://pnpm.io/installation',

@@ -12,6 +12,7 @@ describe('get user agent', () => {
     ['bun', 'bun/1.1.8 npm/? node/v21.6.0 linux x64'],
     ['deno', 'deno/2.0.5 npm/? node/v21.6.0 linux x64'],
     ['nub', 'nub/0.2.4 npm/? node/v22.0.0 darwin arm64'],
+    ['aube', 'aube/1.0.0 npm/? node/v22.0.0 linux x64'],
   ].forEach(([agent, detection]) => {
     it(`${agent} detected with ${detection}`, () => {
       vi.stubEnv(

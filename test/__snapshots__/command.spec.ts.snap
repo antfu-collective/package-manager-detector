@@ -1,5 +1,38 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`test aube add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "aube",
+}
+`;
+
+exports[`test aube execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
+  ],
+  "command": "aube",
+}
+`;
+
+exports[`test aube run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "aube",
+}
+`;
+
 exports[`test bun add command > command handles args correctly 1`] = `
 {
   "args": [
