@@ -1,25 +1,39 @@
 import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
 
+/**
+ * Split `run` arguments around the script name for package managers that
+ * require `--` to forward extra arguments to the script (npm, pnpm@6).
+ *
+ * The script name is the first positional argument that is neither a flag
+ * nor the value of a preceding value-taking flag (e.g. `-w <workspace>`).
+ * Everything before it (workspace/filter flags) stays in front; everything
+ * after it is the script's own arguments.
+ *
+ * @param args The arguments passed after the `run` command.
+ * @param valueFlags Flags that consume the following argument as their value.
+ * @returns The args split into `before` the script, the `script` itself
+ * (or `undefined` when there is no script name), and the `after` args.
+ */
+export function splitRunArgs(args: string[], valueFlags: string[] = []): {
+  before: string[]
+  script: string | undefined
+  after: string[]
+} {
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('-'))
+      continue
+    if (i > 0 && valueFlags.includes(args[i - 1]))
+      continue
+    return { before: args.slice(0, i), script: args[i], after: args.slice(i + 1) }
+  }
+  return { before: args, script: undefined, after: [] }
+}
+
 function dashDashArg(agent: string, agentCommand: string, valueFlags: string[] = []) {
   return (args: string[]) => {
-    // Find the script name: the first positional arg that isn't a flag
-    // and isn't the value of a preceding value-taking flag (e.g. `-w foo`).
-    let scriptIdx = -1
-    for (let i = 0; i < args.length; i++) {
-      if (args[i].startsWith('-'))
-        continue
-      const prev = i > 0 ? args[i - 1] : undefined
-      if (prev !== undefined && valueFlags.includes(prev))
-        continue
-      scriptIdx = i
-      break
-    }
-    if (scriptIdx === -1)
-      return [agent, agentCommand, ...args]
-
-    const before = args.slice(0, scriptIdx)
-    const script = args[scriptIdx]
-    const after = args.slice(scriptIdx + 1)
+    const { before, script, after } = splitRunArgs(args, valueFlags)
+    if (script === undefined)
+      return [agent, agentCommand, ...before]
     if (after.length > 0)
       return [agent, agentCommand, ...before, script, '--', ...after]
     return [agent, agentCommand, ...before, script]
