@@ -103,6 +103,20 @@ const pnpm: AgentCommands = {
   'global_uninstall': ['pnpm', 'remove', '--global', 0],
 }
 
+/** pnpm via Rush (rush-pnpm) */
+const pnpmRush: AgentCommands = Object.fromEntries(
+  Object.entries(pnpm).map(([key, value]) => {
+    if (value == null) return [key, null]
+    if (typeof value === 'function') {
+      return [key, (args: string[]) => {
+        const resolved = value(args)
+        return resolved.map((v, i) => i === 0 && v === 'pnpm' ? 'rush-pnpm' : v)
+      }]
+    }
+    return [key, value.map((v, i) => i === 0 && v === 'pnpm' ? 'rush-pnpm' : v)]
+  }),
+) as AgentCommands
+
 const bun: AgentCommands = {
   'agent': ['bun', 0],
   'run': ['bun', 'run', 0],
@@ -181,6 +195,7 @@ export const COMMANDS = {
     ...pnpm,
     run: dashDashArg('pnpm', 'run', ['-F', '--filter']),
   },
+  'pnpm-rush': pnpmRush,
   'bun': bun,
   'aube': aube,
   'deno': deno,

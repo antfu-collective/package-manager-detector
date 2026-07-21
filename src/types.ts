@@ -1,4 +1,4 @@
-export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'bun' | 'deno' | 'nub' | 'aube'
+export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'pnpm-rush' | 'bun' | 'deno' | 'nub' | 'aube'
 export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno' | 'nub' | 'aube'
 
 export type AgentCommandValue = (string | number)[] | ((args: string[]) => string[]) | null
@@ -32,8 +32,7 @@ export interface ResolvedCommand {
   args: string[]
 }
 
-export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
-
+export type DetectStrategy = 'rush' | 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
 export interface DetectOptions {
   /**
    * Current working directory to start looking up for package manager.

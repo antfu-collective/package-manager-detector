@@ -58,7 +58,7 @@ async function parsePackageJson(
 export async function detect(options: DetectOptions = {}): Promise<DetectResult | null> {
   const {
     cwd,
-    strategies = ['lockfile', 'packageManager-field', 'devEngines-field'],
+    strategies = ['rush', 'lockfile', 'packageManager-field', 'devEngines-field'],
   } = options
 
   let stopDir: ((dir: string) => boolean) | undefined
@@ -73,6 +73,12 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   for (const directory of lookup(cwd)) {
     for (const strategy of strategies) {
       switch (strategy) {
+        case 'rush': {
+          if (await pathExists(path.join(directory, 'rush.json'), 'file')) {
+            return { name: 'pnpm', agent: 'pnpm-rush' }
+          }
+          break
+        }
         case 'lockfile': {
           // Look up for lock files
           for (const lock of Object.keys(LOCKS)) {

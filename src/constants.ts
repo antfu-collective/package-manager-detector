@@ -6,6 +6,7 @@ export const AGENTS: Agent[] = [
   'yarn@berry',
   'pnpm',
   'pnpm@6',
+  'pnpm-rush',
   'bun',
   'deno',
   'nub',
