@@ -175,6 +175,13 @@ exports[`lockfile > npm 1`] = `
 }
 `;
 
+exports[`lockfile > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+}
+`;
+
 exports[`lockfile > pnpm 1`] = `
 {
   "agent": "pnpm",
