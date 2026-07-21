@@ -47,6 +47,7 @@ export const INSTALL_PAGE: Record<Agent, string> = {
   'deno': 'https://deno.com',
   'pnpm': 'https://pnpm.io/installation',
   'pnpm@6': 'https://pnpm.io/6.x/installation',
+  'pnpm-rush': 'https://rushjs.io/pages/intro/get_started/',
   'yarn': 'https://classic.yarnpkg.com/en/docs/install',
   'yarn@berry': 'https://yarnpkg.com/getting-started/install',
   'npm': 'https://docs.npmjs.com/cli/configuring-npm/install',

@@ -32,7 +32,8 @@ export interface ResolvedCommand {
   args: string[]
 }
 
-export type DetectStrategy = 'rush' | 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
+export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
+
 export interface DetectOptions {
   /**
    * Current working directory to start looking up for package manager.

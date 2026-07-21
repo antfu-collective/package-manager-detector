@@ -18,6 +18,7 @@ export declare const COMMANDS: {
     'yarn@berry': AgentCommands;
     pnpm: AgentCommands;
     'pnpm@6': AgentCommands;
+    'pnpm-rush': AgentCommands;
     bun: AgentCommands;
     aube: AgentCommands;
     deno: AgentCommands;

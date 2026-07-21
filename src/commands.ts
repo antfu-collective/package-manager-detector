@@ -87,35 +87,29 @@ const yarnBerry: AgentCommands = {
   'global_uninstall': ['npm', 'uninstall', '-g', 0],
 }
 
-const pnpm: AgentCommands = {
-  'agent': ['pnpm', 0],
-  'run': ['pnpm', 'run', 0],
-  'install': ['pnpm', 'i', 0],
-  'frozen': ['pnpm', 'i', '--frozen-lockfile', 0],
-  'global': ['pnpm', 'add', '-g', 0],
-  'add': ['pnpm', 'add', 0],
-  'upgrade': ['pnpm', 'update', 0],
-  'upgrade-interactive': ['pnpm', 'update', '-i', 0],
-  'dedupe': ['pnpm', 'dedupe', 0],
-  'execute': ['pnpm', 'dlx', 0],
-  'execute-local': ['pnpm', 'exec', 0],
-  'uninstall': ['pnpm', 'remove', 0],
-  'global_uninstall': ['pnpm', 'remove', '--global', 0],
+/** pnpm command set, parameterized by the CLI executable name (`pnpm` / `rush-pnpm`) */
+function createPnpmCommands(cli: string): AgentCommands {
+  return {
+    'agent': [cli, 0],
+    'run': [cli, 'run', 0],
+    'install': [cli, 'i', 0],
+    'frozen': [cli, 'i', '--frozen-lockfile', 0],
+    'global': [cli, 'add', '-g', 0],
+    'add': [cli, 'add', 0],
+    'upgrade': [cli, 'update', 0],
+    'upgrade-interactive': [cli, 'update', '-i', 0],
+    'dedupe': [cli, 'dedupe', 0],
+    'execute': [cli, 'dlx', 0],
+    'execute-local': [cli, 'exec', 0],
+    'uninstall': [cli, 'remove', 0],
+    'global_uninstall': [cli, 'remove', '--global', 0],
+  }
 }
 
+const pnpm: AgentCommands = createPnpmCommands('pnpm')
+
 /** pnpm via Rush (rush-pnpm) */
-const pnpmRush: AgentCommands = Object.fromEntries(
-  Object.entries(pnpm).map(([key, value]) => {
-    if (value == null) return [key, null]
-    if (typeof value === 'function') {
-      return [key, (args: string[]) => {
-        const resolved = value(args)
-        return resolved.map((v, i) => i === 0 && v === 'pnpm' ? 'rush-pnpm' : v)
-      }]
-    }
-    return [key, value.map((v, i) => i === 0 && v === 'pnpm' ? 'rush-pnpm' : v)]
-  }),
-) as AgentCommands
+const pnpmRush: AgentCommands = createPnpmCommands('rush-pnpm')
 
 const bun: AgentCommands = {
   'agent': ['bun', 0],
