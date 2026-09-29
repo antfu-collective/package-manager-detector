@@ -47,7 +47,10 @@
     "release": "bumpp",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test": "vitest"
+    "test": "vitest",
+    "update:deps": "pnpm dlx taze -I",
+    "update:workflows": "pnpm dlx actions-up -y",
+    "update:workflows:dry": "pnpm dlx actions-up --dry-run"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
