@@ -264,6 +264,38 @@ exports[`test pnpm-rush run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test upm add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "upm",
+}
+`;
+
+exports[`test upm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "upx",
+}
+`;
+
+exports[`test upm run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "upm",
+}
+`;
+
 exports[`test yarn add command > command handles args correctly 1`] = `
 {
   "args": [

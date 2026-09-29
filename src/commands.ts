@@ -179,6 +179,24 @@ const nub: AgentCommands = {
   'global_uninstall': ['nub', 'remove', '-g', 0],
 }
 
+// upm has no global installs and no `update` command yet: https://github.com/unjs/upm#add-and-remove-packages
+// `execute` is the dedicated `upx` binary (short for `upm exec`), which installs the package when needed.
+const upm: AgentCommands = {
+  'agent': ['upm', 0],
+  'run': ['upm', 'run', 0],
+  'install': ['upm', 'install', 0],
+  'frozen': ['upm', 'install', '--frozen-lockfile', 0],
+  'global': null,
+  'add': ['upm', 'add', 0],
+  'upgrade': null,
+  'upgrade-interactive': null,
+  'dedupe': ['upm', 'dedupe', 0],
+  'execute': ['upx', 0],
+  'execute-local': ['upm', 'exec', 0],
+  'uninstall': ['upm', 'remove', 0],
+  'global_uninstall': null,
+}
+
 export const COMMANDS = {
   'npm': npm,
   'yarn': yarn,
@@ -194,6 +212,7 @@ export const COMMANDS = {
   'aube': aube,
   'deno': deno,
   'nub': nub,
+  'upm': upm,
 } satisfies Record<Agent, AgentCommands>
 
 /**
