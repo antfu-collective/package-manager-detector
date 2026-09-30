@@ -149,7 +149,7 @@ const deno: AgentCommands = {
   'install': ['deno', 'install', 0],
   'frozen': ['deno', 'install', '--frozen', 0],
   'global': ['deno', 'install', '-g', 0],
-  'add': ['deno', 'add', 0],
+  'add': ['deno', 'add', '--npm', 0],
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'dedupe': null,
