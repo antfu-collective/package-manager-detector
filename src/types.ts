@@ -32,6 +32,14 @@ export interface ResolvedCommand {
   args: string[]
 }
 
+export interface ResolveCommandOptions {
+  /**
+   * Pass `--ignore-workspace-root-check` to pnpm (`add`) and yarn v1 (`add`, `uninstall`).
+   * @default false
+   */
+  ignoreWorkspaceRootCheck?: boolean
+}
+
 export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
 
 export interface DetectOptions {
