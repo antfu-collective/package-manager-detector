@@ -118,3 +118,16 @@ describe('pnpm@6 run filter flag handling', () => {
     expect(resolved).toEqual({ command: 'pnpm', args: ['run', '-F', 'packages/foo', 'test'] })
   })
 })
+
+describe('ignoreWorkspaceRootCheck option', () => {
+  it.each([
+    ['pnpm', 'add', 'pnpm', ['add', '--ignore-workspace-root-check', 'vite']],
+    ['pnpm', 'uninstall', 'pnpm', ['remove', 'vite']],
+    ['yarn', 'add', 'yarn', ['add', '--ignore-workspace-root-check', 'vite']],
+    ['yarn', 'uninstall', 'yarn', ['remove', '--ignore-workspace-root-check', 'vite']],
+    ['yarn@berry', 'add', 'yarn', ['add', 'vite']],
+    ['npm', 'add', 'npm', ['i', 'vite']],
+  ] as const)('resolves %s %s', (agent, cmd, command, args) => {
+    expect(resolveCommand(agent, cmd, ['vite'], { ignoreWorkspaceRootCheck: true })).toEqual({ command, args })
+  })
+})

@@ -1,4 +1,4 @@
-import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
+import type { Agent, AgentCommands, AgentCommandValue, Command, ResolveCommandOptions, ResolvedCommand } from './types'
 
 /**
  * Split `run` arguments around the script name for package managers that
@@ -196,6 +196,13 @@ export const COMMANDS = {
   'nub': nub,
 } satisfies Record<Agent, AgentCommands>
 
+const WORKSPACE_ROOT_CHECK_COMMANDS: Partial<Record<Agent, Command[]>> = {
+  'yarn': ['add', 'uninstall'],
+  'pnpm': ['add'],
+  'pnpm@6': ['add'],
+  'pnpm-rush': ['add'],
+}
+
 /**
  * Resolve the command for the agent merging the command arguments with the provided arguments.
  *
@@ -209,10 +216,13 @@ export const COMMANDS = {
  * @param agent The agent to use.
  * @param command the command to resolve.
  * @param args The arguments to pass to the command.
+ * @param options Additional options to resolve the command.
  * @returns {ResolvedCommand} The resolved command or `null` if the agent command is not found.
  */
-export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
+export function resolveCommand(agent: Agent, command: Command, args: string[], options: ResolveCommandOptions = {}): ResolvedCommand | null {
   const value = COMMANDS[agent][command] as AgentCommandValue
+  if (options.ignoreWorkspaceRootCheck && WORKSPACE_ROOT_CHECK_COMMANDS[agent]?.includes(command))
+    args = ['--ignore-workspace-root-check', ...args]
   return constructCommand(value, args)
 }
 
