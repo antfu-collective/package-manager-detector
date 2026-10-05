@@ -148,13 +148,21 @@ const aube: AgentCommands = {
   'global_uninstall': ['aube', 'remove', '-g', 0],
 }
 
+// `deno add` rejects bare package names, so prefix them with `npm:` to match
+// other agents, unless already prefixed or the caller picked a registry flag.
+function denoAdd(args: string[]) {
+  if (args.includes('--npm') || args.includes('--jsr'))
+    return ['deno', 'add', ...args]
+  return ['deno', 'add', ...args.map(arg => arg.startsWith('-') || arg.includes(':') ? arg : `npm:${arg}`)]
+}
+
 const deno: AgentCommands = {
   'agent': ['deno', 0],
   'run': ['deno', 'task', 0],
   'install': ['deno', 'install', 0],
   'frozen': ['deno', 'install', '--frozen', 0],
   'global': ['deno', 'install', '-g', 0],
-  'add': ['deno', 'add', 0],
+  'add': denoAdd,
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'dedupe': null,
