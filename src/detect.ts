@@ -74,6 +74,11 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     for (const strategy of strategies) {
       switch (strategy) {
         case 'lockfile': {
+          // Rush monorepos wrap pnpm with `rush-pnpm`; detect them before
+          // falling back to the regular lock file lookup.
+          if (await pathExists(path.join(directory, 'rush.json'), 'file')) {
+            return { name: 'pnpm', agent: 'pnpm-rush' }
+          }
           // Look up for lock files
           for (const lock of Object.keys(LOCKS)) {
             if (await pathExists(path.join(directory, lock), 'file')) {

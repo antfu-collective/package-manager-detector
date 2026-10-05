@@ -1,5 +1,5 @@
-export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'bun' | 'deno'
-export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno'
+export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'pnpm-rush' | 'bun' | 'deno' | 'nub' | 'aube' | 'upm'
+export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno' | 'nub' | 'aube' | 'upm'
 
 export type AgentCommandValue = (string | number)[] | ((args: string[]) => string[]) | null
 
@@ -13,6 +13,7 @@ export interface AgentCommands {
   'upgrade': AgentCommandValue
   'upgrade-interactive': AgentCommandValue
   'dedupe': AgentCommandValue
+  'why': AgentCommandValue
   'execute': AgentCommandValue
   'execute-local': AgentCommandValue
   'uninstall': AgentCommandValue
@@ -30,6 +31,14 @@ export interface ResolvedCommand {
    * Arguments for the CLI command, merged with user arguments.
    */
   args: string[]
+}
+
+export interface ResolveCommandOptions {
+  /**
+   * Pass `--ignore-workspace-root-check` to pnpm (`add`) and yarn v1 (`add`, `uninstall`).
+   * @default false
+   */
+  ignoreWorkspaceRootCheck?: boolean
 }
 
 export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
@@ -81,7 +90,7 @@ export interface DetectResult {
   /**
    * Agent name without the specifier.
    *
-   * Can be `npm`, `yarn`, `pnpm`, `bun`, or `deno`.
+   * Can be `npm`, `yarn`, `pnpm`, `bun`, `deno`, `nub`, `aube`, or `upm`.
    */
   name: AgentName
   /**

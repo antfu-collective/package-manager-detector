@@ -1,5 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`dev-engines > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+  "version": "1",
+}
+`;
+
 exports[`dev-engines > bun 1`] = `
 {
   "agent": "bun",
@@ -21,6 +29,14 @@ exports[`dev-engines > npm 1`] = `
   "agent": "npm",
   "name": "npm",
   "version": "7",
+}
+`;
+
+exports[`dev-engines > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+  "version": "0.2.4",
 }
 `;
 
@@ -50,6 +66,14 @@ exports[`dev-engines > pnpm-version-range 1`] = `
 
 exports[`dev-engines > unknown 1`] = `null`;
 
+exports[`dev-engines > upm 1`] = `
+{
+  "agent": "upm",
+  "name": "upm",
+  "version": "1",
+}
+`;
+
 exports[`dev-engines > yarn 1`] = `
 {
   "agent": "yarn",
@@ -63,6 +87,13 @@ exports[`dev-engines > yarn@berry 1`] = `
   "agent": "yarn@berry",
   "name": "yarn",
   "version": "berry",
+}
+`;
+
+exports[`install-metadata > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
 }
 `;
 
@@ -96,6 +127,13 @@ exports[`install-metadata > pnpm 1`] = `
 
 exports[`install-metadata > unknown 1`] = `null`;
 
+exports[`install-metadata > upm 1`] = `
+{
+  "agent": "upm",
+  "name": "upm",
+}
+`;
+
 exports[`install-metadata > yarn 1`] = `
 {
   "agent": "yarn",
@@ -124,6 +162,13 @@ exports[`install-metadata > yarn@berry_pnp-v3 1`] = `
 }
 `;
 
+exports[`lockfile > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+}
+`;
+
 exports[`lockfile > bun 1`] = `
 {
   "agent": "bun",
@@ -145,6 +190,13 @@ exports[`lockfile > npm 1`] = `
 }
 `;
 
+exports[`lockfile > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+}
+`;
+
 exports[`lockfile > pnpm 1`] = `
 {
   "agent": "pnpm",
@@ -161,6 +213,13 @@ exports[`lockfile > pnpm@6 1`] = `
 
 exports[`lockfile > unknown 1`] = `null`;
 
+exports[`lockfile > upm 1`] = `
+{
+  "agent": "upm",
+  "name": "upm",
+}
+`;
+
 exports[`lockfile > yarn 1`] = `
 {
   "agent": "yarn",
@@ -172,6 +231,14 @@ exports[`lockfile > yarn@berry 1`] = `
 {
   "agent": "yarn",
   "name": "yarn",
+}
+`;
+
+exports[`packager > aube 1`] = `
+{
+  "agent": "aube",
+  "name": "aube",
+  "version": "1",
 }
 `;
 
@@ -196,6 +263,14 @@ exports[`packager > npm 1`] = `
   "agent": "npm",
   "name": "npm",
   "version": "7",
+}
+`;
+
+exports[`packager > nub 1`] = `
+{
+  "agent": "nub",
+  "name": "nub",
+  "version": "0.2.4",
 }
 `;
 
@@ -224,6 +299,14 @@ exports[`packager > pnpm-version-range 1`] = `
 `;
 
 exports[`packager > unknown 1`] = `null`;
+
+exports[`packager > upm 1`] = `
+{
+  "agent": "upm",
+  "name": "upm",
+  "version": "1",
+}
+`;
 
 exports[`packager > yarn 1`] = `
 {

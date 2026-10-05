@@ -1,8 +1,9 @@
 import type { MockInstance } from 'vitest'
 import type { DetectOptions } from '../src'
+import { readdirSync, statSync } from 'node:fs'
+import { cp, mkdir, mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import fs from 'fs-extra'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { detect } from '../src'
 
@@ -10,9 +11,9 @@ let basicLog: MockInstance, errorLog: MockInstance, warnLog: MockInstance, infoL
 
 function detectTest(fixture: string, agent: string, options?: DetectOptions) {
   return async () => {
-    const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+    const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
     const dir = path.join(__dirname, 'fixtures', fixture, agent)
-    await fs.copy(dir, cwd)
+    await cp(dir, cwd, { recursive: true })
 
     expect(await detect({ cwd, ...options })).toMatchSnapshot()
   }
@@ -52,23 +53,24 @@ fixtures.forEach(fixture => describe(fixture, () => {
 
 function getFixtureDirs(fixture: string) {
   const fixtureDir = path.join(__dirname, 'fixtures', fixture)
-  const items = fs.readdirSync(fixtureDir)
-  return items.filter(item => fs.statSync(path.join(fixtureDir, item)).isDirectory())
+  const items = readdirSync(fixtureDir)
+  return items.filter(item => statSync(path.join(fixtureDir, item)).isDirectory())
 }
 
 it('stops at specified directory', async () => {
-  const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+  const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
 
   const noFilesDir = path.join(cwd, 'no-files')
   const nestedNoFilesDir = path.join(noFilesDir, 'nested')
   const parentDir = cwd
 
-  await fs.mkdirp(noFilesDir)
-  await fs.mkdirp(nestedNoFilesDir)
+  await mkdir(noFilesDir, { recursive: true })
+  await mkdir(nestedNoFilesDir, { recursive: true })
 
-  await fs.copy(
+  await cp(
     path.join(__dirname, 'fixtures', 'lockfile', 'npm'),
     parentDir,
+    { recursive: true },
   )
 
   const resultWithStop = await detect({
@@ -89,19 +91,20 @@ it('stops at specified directory', async () => {
 })
 
 it('stops at with custom stop function', async () => {
-  const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+  const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
   let count = 0
 
   const noFilesDir = path.join(cwd, 'no-files')
   const nestedNoFilesDir = path.join(noFilesDir, 'nested/nested')
   const parentDir = cwd
 
-  await fs.mkdirp(noFilesDir)
-  await fs.mkdirp(nestedNoFilesDir)
+  await mkdir(noFilesDir, { recursive: true })
+  await mkdir(nestedNoFilesDir, { recursive: true })
 
-  await fs.copy(
+  await cp(
     path.join(__dirname, 'fixtures', 'lockfile', 'npm'),
     parentDir,
+    { recursive: true },
   )
 
   const resultWithStop = await detect({
@@ -126,9 +129,9 @@ it('stops at with custom stop function', async () => {
 
 describe('packageJsonParser', () => {
   it('uses custom package.json parser', async () => {
-    const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+    const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
     const fixturePath = path.join(__dirname, 'fixtures', 'packager', 'npm')
-    await fs.copy(fixturePath, cwd)
+    await cp(fixturePath, cwd, { recursive: true })
 
     const parser = vi.fn((content: string) => JSON.parse(content))
 
@@ -147,9 +150,9 @@ describe('packageJsonParser', () => {
   })
 
   it('uses custom package.json parser to modify result', async () => {
-    const cwd = await fs.mkdtemp(path.join(tmpdir(), 'ni-'))
+    const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
     const fixturePath = path.join(__dirname, 'fixtures', 'packager', 'npm')
-    await fs.copy(fixturePath, cwd)
+    await cp(fixturePath, cwd, { recursive: true })
 
     // Parser that lies about the package manager
     const parser = vi.fn(() => ({ packageManager: 'pnpm@8' }))

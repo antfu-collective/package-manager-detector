@@ -1,2 +1,10 @@
-onlyBuiltDependencies:
-  - esbuild
+minimumReleaseAgeExcludePrune: true
+trustPolicy: no-downgrade
+shellEmulator: true
+
+overrides:
+  # check https://npmx.dev/package/why-is-node-running => possible package takeover
+  why-is-node-running: 3.2.1
+
+allowBuilds:
+  esbuild: true

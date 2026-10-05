@@ -1,25 +1,48 @@
-import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
+import type { Agent, AgentCommands, AgentCommandValue, Command, ResolveCommandOptions, ResolvedCommand } from './types'
 
-function dashDashArg(agent: string, agentCommand: string) {
-  return (args: string[]) => {
-    if (args.length > 1) {
-      return [agent, agentCommand, args[0], '--', ...args.slice(1)]
-    }
-    else {
-      return [agent, agentCommand, args[0]]
-    }
+/**
+ * Split `run` arguments around the script name for package managers that
+ * require `--` to forward extra arguments to the script (npm, pnpm@6).
+ *
+ * The script name is the first positional argument that is neither a flag
+ * nor the value of a preceding value-taking flag (e.g. `-w <workspace>`).
+ * Everything before it (workspace/filter flags) stays in front; everything
+ * after it is the script's own arguments.
+ *
+ * @param args The arguments passed after the `run` command.
+ * @param valueFlags Flags that consume the following argument as their value.
+ * @returns The args split into `before` the script, the `script` itself
+ * (or `undefined` when there is no script name), and the `after` args.
+ */
+export function splitRunArgs(args: string[], valueFlags: string[] = []): {
+  before: string[]
+  script: string | undefined
+  after: string[]
+} {
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('-'))
+      continue
+    if (i > 0 && valueFlags.includes(args[i - 1]))
+      continue
+    return { before: args.slice(0, i), script: args[i], after: args.slice(i + 1) }
   }
+  return { before: args, script: undefined, after: [] }
 }
 
-function denoExecute() {
+function dashDashArg(agent: string, agentCommand: string, valueFlags: string[] = []) {
   return (args: string[]) => {
-    return ['deno', 'run', `npm:${args[0]}`, ...args.slice(1)]
+    const { before, script, after } = splitRunArgs(args, valueFlags)
+    if (script === undefined)
+      return [agent, agentCommand, ...before]
+    if (after.length > 0)
+      return [agent, agentCommand, ...before, script, '--', ...after]
+    return [agent, agentCommand, ...before, script]
   }
 }
 
 const npm: AgentCommands = {
   'agent': ['npm', 0],
-  'run': dashDashArg('npm', 'run'),
+  'run': dashDashArg('npm', 'run', ['-w', '--workspace']),
   'install': ['npm', 'i', 0],
   'frozen': ['npm', 'ci', 0],
   'global': ['npm', 'i', '-g', 0],
@@ -27,6 +50,7 @@ const npm: AgentCommands = {
   'upgrade': ['npm', 'update', 0],
   'upgrade-interactive': null,
   'dedupe': ['npm', 'dedupe', 0],
+  'why': ['npm', 'why', 0],
   'execute': ['npx', 0],
   'execute-local': ['npx', 0],
   'uninstall': ['npm', 'uninstall', 0],
@@ -44,6 +68,7 @@ const yarn: AgentCommands = {
   'upgrade': ['yarn', 'upgrade', 0],
   'upgrade-interactive': ['yarn', 'upgrade-interactive', 0],
   'dedupe': null,
+  'why': ['yarn', 'why', 0],
   'execute': ['npx', 0],
   'execute-local': dashDashArg('yarn', 'exec'),
   'uninstall': ['yarn', 'remove', 0],
@@ -64,21 +89,30 @@ const yarnBerry: AgentCommands = {
   'global_uninstall': ['npm', 'uninstall', '-g', 0],
 }
 
-const pnpm: AgentCommands = {
-  'agent': ['pnpm', 0],
-  'run': ['pnpm', 'run', 0],
-  'install': ['pnpm', 'i', 0],
-  'frozen': ['pnpm', 'i', '--frozen-lockfile', 0],
-  'global': ['pnpm', 'add', '-g', 0],
-  'add': ['pnpm', 'add', 0],
-  'upgrade': ['pnpm', 'update', 0],
-  'upgrade-interactive': ['pnpm', 'update', '-i', 0],
-  'dedupe': ['pnpm', 'dedupe', 0],
-  'execute': ['pnpm', 'dlx', 0],
-  'execute-local': ['pnpm', 'exec', 0],
-  'uninstall': ['pnpm', 'remove', 0],
-  'global_uninstall': ['pnpm', 'remove', '--global', 0],
+/** pnpm command set, parameterized by the CLI executable name (`pnpm` / `rush-pnpm`) */
+function createPnpmCommands(cli: string): AgentCommands {
+  return {
+    'agent': [cli, 0],
+    'run': [cli, 'run', 0],
+    'install': [cli, 'i', 0],
+    'frozen': [cli, 'i', '--frozen-lockfile', 0],
+    'global': [cli, 'add', '-g', 0],
+    'add': [cli, 'add', 0],
+    'upgrade': [cli, 'update', 0],
+    'upgrade-interactive': [cli, 'update', '-i', 0],
+    'dedupe': [cli, 'dedupe', 0],
+    'why': [cli, 'why', 0],
+    'execute': [cli, 'dlx', 0],
+    'execute-local': [cli, 'exec', 0],
+    'uninstall': [cli, 'remove', 0],
+    'global_uninstall': [cli, 'remove', '--global', 0],
+  }
 }
+
+const pnpm: AgentCommands = createPnpmCommands('pnpm')
+
+/** pnpm via Rush (rush-pnpm) */
+const pnpmRush: AgentCommands = createPnpmCommands('rush-pnpm')
 
 const bun: AgentCommands = {
   'agent': ['bun', 0],
@@ -90,10 +124,36 @@ const bun: AgentCommands = {
   'upgrade': ['bun', 'update', 0],
   'upgrade-interactive': ['bun', 'update', '-i', 0],
   'dedupe': null,
+  'why': ['bun', 'why', 0],
   'execute': ['bun', 'x', 0],
   'execute-local': ['bun', 'x', 0],
   'uninstall': ['bun', 'remove', 0],
   'global_uninstall': ['bun', 'remove', '-g', 0],
+}
+
+const aube: AgentCommands = {
+  'agent': ['aube', 0],
+  'run': ['aube', 'run', 0],
+  'install': ['aube', 'install', 0],
+  'frozen': ['aube', 'install', '--frozen-lockfile', 0],
+  'global': ['aube', 'add', '-g', 0],
+  'add': ['aube', 'add', 0],
+  'upgrade': ['aube', 'update', 0],
+  'upgrade-interactive': ['aube', 'update', '-i', 0],
+  'dedupe': ['aube', 'dedupe', 0],
+  'why': ['aube', 'why', 0],
+  'execute': ['aube', 'dlx', 0],
+  'execute-local': ['aube', 'exec', 0],
+  'uninstall': ['aube', 'remove', 0],
+  'global_uninstall': ['aube', 'remove', '-g', 0],
+}
+
+// `deno add` rejects bare package names, so prefix them with `npm:` to match
+// other agents, unless already prefixed or the caller picked a registry flag.
+function denoAdd(args: string[]) {
+  if (args.includes('--npm') || args.includes('--jsr'))
+    return ['deno', 'add', ...args]
+  return ['deno', 'add', ...args.map(arg => arg.startsWith('-') || arg.includes(':') ? arg : `npm:${arg}`)]
 }
 
 const deno: AgentCommands = {
@@ -102,14 +162,55 @@ const deno: AgentCommands = {
   'install': ['deno', 'install', 0],
   'frozen': ['deno', 'install', '--frozen', 0],
   'global': ['deno', 'install', '-g', 0],
-  'add': ['deno', 'add', 0],
+  'add': denoAdd,
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'dedupe': null,
-  'execute': denoExecute(),
+  'why': ['deno', 'why', 0],
+  'execute': ['deno', 'x', 0],
   'execute-local': ['deno', 'task', '--eval', 0],
   'uninstall': ['deno', 'remove', 0],
   'global_uninstall': ['deno', 'uninstall', '-g', 0],
+}
+
+// nub mirrors pnpm's CLI grammar, with two deliberate divergences encoded
+// here: `upgrade` maps to `nub update` (nub reserves `nub upgrade` for its
+// own self-update, which rejects a package argument), and `execute` (dlx) is
+// the dedicated `nubx` binary, not a `nub` subcommand.
+const nub: AgentCommands = {
+  'agent': ['nub', 0],
+  'run': ['nub', 'run', 0],
+  'install': ['nub', 'install', 0],
+  'frozen': ['nub', 'install', '--frozen-lockfile', 0],
+  'global': ['nub', 'add', '-g', 0],
+  'add': ['nub', 'add', 0],
+  'upgrade': ['nub', 'update', 0],
+  'upgrade-interactive': ['nub', 'update', '-i', 0],
+  'dedupe': ['nub', 'dedupe', 0],
+  'why': ['nub', 'why', 0],
+  'execute': ['nubx', 0],
+  'execute-local': ['nub', 'exec', 0],
+  'uninstall': ['nub', 'remove', 0],
+  'global_uninstall': ['nub', 'remove', '-g', 0],
+}
+
+// upm has no global installs and no `update` or `why` command yet: https://github.com/unjs/upm#add-and-remove-packages
+// `execute` is the dedicated `upx` binary (short for `upm exec`), which installs the package when needed.
+const upm: AgentCommands = {
+  'agent': ['upm', 0],
+  'run': ['upm', 'run', 0],
+  'install': ['upm', 'install', 0],
+  'frozen': ['upm', 'install', '--frozen-lockfile', 0],
+  'global': null,
+  'add': ['upm', 'add', 0],
+  'upgrade': null,
+  'upgrade-interactive': null,
+  'dedupe': ['upm', 'dedupe', 0],
+  'execute': ['upx', 0],
+  'execute-local': ['upm', 'exec', 0],
+  'uninstall': ['upm', 'remove', 0],
+  'global_uninstall': null,
+  'why': null,
 }
 
 export const COMMANDS = {
@@ -120,11 +221,22 @@ export const COMMANDS = {
   // pnpm v6.x or below
   'pnpm@6': <AgentCommands>{
     ...pnpm,
-    run: dashDashArg('pnpm', 'run'),
+    run: dashDashArg('pnpm', 'run', ['-F', '--filter']),
   },
+  'pnpm-rush': pnpmRush,
   'bun': bun,
+  'aube': aube,
   'deno': deno,
+  'nub': nub,
+  'upm': upm,
 } satisfies Record<Agent, AgentCommands>
+
+const WORKSPACE_ROOT_CHECK_COMMANDS: Partial<Record<Agent, Command[]>> = {
+  'yarn': ['add', 'uninstall'],
+  'pnpm': ['add'],
+  'pnpm@6': ['add'],
+  'pnpm-rush': ['add'],
+}
 
 /**
  * Resolve the command for the agent merging the command arguments with the provided arguments.
@@ -139,10 +251,13 @@ export const COMMANDS = {
  * @param agent The agent to use.
  * @param command the command to resolve.
  * @param args The arguments to pass to the command.
+ * @param options Additional options to resolve the command.
  * @returns {ResolvedCommand} The resolved command or `null` if the agent command is not found.
  */
-export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
+export function resolveCommand(agent: Agent, command: Command, args: string[], options: ResolveCommandOptions = {}): ResolvedCommand | null {
   const value = COMMANDS[agent][command] as AgentCommandValue
+  if (options.ignoreWorkspaceRootCheck && WORKSPACE_ROOT_CHECK_COMMANDS[agent]?.includes(command))
+    args = ['--ignore-workspace-root-check', ...args]
   return constructCommand(value, args)
 }
 

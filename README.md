@@ -7,7 +7,7 @@
 
 Package manager detector is based on lock files, the `package.json` `packageManager` field, and installation metadata to detect the package manager used in a project.
 
-It supports `npm`, `yarn`, `pnpm`, `deno`, and `bun`.
+It supports `npm`, `yarn`, `pnpm`, `deno`, `bun`, `nub`, `aube`, and `upm`.
 
 ## Install
 
@@ -71,6 +71,7 @@ This package includes package manager agents and their corresponding commands fo
 - `'upgrade'` - upgrade dependencies
 - `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm`
 - `'dedupe'` - deduplicate dependencies with overlapping ranges: not available for `deno` and `bun`
+- `'why'` - show why a package is installed
 - `'execute'` - download & execute binary scripts
 - `'execute-local'` - execute binary scripts (from package locally installed)
 - `'run'` - run `package.json` scripts

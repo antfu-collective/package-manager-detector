@@ -1,11 +1,65 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`test aube add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "aube",
+}
+`;
+
+exports[`test aube execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
+  ],
+  "command": "aube",
+}
+`;
+
+exports[`test aube run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "aube",
+}
+`;
+
+exports[`test aube why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "aube",
+}
+`;
+
 exports[`test bun add command > command handles args correctly 1`] = `
 {
   "args": [
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "bun",
+}
+`;
+
+exports[`test bun execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "x",
+    "eslint",
+    "--fix",
   ],
   "command": "bun",
 }
@@ -22,12 +76,33 @@ exports[`test bun run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test bun why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "bun",
+}
+`;
+
 exports[`test deno add command > command handles args correctly 1`] = `
 {
   "args": [
     "add",
-    "@antfu/ni",
+    "npm:@antfu/ni",
     "-D",
+  ],
+  "command": "deno",
+}
+`;
+
+exports[`test deno execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "x",
+    "eslint",
+    "--fix",
   ],
   "command": "deno",
 }
@@ -44,6 +119,16 @@ exports[`test deno run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test deno why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "deno",
+}
+`;
+
 exports[`test npm add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -52,6 +137,16 @@ exports[`test npm add command > command handles args correctly 1`] = `
     "-D",
   ],
   "command": "npm",
+}
+`;
+
+exports[`test npm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "npx",
 }
 `;
 
@@ -67,12 +162,75 @@ exports[`test npm run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test npm why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "npm",
+}
+`;
+
+exports[`test nub add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "nub",
+}
+`;
+
+exports[`test nub execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "nubx",
+}
+`;
+
+exports[`test nub run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "nub",
+}
+`;
+
+exports[`test nub why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "nub",
+}
+`;
+
 exports[`test pnpm add command > command handles args correctly 1`] = `
 {
   "args": [
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
   ],
   "command": "pnpm",
 }
@@ -89,12 +247,33 @@ exports[`test pnpm run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test pnpm why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "pnpm",
+}
+`;
+
 exports[`test pnpm@6 add command > command handles args correctly 1`] = `
 {
   "args": [
     "add",
     "@antfu/ni",
     "-D",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm@6 execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
   ],
   "command": "pnpm",
 }
@@ -112,6 +291,93 @@ exports[`test pnpm@6 run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test pnpm@6 why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm-rush add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "rush-pnpm",
+}
+`;
+
+exports[`test pnpm-rush execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
+  ],
+  "command": "rush-pnpm",
+}
+`;
+
+exports[`test pnpm-rush run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "rush-pnpm",
+}
+`;
+
+exports[`test pnpm-rush why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "rush-pnpm",
+}
+`;
+
+exports[`test upm add command > command handles args correctly 1`] = `
+{
+  "args": [
+    "add",
+    "@antfu/ni",
+    "-D",
+  ],
+  "command": "upm",
+}
+`;
+
+exports[`test upm execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "upx",
+}
+`;
+
+exports[`test upm run command > command handles args correctly 1`] = `
+{
+  "args": [
+    "run",
+    "arg0",
+    "arg1-0 arg1-1",
+  ],
+  "command": "upm",
+}
+`;
+
+exports[`test upm why command > command handles args correctly 1`] = `null`;
+
 exports[`test yarn add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -123,12 +389,32 @@ exports[`test yarn add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test yarn execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "eslint",
+    "--fix",
+  ],
+  "command": "npx",
+}
+`;
+
 exports[`test yarn run command > command handles args correctly 1`] = `
 {
   "args": [
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "yarn",
 }
@@ -145,12 +431,33 @@ exports[`test yarn@berry add command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test yarn@berry execute command > command handles args correctly 1`] = `
+{
+  "args": [
+    "dlx",
+    "eslint",
+    "--fix",
+  ],
+  "command": "yarn",
+}
+`;
+
 exports[`test yarn@berry run command > command handles args correctly 1`] = `
 {
   "args": [
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn@berry why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "yarn",
 }

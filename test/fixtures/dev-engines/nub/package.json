@@ -1,0 +1,8 @@
+{
+  "devEngines": {
+    "packageManager": {
+      "name": "nub",
+      "version": "0.2.4"
+    }
+  }
+}

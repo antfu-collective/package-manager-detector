@@ -6,10 +6,6 @@ process.env.NI_CONFIG_FILE = 'false'
 
 export default defineConfig({
   test: {
-    server: {
-      deps: {
-        inline: ['vitest-package-exports'],
-      },
-    },
+    globalSetup: ['test/globalSetup.ts'],
   },
 })

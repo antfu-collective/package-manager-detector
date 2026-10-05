@@ -6,15 +6,23 @@ export const AGENTS: Agent[] = [
   'yarn@berry',
   'pnpm',
   'pnpm@6',
+  'pnpm-rush',
   'bun',
   'deno',
+  'nub',
+  'aube',
+  'upm',
 ]
 
 // the order here matters, more specific one comes first
 export const LOCKS: Record<string, AgentName> = {
+  'aube-lock.yaml': 'aube',
+  'aube-workspace.yaml': 'aube',
   'bun.lock': 'bun',
   'bun.lockb': 'bun',
   'deno.lock': 'deno',
+  'nub.lock': 'nub',
+  'upm.lock': 'upm',
   'pnpm-lock.yaml': 'pnpm',
   'pnpm-workspace.yaml': 'pnpm',
   'yarn.lock': 'yarn',
@@ -24,8 +32,10 @@ export const LOCKS: Record<string, AgentName> = {
 
 // the order here matters, more specific one comes first
 export const INSTALL_METADATA: Record<string, AgentName> = {
+  'node_modules/.aube/': 'aube',
   'node_modules/.deno/': 'deno',
   'node_modules/.pnpm/': 'pnpm',
+  'node_modules/.upm/': 'upm',
   'node_modules/.yarn-state.yml': 'yarn', // yarn v2+ (node-modules)
   'node_modules/.yarn_integrity': 'yarn', // yarn v1
   'node_modules/.package-lock.json': 'npm',
@@ -36,11 +46,15 @@ export const INSTALL_METADATA: Record<string, AgentName> = {
 }
 
 export const INSTALL_PAGE: Record<Agent, string> = {
+  'aube': 'https://aube.en.dev/installation',
   'bun': 'https://bun.sh',
   'deno': 'https://deno.com',
   'pnpm': 'https://pnpm.io/installation',
   'pnpm@6': 'https://pnpm.io/6.x/installation',
+  'pnpm-rush': 'https://rushjs.io/pages/intro/get_started/',
   'yarn': 'https://classic.yarnpkg.com/en/docs/install',
   'yarn@berry': 'https://yarnpkg.com/getting-started/install',
   'npm': 'https://docs.npmjs.com/cli/configuring-npm/install',
+  'nub': 'https://nubjs.com/docs/install',
+  'upm': 'https://github.com/unjs/upm#get-started',
 }
