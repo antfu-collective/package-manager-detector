@@ -125,16 +125,24 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
+/**
+ * Extracts the `major[.minor[.patch]]` part of a version string, e.g. `^9.12.1+sha512.abc` becomes `9.12.1`.
+ * @param version The raw version, as found in `packageManager` or `devEngines.packageManager.version`.
+ * @returns The extracted version, or the input unchanged if it contains no numeric version.
+ */
+export function normalizeAgentVersion(version: string | undefined): string | undefined {
+  return version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+}
+
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
-  const handelVer = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-    return { name, ver: handelVer(ver) }
+    return { name, ver: normalizeAgentVersion(ver) }
   }
   if (typeof pkg.devEngines?.packageManager?.name === 'string') {
     return {
       name: pkg.devEngines.packageManager.name,
-      ver: handelVer(pkg.devEngines.packageManager.version),
+      ver: normalizeAgentVersion(pkg.devEngines.packageManager.version),
     }
   }
   return undefined
@@ -151,33 +159,40 @@ async function handlePackageManager(
       ? await options.packageJsonParser(content, filepath)
       : JSON.parse(content)
 
-    let agent: Agent | undefined
     const nameAndVer = getNameAndVer(pkg)
     if (nameAndVer) {
-      const name = nameAndVer.name as AgentName
-      const ver = nameAndVer.ver
-      let version = ver
-      if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
-        agent = 'yarn@berry'
-        // the version in packageManager isn't the actual yarn package version
-        version = 'berry'
-        return { name, agent, version }
-      }
-      else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
-        agent = 'pnpm@6'
-        return { name, agent, version }
-      }
-      else if (AGENTS.includes(name)) {
-        agent = name as Agent
-        return { name, agent, version }
-      }
-      else {
-        return options.onUnknown?.(pkg.packageManager) ?? null
-      }
+      return resolveAgent(nameAndVer.name as AgentName, nameAndVer.ver) ?? options.onUnknown?.(pkg.packageManager) ?? null
     }
   }
   catch { }
   return null
+}
+
+/**
+ * Resolves the agent for a package manager name and version, e.g. to pass to `resolveCommand` without running `detect`.
+ *
+ * Yarn above v1 resolves to `yarn@berry` (with version `berry`) and pnpm below v7 to `pnpm@6`.
+ * @param name The package manager name.
+ * @param ver The package manager version, see `normalizeAgentVersion`.
+ * @returns The resolved name, agent and version, or `undefined` if the name is not a known agent.
+ */
+export function resolveAgent(name: AgentName, ver?: string) {
+  let agent: Agent | undefined
+  let version = ver
+  if (name === 'yarn' && ver && Number.parseInt(ver) > 1) {
+    agent = 'yarn@berry'
+    // the version in packageManager isn't the actual yarn package version
+    version = 'berry'
+    return { name, agent, version }
+  }
+  else if (name === 'pnpm' && ver && Number.parseInt(ver) < 7) {
+    agent = 'pnpm@6'
+    return { name, agent, version }
+  }
+  else if (AGENTS.includes(name)) {
+    agent = name as Agent
+    return { name, agent, version }
+  }
 }
 
 function isMetadataYarnClassic(metadataPath: string) {
