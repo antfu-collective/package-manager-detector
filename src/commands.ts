@@ -238,6 +238,38 @@ const WORKSPACE_ROOT_CHECK_COMMANDS: Partial<Record<Agent, Command[]>> = {
   'pnpm-rush': ['add'],
 }
 
+// yarn (env/config only), aube (env/config only) and pnpm@6 have no CLI flag for this.
+const MINIMUM_RELEASE_AGE_FLAGS: Partial<Record<Agent, { commands: Command[], flag: (minutes: number) => string }>> = {
+  'npm': {
+    commands: ['install', 'add', 'upgrade', 'global', 'execute'],
+    flag: minutes => `--min-release-age=${minutes / 1440}`,
+  },
+  'pnpm': {
+    commands: ['install', 'add', 'upgrade', 'upgrade-interactive', 'global', 'execute'],
+    flag: minutes => `--config.minimum-release-age=${minutes}`,
+  },
+  'pnpm-rush': {
+    commands: ['install', 'add', 'upgrade', 'upgrade-interactive', 'global', 'execute'],
+    flag: minutes => `--config.minimum-release-age=${minutes}`,
+  },
+  'bun': {
+    commands: ['install', 'add', 'upgrade', 'upgrade-interactive', 'global'],
+    flag: minutes => `--minimum-release-age=${minutes * 60}`,
+  },
+  'deno': {
+    commands: ['install', 'add', 'global', 'execute'],
+    flag: minutes => `--minimum-dependency-age=${minutes}`,
+  },
+  'nub': {
+    commands: ['install', 'add', 'upgrade', 'upgrade-interactive', 'global', 'execute'],
+    flag: minutes => `--minimum-release-age=${minutes}`,
+  },
+  'upm': {
+    commands: ['install', 'add', 'execute'],
+    flag: minutes => `--min-release-age=${minutes / 1440}`,
+  },
+}
+
 /**
  * Resolve the command for the agent merging the command arguments with the provided arguments.
  *
@@ -258,6 +290,9 @@ export function resolveCommand(agent: Agent, command: Command, args: string[], o
   const value = COMMANDS[agent][command] as AgentCommandValue
   if (options.ignoreWorkspaceRootCheck && WORKSPACE_ROOT_CHECK_COMMANDS[agent]?.includes(command))
     args = ['--ignore-workspace-root-check', ...args]
+  const releaseAge = MINIMUM_RELEASE_AGE_FLAGS[agent]
+  if (options.minimumReleaseAge != null && releaseAge?.commands.includes(command))
+    args = [releaseAge.flag(options.minimumReleaseAge), ...args]
   return constructCommand(value, args)
 }
 
