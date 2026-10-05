@@ -39,6 +39,14 @@ export interface ResolveCommandOptions {
    * @default false
    */
   ignoreWorkspaceRootCheck?: boolean
+  /**
+   * Minimum age in minutes a package version must have before it can be installed,
+   * converted to each agent's own flag and unit.
+   *
+   * Applied to npm, pnpm, bun, deno, nub and upm on commands that resolve versions.
+   * Ignored for yarn, aube and pnpm@6, which have no CLI flag for it.
+   */
+  minimumReleaseAge?: number
 }
 
 export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'

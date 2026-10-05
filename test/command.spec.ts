@@ -153,3 +153,20 @@ describe('ignoreWorkspaceRootCheck option', () => {
     expect(resolveCommand(agent, cmd, ['vite'], { ignoreWorkspaceRootCheck: true })).toEqual({ command, args })
   })
 })
+
+describe('minimumReleaseAge option', () => {
+  it.each([
+    ['npm', 'add', 'npm', ['i', '--min-release-age=3', 'vite']],
+    ['npm', 'frozen', 'npm', ['ci', 'vite']],
+    ['pnpm', 'execute', 'pnpm', ['dlx', '--config.minimum-release-age=4320', 'vite']],
+    ['bun', 'add', 'bun', ['add', '--minimum-release-age=259200', 'vite']],
+    ['bun', 'execute', 'bun', ['x', 'vite']],
+    ['deno', 'add', 'deno', ['add', '--minimum-dependency-age=4320', 'npm:vite']],
+    ['nub', 'execute', 'nubx', ['--minimum-release-age=4320', 'vite']],
+    ['upm', 'install', 'upm', ['install', '--min-release-age=3', 'vite']],
+    ['yarn@berry', 'add', 'yarn', ['add', 'vite']],
+    ['pnpm@6', 'add', 'pnpm', ['add', 'vite']],
+  ] as const)('resolves %s %s', (agent, cmd, command, args) => {
+    expect(resolveCommand(agent, cmd, ['vite'], { minimumReleaseAge: 3 * 24 * 60 })).toEqual({ command, args })
+  })
+})
