@@ -1,5 +1,10 @@
 minimumReleaseAgeExcludePrune: true
 trustPolicy: no-downgrade
+
+update:
+  ignoreDeps:
+    - typescript@7
+
 shellEmulator: true
 
 overrides:
