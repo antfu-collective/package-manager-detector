@@ -1,36 +1,19 @@
-name: Test
+name: Unit Test
 
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
+
+permissions: {}
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  unit-test:
+    uses: sxzz/workflows/.github/workflows/unit-test.yml@main
 
-    strategy:
-      matrix:
-        node-version: [22.x, lts/*]
-
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@v5
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: pnpm
-      - name: Install
-        run: pnpm install
-      - name: Build
-        run: pnpm build
-      - name: Lint
-        run: pnpm run lint
-      - name: Test
-        run: pnpm run test
+  # coverage:
+  #   uses: sxzz/workflows/.github/workflows/coverage.yml@main
+  #   needs: unit-test
+  #   permissions:
+  #     id-token: write
