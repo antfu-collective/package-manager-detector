@@ -44,6 +44,7 @@
     "prepublishOnly": "npm run build",
     "build": "unbuild",
     "stub": "unbuild --stub",
+    "typecheck": "tsc --noEmit",
     "release": "bumpp",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
