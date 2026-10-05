@@ -71,6 +71,7 @@ This package includes package manager agents and their corresponding commands fo
 - `'upgrade'` - upgrade dependencies
 - `'upgrade-interactive'` - upgrade dependencies interactively: not available for `npm`
 - `'dedupe'` - deduplicate dependencies with overlapping ranges: not available for `deno` and `bun`
+- `'why'` - show why a package is installed
 - `'execute'` - download & execute binary scripts
 - `'execute-local'` - execute binary scripts (from package locally installed)
 - `'run'` - run `package.json` scripts

@@ -25,6 +25,12 @@ Object.entries(COMMANDS)
         expect(args).toMatchSnapshot()
       })
     })
+    describe(`test ${pm} why command`, () => {
+      it ('command handles args correctly', () => {
+        const args = resolveCommand(pm, 'why', ['vite'])
+        expect(args).toMatchSnapshot()
+      })
+    })
   })
 
 describe('splitRunArgs', () => {
@@ -116,5 +122,18 @@ describe('pnpm@6 run filter flag handling', () => {
   it('keeps `-F <value>` together with the script name', () => {
     const resolved = resolveCommand('pnpm@6', 'run', ['-F', 'packages/foo', 'test'])
     expect(resolved).toEqual({ command: 'pnpm', args: ['run', '-F', 'packages/foo', 'test'] })
+  })
+})
+
+describe('ignoreWorkspaceRootCheck option', () => {
+  it.each([
+    ['pnpm', 'add', 'pnpm', ['add', '--ignore-workspace-root-check', 'vite']],
+    ['pnpm', 'uninstall', 'pnpm', ['remove', 'vite']],
+    ['yarn', 'add', 'yarn', ['add', '--ignore-workspace-root-check', 'vite']],
+    ['yarn', 'uninstall', 'yarn', ['remove', '--ignore-workspace-root-check', 'vite']],
+    ['yarn@berry', 'add', 'yarn', ['add', 'vite']],
+    ['npm', 'add', 'npm', ['i', 'vite']],
+  ] as const)('resolves %s %s', (agent, cmd, command, args) => {
+    expect(resolveCommand(agent, cmd, ['vite'], { ignoreWorkspaceRootCheck: true })).toEqual({ command, args })
   })
 })

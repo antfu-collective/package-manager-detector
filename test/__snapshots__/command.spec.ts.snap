@@ -33,6 +33,16 @@ exports[`test aube run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test aube why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "aube",
+}
+`;
+
 exports[`test bun add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -61,6 +71,16 @@ exports[`test bun run command > command handles args correctly 1`] = `
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "bun",
+}
+`;
+
+exports[`test bun why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "bun",
 }
@@ -99,6 +119,16 @@ exports[`test deno run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test deno why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "deno",
+}
+`;
+
 exports[`test npm add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -127,6 +157,16 @@ exports[`test npm run command > command handles args correctly 1`] = `
     "arg0",
     "--",
     "arg1-0 arg1-1",
+  ],
+  "command": "npm",
+}
+`;
+
+exports[`test npm why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "npm",
 }
@@ -164,6 +204,16 @@ exports[`test nub run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test nub why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "nub",
+}
+`;
+
 exports[`test pnpm add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -192,6 +242,16 @@ exports[`test pnpm run command > command handles args correctly 1`] = `
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "pnpm",
+}
+`;
+
+exports[`test pnpm why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "pnpm",
 }
@@ -231,6 +291,16 @@ exports[`test pnpm@6 run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test pnpm@6 why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
+  ],
+  "command": "pnpm",
+}
+`;
+
 exports[`test pnpm-rush add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -259,6 +329,16 @@ exports[`test pnpm-rush run command > command handles args correctly 1`] = `
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "rush-pnpm",
+}
+`;
+
+exports[`test pnpm-rush why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "rush-pnpm",
 }
@@ -296,6 +376,8 @@ exports[`test upm run command > command handles args correctly 1`] = `
 }
 `;
 
+exports[`test upm why command > command handles args correctly 1`] = `null`;
+
 exports[`test yarn add command > command handles args correctly 1`] = `
 {
   "args": [
@@ -323,6 +405,16 @@ exports[`test yarn run command > command handles args correctly 1`] = `
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "yarn",
 }
@@ -356,6 +448,16 @@ exports[`test yarn@berry run command > command handles args correctly 1`] = `
     "run",
     "arg0",
     "arg1-0 arg1-1",
+  ],
+  "command": "yarn",
+}
+`;
+
+exports[`test yarn@berry why command > command handles args correctly 1`] = `
+{
+  "args": [
+    "why",
+    "vite",
   ],
   "command": "yarn",
 }

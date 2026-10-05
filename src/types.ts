@@ -13,6 +13,7 @@ export interface AgentCommands {
   'upgrade': AgentCommandValue
   'upgrade-interactive': AgentCommandValue
   'dedupe': AgentCommandValue
+  'why': AgentCommandValue
   'execute': AgentCommandValue
   'execute-local': AgentCommandValue
   'uninstall': AgentCommandValue
@@ -30,6 +31,14 @@ export interface ResolvedCommand {
    * Arguments for the CLI command, merged with user arguments.
    */
   args: string[]
+}
+
+export interface ResolveCommandOptions {
+  /**
+   * Pass `--ignore-workspace-root-check` to pnpm (`add`) and yarn v1 (`add`, `uninstall`).
+   * @default false
+   */
+  ignoreWorkspaceRootCheck?: boolean
 }
 
 export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'

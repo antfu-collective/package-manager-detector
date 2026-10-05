@@ -1,4 +1,4 @@
-import type { Agent, AgentCommands, AgentCommandValue, Command, ResolvedCommand } from './types'
+import type { Agent, AgentCommands, AgentCommandValue, Command, ResolveCommandOptions, ResolvedCommand } from './types'
 
 /**
  * Split `run` arguments around the script name for package managers that
@@ -50,6 +50,7 @@ const npm: AgentCommands = {
   'upgrade': ['npm', 'update', 0],
   'upgrade-interactive': null,
   'dedupe': ['npm', 'dedupe', 0],
+  'why': ['npm', 'why', 0],
   'execute': ['npx', 0],
   'execute-local': ['npx', 0],
   'uninstall': ['npm', 'uninstall', 0],
@@ -67,6 +68,7 @@ const yarn: AgentCommands = {
   'upgrade': ['yarn', 'upgrade', 0],
   'upgrade-interactive': ['yarn', 'upgrade-interactive', 0],
   'dedupe': null,
+  'why': ['yarn', 'why', 0],
   'execute': ['npx', 0],
   'execute-local': dashDashArg('yarn', 'exec'),
   'uninstall': ['yarn', 'remove', 0],
@@ -99,6 +101,7 @@ function createPnpmCommands(cli: string): AgentCommands {
     'upgrade': [cli, 'update', 0],
     'upgrade-interactive': [cli, 'update', '-i', 0],
     'dedupe': [cli, 'dedupe', 0],
+    'why': [cli, 'why', 0],
     'execute': [cli, 'dlx', 0],
     'execute-local': [cli, 'exec', 0],
     'uninstall': [cli, 'remove', 0],
@@ -121,6 +124,7 @@ const bun: AgentCommands = {
   'upgrade': ['bun', 'update', 0],
   'upgrade-interactive': ['bun', 'update', '-i', 0],
   'dedupe': null,
+  'why': ['bun', 'why', 0],
   'execute': ['bun', 'x', 0],
   'execute-local': ['bun', 'x', 0],
   'uninstall': ['bun', 'remove', 0],
@@ -137,6 +141,7 @@ const aube: AgentCommands = {
   'upgrade': ['aube', 'update', 0],
   'upgrade-interactive': ['aube', 'update', '-i', 0],
   'dedupe': ['aube', 'dedupe', 0],
+  'why': ['aube', 'why', 0],
   'execute': ['aube', 'dlx', 0],
   'execute-local': ['aube', 'exec', 0],
   'uninstall': ['aube', 'remove', 0],
@@ -153,6 +158,7 @@ const deno: AgentCommands = {
   'upgrade': ['deno', 'outdated', '--update', 0],
   'upgrade-interactive': ['deno', 'outdated', '--update', 0],
   'dedupe': null,
+  'why': ['deno', 'why', 0],
   'execute': ['deno', 'x', 0],
   'execute-local': ['deno', 'task', '--eval', 0],
   'uninstall': ['deno', 'remove', 0],
@@ -173,6 +179,7 @@ const nub: AgentCommands = {
   'upgrade': ['nub', 'update', 0],
   'upgrade-interactive': ['nub', 'update', '-i', 0],
   'dedupe': ['nub', 'dedupe', 0],
+  'why': ['nub', 'why', 0],
   'execute': ['nubx', 0],
   'execute-local': ['nub', 'exec', 0],
   'uninstall': ['nub', 'remove', 0],
@@ -215,6 +222,13 @@ export const COMMANDS = {
   'upm': upm,
 } satisfies Record<Agent, AgentCommands>
 
+const WORKSPACE_ROOT_CHECK_COMMANDS: Partial<Record<Agent, Command[]>> = {
+  'yarn': ['add', 'uninstall'],
+  'pnpm': ['add'],
+  'pnpm@6': ['add'],
+  'pnpm-rush': ['add'],
+}
+
 /**
  * Resolve the command for the agent merging the command arguments with the provided arguments.
  *
@@ -228,10 +242,13 @@ export const COMMANDS = {
  * @param agent The agent to use.
  * @param command the command to resolve.
  * @param args The arguments to pass to the command.
+ * @param options Additional options to resolve the command.
  * @returns {ResolvedCommand} The resolved command or `null` if the agent command is not found.
  */
-export function resolveCommand(agent: Agent, command: Command, args: string[]): ResolvedCommand | null {
+export function resolveCommand(agent: Agent, command: Command, args: string[], options: ResolveCommandOptions = {}): ResolvedCommand | null {
   const value = COMMANDS[agent][command] as AgentCommandValue
+  if (options.ignoreWorkspaceRootCheck && WORKSPACE_ROOT_CHECK_COMMANDS[agent]?.includes(command))
+    args = ['--ignore-workspace-root-check', ...args]
   return constructCommand(value, args)
 }
 
