@@ -25,6 +25,12 @@ Object.entries(COMMANDS)
         expect(args).toMatchSnapshot()
       })
     })
+    describe(`test ${pm} why command`, () => {
+      it ('command handles args correctly', () => {
+        const args = resolveCommand(pm, 'why', ['vite'])
+        expect(args).toMatchSnapshot()
+      })
+    })
   })
 
 describe('splitRunArgs', () => {
