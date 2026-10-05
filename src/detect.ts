@@ -125,6 +125,11 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
   return null
 }
 
+/**
+ * Extracts the `major[.minor[.patch]]` part of a version string, e.g. `^9.12.1+sha512.abc` becomes `9.12.1`.
+ * @param version The raw version, as found in `packageManager` or `devEngines.packageManager.version`.
+ * @returns The extracted version, or the input unchanged if it contains no numeric version.
+ */
 export const handleVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
   if (typeof pkg.packageManager === 'string') {
@@ -160,6 +165,14 @@ async function handlePackageManager(
   return null
 }
 
+/**
+ * Resolves the agent for a package manager name and version, e.g. to pass to `resolveCommand` without running `detect`.
+ *
+ * Yarn above v1 resolves to `yarn@berry` (with version `berry`) and pnpm below v7 to `pnpm@6`.
+ * @param name The package manager name.
+ * @param ver The package manager version, see `handleVersion`.
+ * @returns The resolved name, agent and version, or `undefined` if the name is not a known agent.
+ */
 export function resolveAgent(name: AgentName, ver?: string) {
   let agent: Agent | undefined
   let version = ver
