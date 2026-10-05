@@ -130,16 +130,16 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  * @param version The raw version, as found in `packageManager` or `devEngines.packageManager.version`.
  * @returns The extracted version, or the input unchanged if it contains no numeric version.
  */
-export const handleVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+export const normalizeAgentVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')
-    return { name, ver: handleVersion(ver) }
+    return { name, ver: normalizeAgentVersion(ver) }
   }
   if (typeof pkg.devEngines?.packageManager?.name === 'string') {
     return {
       name: pkg.devEngines.packageManager.name,
-      ver: handleVersion(pkg.devEngines.packageManager.version),
+      ver: normalizeAgentVersion(pkg.devEngines.packageManager.version),
     }
   }
   return undefined
@@ -170,7 +170,7 @@ async function handlePackageManager(
  *
  * Yarn above v1 resolves to `yarn@berry` (with version `berry`) and pnpm below v7 to `pnpm@6`.
  * @param name The package manager name.
- * @param ver The package manager version, see `handleVersion`.
+ * @param ver The package manager version, see `normalizeAgentVersion`.
  * @returns The resolved name, agent and version, or `undefined` if the name is not a known agent.
  */
 export function resolveAgent(name: AgentName, ver?: string) {

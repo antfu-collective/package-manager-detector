@@ -8,5 +8,5 @@ export function resolveAgent(_, _) {}
 // #endregion
 
 // #region Variables
-export var handleVersion /* const */
+export var normalizeAgentVersion /* const */
 // #endregion

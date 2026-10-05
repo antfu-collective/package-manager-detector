@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { handleVersion, resolveAgent } from '../src/detect'
+import { normalizeAgentVersion, resolveAgent } from '../src/detect'
 
-describe('handleVersion', () => {
+describe('normalizeAgentVersion', () => {
   it.each([
     ['9.12.1', '9.12.1'],
     ['^9.12.1', '9.12.1'],
@@ -11,7 +11,7 @@ describe('handleVersion', () => {
     ['latest', 'latest'],
     [undefined, undefined],
   ])('%s -> %s', (input, expected) => {
-    expect(handleVersion(input)).toBe(expected)
+    expect(normalizeAgentVersion(input)).toBe(expected)
   })
 })
 

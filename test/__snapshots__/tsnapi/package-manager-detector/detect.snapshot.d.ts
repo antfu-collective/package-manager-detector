@@ -12,5 +12,5 @@ export declare function resolveAgent(_: AgentName, _?: string): {
 // #endregion
 
 // #region Variables
-export declare const handleVersion: (version: string | undefined) => string | undefined;
+export declare const normalizeAgentVersion: (version: string | undefined) => string | undefined;
 // #endregion
