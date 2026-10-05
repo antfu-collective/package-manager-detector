@@ -130,7 +130,10 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
  * @param version The raw version, as found in `packageManager` or `devEngines.packageManager.version`.
  * @returns The extracted version, or the input unchanged if it contains no numeric version.
  */
-export const normalizeAgentVersion = (version: string | undefined) => version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+export function normalizeAgentVersion(version: string | undefined): string | undefined {
+  return version?.match(/\d+(\.\d+){0,2}/)?.[0] ?? version
+}
+
 function getNameAndVer(pkg: { packageManager?: string, devEngines?: { packageManager?: { name?: string, version?: string } } }) {
   if (typeof pkg.packageManager === 'string') {
     const [name, ver] = pkg.packageManager.replace(/^\^/, '').split('@')

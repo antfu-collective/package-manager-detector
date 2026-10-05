@@ -4,9 +4,6 @@
 // #region Functions
 export async function detect(_) {}
 export function getUserAgent() {}
+export function normalizeAgentVersion(_) {}
 export function resolveAgent(_, _) {}
-// #endregion
-
-// #region Variables
-export var normalizeAgentVersion /* const */
 // #endregion
