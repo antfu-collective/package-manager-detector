@@ -27,6 +27,22 @@ Object.entries(COMMANDS)
     })
   })
 
+describe('deno add', () => {
+  it('prefixes bare package names with `npm:`', () => {
+    expect(resolveCommand('deno', 'add', ['-D', 'vite', 'jsr:@std/path', 'npm:@antfu/ni'])).toEqual({
+      command: 'deno',
+      args: ['add', '-D', 'npm:vite', 'jsr:@std/path', 'npm:@antfu/ni'],
+    })
+  })
+
+  it.each(['--npm', '--jsr'])('leaves args untouched when %s is passed', (flag) => {
+    expect(resolveCommand('deno', 'add', [flag, 'vite'])).toEqual({
+      command: 'deno',
+      args: ['add', flag, 'vite'],
+    })
+  })
+})
+
 describe('splitRunArgs', () => {
   it('treats the first positional arg as the script', () => {
     expect(splitRunArgs(['dev'])).toEqual({ before: [], script: 'dev', after: [] })
