@@ -23,5 +23,6 @@ export declare const COMMANDS: {
     aube: AgentCommands;
     deno: AgentCommands;
     nub: AgentCommands;
+    upm: AgentCommands;
 };
 // #endregion

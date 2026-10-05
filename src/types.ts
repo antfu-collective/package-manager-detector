@@ -1,5 +1,5 @@
-export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'pnpm-rush' | 'bun' | 'deno' | 'nub' | 'aube'
-export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno' | 'nub' | 'aube'
+export type Agent = 'npm' | 'yarn' | 'yarn@berry' | 'pnpm' | 'pnpm@6' | 'pnpm-rush' | 'bun' | 'deno' | 'nub' | 'aube' | 'upm'
+export type AgentName = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'deno' | 'nub' | 'aube' | 'upm'
 
 export type AgentCommandValue = (string | number)[] | ((args: string[]) => string[]) | null
 
@@ -90,7 +90,7 @@ export interface DetectResult {
   /**
    * Agent name without the specifier.
    *
-   * Can be `npm`, `yarn`, `pnpm`, `bun`, `deno`, `nub`, or `aube`.
+   * Can be `npm`, `yarn`, `pnpm`, `bun`, `deno`, `nub`, `aube`, or `upm`.
    */
   name: AgentName
   /**
