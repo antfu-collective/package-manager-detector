@@ -123,7 +123,7 @@ const bun: AgentCommands = {
   'add': ['bun', 'add', 0],
   'upgrade': ['bun', 'update', 0],
   'upgrade-interactive': ['bun', 'update', '-i', 0],
-  'dedupe': null,
+  'dedupe': ['bun', 'dedupe', 0],
   'why': ['bun', 'why', 0],
   'execute': ['bun', 'x', 0],
   'execute-local': ['bun', 'x', 0],

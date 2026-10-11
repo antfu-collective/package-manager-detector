@@ -170,3 +170,12 @@ describe('minimumReleaseAge option', () => {
     expect(resolveCommand(agent, cmd, ['vite'], { minimumReleaseAge: 3 * 24 * 60 })).toEqual({ command, args })
   })
 })
+
+describe('bun dedupe', () => {
+  it('resolves to the native bun dedupe command', () => {
+    expect(resolveCommand('bun', 'dedupe', [])).toEqual({
+      command: 'bun',
+      args: ['dedupe'],
+    })
+  })
+})
