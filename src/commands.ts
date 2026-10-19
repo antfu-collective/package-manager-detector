@@ -1,4 +1,5 @@
 import type { Agent, AgentCommands, AgentCommandValue, Command, ResolveCommandOptions, ResolvedCommand } from './types'
+import { getConfigFlags } from './config'
 
 /**
  * Split `run` arguments around the script name for package managers that
@@ -293,7 +294,20 @@ export function resolveCommand(agent: Agent, command: Command, args: string[], o
   const releaseAge = MINIMUM_RELEASE_AGE_FLAGS[agent]
   if (options.minimumReleaseAge != null && releaseAge?.commands.includes(command))
     args = [releaseAge.flag(options.minimumReleaseAge), ...args]
-  return constructCommand(value, args)
+
+  const resolved = constructCommand(value, args)
+  if (!resolved)
+    return null
+
+  // Add config flags if requested
+  if (options.includeConfigFlags) {
+    const configArgs = getConfigFlags(agent, command)
+    if (configArgs.length > 0) {
+      resolved.configArgs = configArgs
+    }
+  }
+
+  return resolved
 }
 
 /**
