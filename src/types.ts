@@ -31,6 +31,10 @@ export interface ResolvedCommand {
    * Arguments for the CLI command, merged with user arguments.
    */
   args: string[]
+  /**
+   * Configuration-derived flags when `includeConfigFlags` is enabled.
+   */
+  configArgs?: string[]
 }
 
 export interface ResolveCommandOptions {
@@ -47,6 +51,12 @@ export interface ResolveCommandOptions {
    * Ignored for yarn, aube and pnpm@6, which have no CLI flag for it.
    */
   minimumReleaseAge?: number
+  /**
+   * When enabled, detect package manager configuration and include derived flags
+   * in the `configArgs` field of the returned command.
+   * @default false
+   */
+  includeConfigFlags?: boolean
 }
 
 export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
