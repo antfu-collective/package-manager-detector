@@ -18,15 +18,18 @@ async function pathExists(path: string, type: 'file' | 'dir') {
  * Detects the package manager used in the running process.
  *
  * This method will check for `process.env.npm_config_user_agent`.
+ * Returns an `Agent` suitable for `resolveCommand` (e.g. `yarn@berry` for Yarn ≥ 2,
+ * `pnpm@6` for pnpm < 7), not only the bare `AgentName`.
  */
-export function getUserAgent(): AgentName | null {
+export function getUserAgent(): Agent | null {
   const userAgent = process.env.npm_config_user_agent
   if (!userAgent) {
     return null
   }
 
-  const name = userAgent.split('/')[0] as AgentName
-  return AGENTS.includes(name) ? name : null
+  // Format: `<name>/<version> ...` (e.g. `yarn/4.13.0 npm/? node/v24.13.0 darwin arm64`)
+  const [name, ver] = userAgent.split(' ')[0]!.split('/')
+  return resolveAgent(name as AgentName, normalizeAgentVersion(ver))?.agent ?? null
 }
 
 function* lookup(cwd: string = process.cwd()): Generator<string> {

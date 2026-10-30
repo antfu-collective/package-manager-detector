@@ -3,7 +3,7 @@
  */
 // #region Functions
 export declare function detect(_?: DetectOptions): Promise<DetectResult | null>;
-export declare function getUserAgent(): AgentName | null;
+export declare function getUserAgent(): Agent | null;
 export declare function normalizeAgentVersion(_: string | undefined): string | undefined;
 export declare function resolveAgent(_: AgentName, _?: string): {
     name: AgentName;
