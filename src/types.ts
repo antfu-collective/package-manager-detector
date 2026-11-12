@@ -49,7 +49,50 @@ export interface ResolveCommandOptions {
   minimumReleaseAge?: number
 }
 
-export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
+/**
+ * Name of a strategy that is built into the detector.
+ */
+export type DetectStrategyName = 'rush' | 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
+
+/**
+ * What a custom strategy receives when it is called.
+ *
+ * A custom strategy runs once per directory, exactly like the built-in ones,
+ * starting at `cwd` and walking up to the root.
+ */
+export interface StrategyContext {
+  /**
+   * The directory currently being visited.
+   */
+  directory: string
+  /**
+   * The (absolute) directory detection started from.
+   */
+  cwd: string
+  /**
+   * The options `detect()` was called with, so custom strategies can reuse
+   * `packageJsonParser`, `onUnknown`, etc.
+   */
+  options: DetectOptions
+  /**
+   * The same file-system probe the built-in strategies use.
+   */
+  pathExists: (path: string, type: 'file' | 'dir') => Promise<boolean>
+  /**
+   * Stop walking up to the parent directories once the current directory has
+   * been fully processed. Strategies that come after this one in the same
+   * directory still run.
+   */
+  stop: () => void
+}
+
+/**
+ * A custom strategy. Return a {@link DetectResult} to stop the detection,
+ * or `null`/`undefined` to fall through to the next strategy.
+ */
+export type DetectStrategyFn = (context: StrategyContext) => DetectResult | null | undefined | Promise<DetectResult | null | undefined>
+
+export type DetectStrategy = DetectStrategyName | DetectStrategyFn
 
 export interface DetectOptions {
   /**
@@ -60,14 +103,21 @@ export interface DetectOptions {
   /**
    * The strategies to use for detecting the package manager. The strategies
    * are executed in the order it's specified for every directory that it iterates
-   * upwards from the `cwd`.
+   * upwards from the `cwd`. A strategy that finds nothing falls through to the
+   * next one.
    *
+   * Built-in strategies are referenced by name:
+   *
+   * - `'rush'`: Look up for a `rush.json` file (Rush monorepos wrapping pnpm).
    * - `'lockfile'`: Look up for lock files.
    * - `'packageManager-field'`: Look up for the `packageManager` field in package.json.
    * - `'devEngines-field'`: Look up for the `devEngines.packageManager` field in package.json.
    * - `'install-metadata'`: Look up for installation metadata added by package managers.
    *
-   * @default ['lockfile', 'packageManager-field', 'devEngines-field']
+   * Custom strategies are plain functions, which makes it possible to insert
+   * your own rules in front of (or between) the built-in ones.
+   *
+   * @default DEFAULT_STRATEGIES
    */
   strategies?: DetectStrategy[]
   /**
