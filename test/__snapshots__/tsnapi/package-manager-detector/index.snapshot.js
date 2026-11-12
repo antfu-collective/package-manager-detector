@@ -4,5 +4,5 @@
 // #region Re-exports
 export { AGENTS, INSTALL_METADATA, INSTALL_PAGE, LOCKS } from './constants.mjs';
 export { COMMANDS, constructCommand, resolveCommand } from './commands.mjs';
-export { detect, getUserAgent } from './detect.mjs';
+export { DEFAULT_STRATEGIES, detect, getUserAgent } from './detect.mjs';
 // #endregion

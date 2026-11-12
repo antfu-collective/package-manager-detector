@@ -11,3 +11,7 @@ export declare function resolveAgent(_: AgentName, _?: string): {
     version: string | undefined;
 } | undefined;
 // #endregion
+
+// #region Variables
+export declare const DEFAULT_STRATEGIES: DetectStrategy[];
+// #endregion

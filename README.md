@@ -38,10 +38,13 @@ import { getUserAgent } from 'package-manager-detector/detect'
 
 ## Customize Detection Strategy
 
-By default, the `detect` API searches through the current directory for lock files, and if none exists, it looks for the `packageManager` field in `package.json`. If that also doesn't exist, it will check the `devEngines.packageManager` field in `package.json`. If all strategies couldn't detect the package manager, it'll crawl upwards to the parent directory and repeat the detection process until it reaches the root directory.
+By default, the `detect` API looks for a `rush.json` file, then for the `packageManager` field in `package.json`, then for the `devEngines.packageManager` field, and finally for lock files. If none of them match, it crawls upwards to the parent directory and repeats the detection process until it reaches the root directory.
+
+Every strategy is independent: a strategy that finds nothing falls through to the next one, so you can order them freely.
 
 The strategies can be configured through `detect`'s `strategies` option with the following accepted strategies:
 
+- `'rush'`: Look up for a `rush.json` file (Rush monorepos wrapping pnpm).
 - `'lockfile'`: Look up for lock files.
 - `'packageManager-field'`: Look up for the `packageManager` field in package.json.
 - `'devEngines-field'`: Look up for the `devEngines.packageManager` field in package.json.

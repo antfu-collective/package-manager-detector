@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest'
 import type { DetectOptions } from '../src'
 import { readdirSync, statSync } from 'node:fs'
-import { cp, mkdir, mkdtemp } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
@@ -166,5 +166,93 @@ describe('packageJsonParser', () => {
       name: 'pnpm',
       agent: 'pnpm',
     })
+  })
+})
+
+async function createProject(files: Record<string, string>) {
+  const cwd = await mkdtemp(path.join(tmpdir(), 'ni-'))
+  for (const [name, content] of Object.entries(files))
+    await writeFile(path.join(cwd, name), content)
+  return cwd
+}
+
+describe('strategy independence', () => {
+  it('lockfile only looks at lock files', async () => {
+    const cwd = await createProject({
+      'pnpm-lock.yaml': '',
+      'package.json': JSON.stringify({ packageManager: 'yarn@4.1.0' }),
+    })
+
+    expect(await detect({ cwd, strategies: ['lockfile'] })).toEqual({ name: 'pnpm', agent: 'pnpm' })
+  })
+
+  it('packageManager-field only looks at the packageManager field', async () => {
+    const cwd = await createProject({
+      'package.json': JSON.stringify({ devEngines: { packageManager: { name: 'pnpm' } } }),
+    })
+
+    expect(await detect({ cwd, strategies: ['packageManager-field'] })).toBe(null)
+  })
+
+  it('devEngines-field only looks at the devEngines field', async () => {
+    const cwd = await createProject({
+      'package.json': JSON.stringify({ packageManager: 'yarn@4.1.0' }),
+    })
+
+    expect(await detect({ cwd, strategies: ['devEngines-field'] })).toBe(null)
+  })
+
+  it('rush is a standalone strategy', async () => {
+    const cwd = await createProject({
+      'rush.json': '{}',
+      'package.json': JSON.stringify({ packageManager: 'npm@10.0.0' }),
+    })
+
+    expect(await detect({ cwd })).toEqual({ name: 'pnpm', agent: 'pnpm-rush' })
+    expect(await detect({ cwd, strategies: ['lockfile'] })).toBe(null)
+  })
+
+  it('default strategies still prefer the packageManager field over a lock file', async () => {
+    const cwd = await createProject({
+      'pnpm-lock.yaml': '',
+      'package.json': JSON.stringify({ packageManager: 'yarn@4.1.0' }),
+    })
+
+    expect(await detect({ cwd })).toEqual({ name: 'yarn', agent: 'yarn@berry', version: 'berry' })
+  })
+
+  it('reads package.json once per directory for both field strategies', async () => {
+    const cwd = await createProject({ 'package.json': JSON.stringify({ name: 'p' }) })
+    const parser = vi.fn((content: string) => JSON.parse(content))
+
+    expect(await detect({ cwd, packageJsonParser: parser })).toBe(null)
+    expect(parser).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('onUnknown', () => {
+  it('receives the raw `packageManager` value', async () => {
+    const cwd = await createProject({ 'package.json': JSON.stringify({ packageManager: 'future-pm@1.0.0' }) })
+    const onUnknown = vi.fn(() => null)
+
+    expect(await detect({ cwd, onUnknown })).toBe(null)
+    expect(onUnknown).toHaveBeenCalledWith('future-pm@1.0.0')
+  })
+
+  it('receives the `devEngines.packageManager.name` value', async () => {
+    const cwd = await createProject({
+      'package.json': JSON.stringify({ devEngines: { packageManager: { name: 'future-pm' } } }),
+    })
+    const onUnknown = vi.fn(() => null)
+
+    expect(await detect({ cwd, onUnknown })).toBe(null)
+    expect(onUnknown).toHaveBeenCalledWith('future-pm')
+  })
+
+  it('can turn an unknown package manager into a result', async () => {
+    const cwd = await createProject({ 'package.json': JSON.stringify({ packageManager: 'future-pm@1.0.0' }) })
+
+    expect(await detect({ cwd, onUnknown: () => ({ name: 'npm', agent: 'npm' }) }))
+      .toEqual({ name: 'npm', agent: 'npm' })
   })
 })

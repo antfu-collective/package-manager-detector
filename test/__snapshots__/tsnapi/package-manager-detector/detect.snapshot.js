@@ -7,3 +7,7 @@ export function getUserAgent() {}
 export function normalizeAgentVersion(_) {}
 export function resolveAgent(_, _) {}
 // #endregion
+
+// #region Variables
+export var DEFAULT_STRATEGIES /* const */
+// #endregion
