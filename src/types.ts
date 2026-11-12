@@ -49,7 +49,7 @@ export interface ResolveCommandOptions {
   minimumReleaseAge?: number
 }
 
-export type DetectStrategy = 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
+export type DetectStrategy = 'rush' | 'lockfile' | 'packageManager-field' | 'devEngines-field' | 'install-metadata'
 
 export interface DetectOptions {
   /**
@@ -62,12 +62,16 @@ export interface DetectOptions {
    * are executed in the order it's specified for every directory that it iterates
    * upwards from the `cwd`.
    *
+   * - `'rush'`: Look up for a `rush.json` file (Rush monorepos wrapping pnpm).
    * - `'lockfile'`: Look up for lock files.
    * - `'packageManager-field'`: Look up for the `packageManager` field in package.json.
    * - `'devEngines-field'`: Look up for the `devEngines.packageManager` field in package.json.
    * - `'install-metadata'`: Look up for installation metadata added by package managers.
    *
-   * @default ['lockfile', 'packageManager-field', 'devEngines-field']
+   * Every strategy is independent: a strategy that finds nothing falls through
+   * to the next one instead of stopping the lookup.
+   *
+   * @default ['rush', 'packageManager-field', 'devEngines-field', 'lockfile']
    */
   strategies?: DetectStrategy[]
   /**
