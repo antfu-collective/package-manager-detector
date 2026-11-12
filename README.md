@@ -60,6 +60,32 @@ const pm = await detect({
 })
 ```
 
+### Custom Strategies
+
+A strategy can also be a function, which lets you put your own rules in front of (or between) the built-in ones. It is called once per directory, in the same order as the built-in strategies: return a result to stop the detection, or return `null`/`undefined` to fall through to the next strategy.
+
+```js
+import { DEFAULT_STRATEGIES, detect } from 'package-manager-detector/detect'
+
+const pm = await detect({
+  strategies: [
+    ({ cwd }) => {
+      if (cwd.startsWith('/path/to/my-legacy-project'))
+        return { name: 'yarn', agent: 'yarn@berry', version: 'berry' }
+    },
+    ...DEFAULT_STRATEGIES,
+  ],
+})
+```
+
+The context provides:
+
+- `directory` — the directory currently being visited.
+- `cwd` — the directory detection started from.
+- `options` — the options passed to `detect()`, so a custom strategy can reuse `packageJsonParser` and `onUnknown`.
+- `pathExists(path, type)` — the same file-system probe the built-in strategies use.
+- `stop()` — stop walking up to the parent directories once the current directory is fully processed. The remaining strategies of the current directory still run.
+
 ## Agents and Commands
 
 This package includes package manager agents and their corresponding commands for:

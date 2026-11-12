@@ -5,7 +5,7 @@ import { cp, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { detect } from '../src'
+import { DEFAULT_STRATEGIES, detect } from '../src'
 
 let basicLog: MockInstance, errorLog: MockInstance, warnLog: MockInstance, infoLog: MockInstance
 
@@ -254,5 +254,120 @@ describe('onUnknown', () => {
 
     expect(await detect({ cwd, onUnknown: () => ({ name: 'npm', agent: 'npm' }) }))
       .toEqual({ name: 'npm', agent: 'npm' })
+  })
+})
+
+describe('custom strategies', () => {
+  it('runs in the configured order and can win over lock files', async () => {
+    const cwd = await createProject({
+      'pnpm-lock.yaml': '',
+      'package.json': JSON.stringify({ name: 'p' }),
+    })
+
+    const result = await detect({
+      cwd,
+      strategies: [
+        ({ cwd: startDir }) => startDir === cwd ? { name: 'bun', agent: 'bun' } : null,
+        'lockfile',
+      ],
+    })
+
+    expect(result).toEqual({ name: 'bun', agent: 'bun' })
+  })
+
+  it('falls through to the built-in strategies when it returns nothing', async () => {
+    const cwd = await createProject({ 'pnpm-lock.yaml': '' })
+    const spy = vi.fn(() => null)
+
+    const result = await detect({ cwd, strategies: ['rush', spy, 'lockfile'] })
+
+    expect(result).toEqual({ name: 'pnpm', agent: 'pnpm' })
+    expect(spy).toHaveBeenCalled()
+  })
+
+  it('receives the visited directory, the starting directory and the options', async () => {
+    const cwd = await createProject({ 'package.json': JSON.stringify({ packageManager: 'npm@10.0.0' }) })
+    const parser = vi.fn((content: string) => JSON.parse(content))
+    const seen: { directory: string, cwd: string, sameOptions: boolean }[] = []
+
+    await detect({
+      cwd,
+      packageJsonParser: parser,
+      strategies: [
+        ({ directory, cwd: startDir, options }) => {
+          seen.push({ directory, cwd: startDir, sameOptions: options.packageJsonParser === parser })
+          return null
+        },
+        'packageManager-field',
+      ],
+    })
+
+    expect(seen[0]).toEqual({ directory: cwd, cwd, sameOptions: true })
+  })
+
+  it('exposes the same pathExists helper the built-in strategies use', async () => {
+    const cwd = await createProject({ 'package.json': JSON.stringify({ name: 'p' }) })
+    let found = false
+
+    await detect({
+      cwd,
+      strategies: [
+        async ({ pathExists }) => {
+          found = await pathExists(path.join(cwd, 'package.json'), 'file')
+          return null
+        },
+      ],
+    })
+
+    expect(found).toBe(true)
+  })
+
+  it('stops walking up to the parents when `stop()` is called', async () => {
+    const parent = await createProject({ 'package.json': JSON.stringify({ packageManager: 'npm@10.0.0' }) })
+    const cwd = path.join(parent, 'nested')
+    await mkdir(cwd)
+
+    expect(await detect({ cwd })).toMatchObject({ name: 'npm' })
+
+    const stopped = await detect({
+      cwd,
+      strategies: [
+        ({ stop }) => {
+          stop()
+          return null
+        },
+        'lockfile',
+      ],
+    })
+
+    expect(stopped).toBe(null)
+  })
+
+  it('still runs the remaining strategies of the current directory after `stop()`', async () => {
+    const cwd = await createProject({ 'pnpm-lock.yaml': '' })
+
+    const result = await detect({
+      cwd,
+      strategies: [
+        ({ stop }) => {
+          stop()
+          return null
+        },
+        'lockfile',
+      ],
+    })
+
+    expect(result).toEqual({ name: 'pnpm', agent: 'pnpm' })
+  })
+
+  it('can be composed with the default strategies', async () => {
+    const cwd = await createProject({ 'pnpm-lock.yaml': '' })
+
+    const result = await detect({
+      cwd,
+      strategies: [() => null, ...DEFAULT_STRATEGIES],
+    })
+
+    expect(result).toEqual({ name: 'pnpm', agent: 'pnpm' })
   })
 })

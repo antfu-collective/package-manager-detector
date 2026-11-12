@@ -1,4 +1,4 @@
-import type { Agent, AgentName, DetectOptions, DetectResult, DetectStrategy } from './types'
+import type { Agent, AgentName, DetectOptions, DetectResult, DetectStrategy, StrategyContext } from './types'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
@@ -111,6 +111,8 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     strategies = DEFAULT_STRATEGIES,
   } = options
 
+  const startDir = path.resolve(cwd ?? process.cwd())
+
   let stopDir: ((dir: string) => boolean) | undefined
   if (typeof options.stopDir === 'string') {
     const resolved = path.resolve(options.stopDir)
@@ -120,13 +122,31 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
     stopDir = options.stopDir
   }
 
-  for (const directory of lookup(cwd)) {
+  for (const directory of lookup(startDir)) {
     // The two `package.json`-based strategies share one read per directory.
     let packageJson: Promise<Record<string, any> | null> | undefined
     const readPackageJsonAtDirectory = () =>
       (packageJson ??= readPackageJson(path.join(directory, 'package.json'), options))
 
+    let stopRequested = false
+    const context: StrategyContext = {
+      directory,
+      cwd: startDir,
+      options,
+      pathExists,
+      stop: () => {
+        stopRequested = true
+      },
+    }
+
     for (const strategy of strategies) {
+      if (typeof strategy === 'function') {
+        const result = await strategy(context)
+        if (result)
+          return result
+        continue
+      }
+
       switch (strategy) {
         case 'rush': {
           // Rush monorepos wrap pnpm with `rush-pnpm`.
@@ -179,8 +199,8 @@ export async function detect(options: DetectOptions = {}): Promise<DetectResult 
       }
     }
 
-    // Stop the traversing if the stop directory is reached
-    if (stopDir?.(directory))
+    // Stop the traversing if a strategy asked for it or the stop directory is reached
+    if (stopRequested || stopDir?.(directory))
       break
   }
 
